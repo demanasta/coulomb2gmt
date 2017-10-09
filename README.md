@@ -24,6 +24,16 @@ coulomb2gmt -- pre-released
 
 
 
+### Output formats
+Default format is `*.ps` file. You can use  the options bellow to convert  to other format and adjust paper size to map size.
+
+* `-outjpg` : Adjust and convert to JPEG.
+
+* `-outpng` : Adjust and convert to PNG (transparent where nothing is plotted)
+
+* `-outeps` : Adjust and convert to EPS"
+
+* `-outpdf` : Adjust and convert to PDF
 
 ## Contributing
 

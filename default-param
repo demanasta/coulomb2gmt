@@ -1,45 +1,47 @@
 #!/bin/bash
 #use this file to cheange default parameters for plots
+
 # //////////////////////////////////////////////////////////////////////////////
 # Set PATHS parameters
 pth2dems=${HOME}/Map_project/dems
-# inputTopoL=${pth2dems}/ETOPO1_Bed_g_gmt4.grd
-# inputTopoB=${pth2dems}/ETOPO1_Bed_g_gmt4.grd
+
 inputTopoL=${pth2dems}/ETOPO1_gr_resample01m.grd   #ETOPO1_Bed_g_gmt4.grd
 inputTopoB=${pth2dems}/ETOPO1_gr_resample01m.grd    #ETOPO1_Bed_g_gmt4.grd
+
 pth2logos=$HOME/Map_project/logos/DSOlogo2.eps
 pth2faults=$HOME/Map_project/faults/NOAFaults_v1.0.gmt
 
+# //////////////////////////////////////////////////////////////////////////////
 #Path to input file directory
 # pth2inptf=$(pwd)
 pth2inpdir=../inp_historic/
-
-
-#outfiles
-outfile=output.ps
-out_jpg=output.jpg
-#colormaps
-landcpt=land_man.cpt
-bathcpt=bath_man.cpt
-coulombcpt=Coulomb_anatolia.cpt
-
-
-minlon=20.2
-maxlon=20.9
-minlat=37.9
-maxlat=38.5
-prjscale=500000
-
-frame=0.5
-
 pth2inpfile=../inp_historic/${inputfile}.inp
 #pth2gpsfile=../output_files/GPS_output.csv
 #pth2gpsfile=../gmt_files/${inputdata}.disp
 pth2gpsfile=${inputdata}.disp
 #pth2inpdata=../input_zakynthos/${inputfile}.inp
 
+# //////////////////////////////////////////////////////////////////////////////
+#outfiles
+# outfile=output.ps
+# out_jpg=output.jpg
 
+# //////////////////////////////////////////////////////////////////////////////
 
+#colormaps
+landcpt=land_man.cpt
+bathcpt=bath_man.cpt
+coulombcpt=Coulomb_anatolia.cpt
+
+# //////////////////////////////////////////////////////////////////////////////
+minlon=20.2
+maxlon=20.9
+minlat=37.9
+maxlat=38.5
+prjscale=500000
+frame=0.5
+
+# //////////////////////////////////////////////////////////////////////////////
 logo_pos="BL/6c/-1.5c/DSO[at]ntua"
 logo_pos2="-C15.6c/15.9c"
 legendc="-Jx1i -R0/8/0/8 -Dx18.5c/12.6c/3.6c/3.5c/BL"	
