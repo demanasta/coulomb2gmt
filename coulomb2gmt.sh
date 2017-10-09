@@ -149,35 +149,35 @@ while [ $# -gt 2 ]
 do
   case "$3" in
     -r)
-      RANGE=1
-      minlon=${4}
-      maxlon=${5}
-      minlat=${6}
-      maxlat=${7}
-      prjscale=${8}
-      shift
-      shift
-      shift
-      shift
-      shift
-      shift
-      ;;
+	RANGE=1
+	minlon=${4}
+	maxlon=${5}
+	minlat=${6}
+	maxlat=${7}
+	prjscale=${8}
+	shift
+	shift
+	shift
+	shift
+	shift
+	shift
+	;;
     -cstress)
-      CSTRESS=1
-      shift
-      ;;
+	CSTRESS=1
+	shift
+	;;
     -sstress)
-      SSTRESS=1
-      shift
-      ;;
+	SSTRESS=1
+	shift
+	;;
     -nstress)
-      NSTRESS=1
-      shift
-      ;;
+	NSTRESS=1
+	shift
+	;;
     -dilstrain)
-      DILSTRAIN=1
-      shift
-      ;;
+	DILSTRAIN=1
+	shift
+	;;
 		-terobs)
 			TEROBS=1
 			terobs_file=$4
@@ -194,17 +194,17 @@ do
 			shift
 			;;
     -fproj)
-      FPROJ=1
-      shift
-      ;;
+	FPROJ=1
+	shift
+	;;
     -fsurf)
-      FSURF=1
-      shift
-      ;;
+	FSURF=1
+	shift
+	;;
     -fdep)
-      FDEP=1
-      shift
-      ;;
+	FDEP=1
+	shift
+	;;
 		-fcross)
 			FCROSS=1
 			shift
@@ -253,18 +253,17 @@ do
 			shift
 			shift
 			;;
-		-topo)
-#                       switch topo not used in server!
-			TOPOGRAPHY=1
-			shift
-			;;
-		-o)
-			OUTFILES=1
-			outfile=${4}.eps
-			out_jpg=${4}.jpg
-			shift
-			shift
-			;;
+    -topo)
+	TOPOGRAPHY=1
+	shift
+	;;
+    -o)
+	OUTFILES=1
+	outfile=${4}.eps
+	out_jpg=${4}.jpg
+	shift
+	shift
+	;;
 		-l)
 			LABELS=1
 			shift
@@ -273,26 +272,26 @@ do
 			LEGEND=1
 			shift
 			;;
-		-jpg)
-			OUTJPG=1
-			shift
-			;;
-		-h)
-			help
-			;;
-	esac
-done
-else
-	echo " ************* File does not exist! use corret input file *********"
+    -jpg)
+	OUTJPG=1
+	shift
+	;;
+    -h)
 	help
+	;;
+    esac
+done
+  else
+    echo " ************* File does not exist! use corret input file *********"
+    help
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # Pre-defined parameters for GMT
 if [ "$OUTFILES" -eq 0 ]
 then
-	outfile=${inputdata}.eps
-	out_jpg=${inputdata}.jpg
+  outfile=${inputdata}.eps
+  out_jpg=${inputdata}.jpg
 fi
 
 pth2inpfile=${pth2inpdir}/${inputfile}.inp
@@ -301,22 +300,18 @@ pth2gpsfile=${inputdata}.disp
 
 if [ "$RANGE" -eq 0 ]
 then
-	minlon=$(grep "min. lon" ${pth2inpfile} | awk '{print $6}')
-	maxlon=$(grep "max. lon" ${pth2inpfile} | awk '{print $6}')
-	minlat=$(grep "min. lat" ${pth2inpfile} | awk '{print $6}')
-	maxlat=$(grep "max. lat" ${pth2inpfile} | awk '{print $6}')
-	prjscale=1500000 ##DEF 1000000
+  minlon=$(grep "min. lon" ${pth2inpfile} | awk '{print $6}')
+  maxlon=$(grep "max. lon" ${pth2inpfile} | awk '{print $6}')
+  minlat=$(grep "min. lat" ${pth2inpfile} | awk '{print $6}')
+  maxlat=$(grep "max. lat" ${pth2inpfile} | awk '{print $6}')
+  prjscale=1500000 ##DEF 1000000
 fi
-# source region.par
-echo $minlon
-	frame=0.5
-	sclat=$(echo print $minlat + 0.08 | python)
-	sclon=$(echo print $maxlon - 0.22 | python)
-	scale=-Lf${sclon}/${sclat}/36:24/20+l+jr
-# 	scale=-Lf22.3/37.94/36:24/10+l+jr
-	range=-R$minlon/$maxlon/$minlat/$maxlat
-# range=-R20.6/21.5/37.5/38.2
-	proj=-Jm$minlon/$minlat/1:$prjscale
+
+sclat=$(echo print $minlat + 0.08 | python)
+sclon=$(echo print $maxlon - 0.22 | python)
+scale=-Lf${sclon}/${sclat}/36:24/20+l+jr
+range=-R$minlon/$maxlon/$minlat/$maxlat
+proj=-Jm$minlon/$minlat/1:$prjscale
 	
 if [ "$CSTRESS" -eq 0 ]
 then
@@ -419,7 +414,7 @@ then
   gmt grdimage test_sample.grd -Ctestcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
   rm test test_i test_sample.grd
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Coulomb stress change": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p>> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."Plot Diletation Strain": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p>> $outfile
 
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctestcpt.cpt  -B0.2/:bar: -O -K >> $outfile
