@@ -67,6 +67,11 @@ function help {
   echo "           -leg [:=legend] insert legends"
   echo "           -jpg [:=convert] eps file to jpg"
   echo "           -h [:= help] help menu"
+  echo "/*** OUTPUT FORMATS ***********************************************************/"
+  echo "            -outjpg : Adjust and convert to JPEG"
+  echo "            -outpng : Adjust and convert to PNG (transparent where nothing is plotted)"
+  echo "            -outeps : Adjust and convert to EPS"
+  echo "            -outpdf : Adjust and convert to PDF"
   echo ""
   echo " Exit Status:    1 -> help message or error"
   echo " Exit Status: >= 0 -> sucesseful exit"
@@ -91,8 +96,12 @@ dscale=100
 TOPOGRAPHY=0
 LABELS=0
 OUTFILES=0
-OUTJPG=0
 LEGEND=0
+OUTJPG=0
+OUTPNG=0
+OUTEPS=0
+OUTPDF=0
+
 RANGE=0
 CSTRESS=0
 SSTRESS=0
@@ -259,8 +268,7 @@ do
 	;;
     -o)
 	OUTFILES=1
-	outfile=${4}.eps
-	out_jpg=${4}.jpg
+	outfile=${4}.ps
 	shift
 	shift
 	;;
@@ -272,11 +280,23 @@ do
 			LEGEND=1
 			shift
 			;;
-    -jpg)
+    -outjpg)
 	OUTJPG=1
 	shift
 	;;
-    -h)
+    -outpng)
+	OUTPNG=1
+	shift
+	;;
+    -outeps)
+	OUTEPS=1
+	shift
+	;;
+    -outpdf)
+	OUTPDF=1
+	shift
+	;;
+	-h)
 	help
 	;;
     esac
@@ -290,8 +310,7 @@ fi
 # Pre-defined parameters for GMT
 if [ "$OUTFILES" -eq 0 ]
 then
-  outfile=${inputdata}.eps
-  out_jpg=${inputdata}.jpg
+  outfile=${inputdata}.ps
 fi
 
 pth2inpfile=${pth2inpdir}/${inputfile}.inp
@@ -307,7 +326,7 @@ then
   prjscale=1500000 ##DEF 1000000
 fi
 
-sclat=$(echo print $minlat + 0.08 | python)
+sclat=$(echo print $minlat + 0.10 | python)
 sclon=$(echo print $maxlon - 0.22 | python)
 scale=-Lf${sclon}/${sclat}/36:24/20+l+jr
 range=-R$minlon/$maxlon/$minlat/$maxlat
@@ -540,14 +559,27 @@ fi
 
 
 
-#################--- Close eps output file ----##########################################
+#################--- Close eps output file ----#################################
 echo "909 909" | gmt psxy -Sc.1 -Jm -O -R  -W1,red >> $outfile
 
-#################--- Convert to jpg format ----##########################################
+#################--- Convert to other format ----###############################
 if [ "$OUTJPG" -eq 1 ]
 then
-	gs -sDEVICE=jpeg -dJPEGQ=100 -dNOPAUSE -dBATCH -dSAFER -r300 -sOutputFile=$out_jpg $outfile
+	#gs -sDEVICE=jpeg -dJPEGQ=100 -dNOPAUSE -dBATCH -dSAFER -r300 -sOutputFile=$out_jpg $outfile
+	gmt psconvert $outfile -A0.2c -Tj	
 fi
-################--- Convert to gif format ----##########################################
+if [ "$OUTPNG" -eq 1 ]
+then
+	gmt psconvert $outfile -A0.2c -TG	
+fi
+if [ "$OUTEPS" -eq 1 ]
+then
+	gmt psconvert $outfile -A0.2c -Te	
+fi
+if [ "$OUTPDF" -eq 1 ]
+then
+	gmt psconvert $outfile -A0.2c -Tf	
+fi
+################--- Convert to gif format ----##################################
 # ps2raster -E$dpi -Tt $map.ps
 # convert -delay 180 -loop 0 *.tif IonMap$date.gif

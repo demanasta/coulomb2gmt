@@ -16,7 +16,7 @@ pth2inpdir=../inp_historic/
 
 
 #outfiles
-outfile=output.eps
+outfile=output.ps
 out_jpg=output.jpg
 #colormaps
 landcpt=land_man.cpt
