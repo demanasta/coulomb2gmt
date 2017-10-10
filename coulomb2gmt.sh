@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# set -x
+# PS4='Line ${LINENO}: ' 
+
 #plot Coulomb Stress change to GMT maps
 # //////////////////////////////////////////////////////////////////////////////
 # ==============================================================================
@@ -45,6 +49,7 @@ function help {
   echo "           -faults [:= faults] plot NOA fault database"
   echo "           -mt [:= map title] title map default none use quotes"
   echo "           -h [:= help] help menu"
+  echo "           -debug [:=DEBUG] enable debug option"
   echo ""
   echo "/*** PLOT COULOMB OUTPUTS *****************************************************/"
   echo "           -cstress [:=Coulomb Stress] "
@@ -73,6 +78,12 @@ function help {
   echo ""
   echo "/******************************************************************************/"
   exit 1
+}
+# //////////////////////////////////////////////////////////////////////////////
+# Debug function
+function DEBUG()
+{
+ [ "$_DEBUG" == "on" ] &&  $@
 }
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -150,13 +161,20 @@ then
   fi
 elif [ -f ${pth2inpdir}/${1}.inp ];
 then
-  inputfile=${1}
+  inputfile=${1}.inp
+  pth2inpfile=${pth2inpdir}/${1}.inp
   inputdata=${2}
   echo "input file exist"
-  echo "input coulomb file:" $inputfile " input data files:" $inputdata
-while [ $# -gt 2 ]
-do
-  case "$3" in
+  echo "input coulomb file:" $inputfile " input data files code:" $inputdata
+  while [ $# -gt 2 ]
+  do
+    case "$3" in
+    -debug)
+	_DEBUG="on"
+	set -x
+	PS4='L ${LINENO}: '
+	shift
+	;;
     -r)
 	RANGE=1
 	minlon=${4}
@@ -307,8 +325,8 @@ do
 	help
 	;;
     esac
-done
-  else
+  done
+else
     echo " ************* File does not exist! use corret input file *********"
     help
 fi
@@ -322,6 +340,28 @@ fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # Check if all input file exist
+
+### check fault map projection file
+if [ ! -f "${pth2datdir}/${inputdata}-gmt_fault_map_proj.dat" ]
+then
+  echo "fault map projection file: "${pth2datdir}/${inputdata}-gmt_fault_map_proj.dat" does not exist"
+  FPROJ=0
+fi
+
+### check fault surface file
+if [ ! -f "${pth2datdir}/${inputdata}-gmt_fault_surface.dat" ]
+then
+  echo "fault surfece file: "${pth2datdir}/${inputdata}-gmt_fault_surface.dat" does not exist"
+  FSURF=0
+fi
+
+### check fault surface file
+if [ ! -f "${pth2datdir}/${inputdata}-gmt_fault_calc_dep.dat" ]
+then
+  echo "fault surfece file: "${pth2datdir}/${inputdata}-gmt_fault_calc_dep.dat" does not exist"
+  FDEP=0
+fi
+
 
 ### check dems
 if [ "$TOPOGRAPHY" -eq 1 ]
@@ -350,7 +390,7 @@ then
 	echo "Logo file does not exist"
 	LOGO=0
 fi
-pth2inpfile=${pth2inpdir}/${inputfile}.inp
+
 pth2gpsfile=${inputdata}.disp
 
 
@@ -377,7 +417,7 @@ proj=-Jm$minlon/$minlat/1:$prjscale
 if [ "$CSTRESS" -eq 0 ] || [ "$SSTRESS" -eq 0 ] || [ "$NSTRESS" -eq 0 ] || [ "$DILSTRAIN" -eq 0 ]
 then
   ################## Plot coastlines only ######################
-  gmt pscoast $range $proj  -Df -W0.5/10 -G240  -UBL/4c/-2c/"DSO-HGL/NTUA" -K  -Y4.5c> $outfile
+  gmt pscoast $range $proj  -Df -W0.5/10 -G240  -UBL/4c/-2c/"DSO-HGL/NTUA" -K  -Y4.5c> $outfile 
   gmt psbasemap -R -J -O -K -B$frame:."Coulomb outputs plot": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
@@ -592,6 +632,7 @@ fi
 # #20.78 37.93 0.02 0 0 0 0 20 mm
 # 20.50 37.50 0.02 0 0 0 0 20mm
 # EOF
+DEBUG echo "[DEBUG]: current test $DVERT" >&2
 
 
 #################--- Close eps output file ----#################################

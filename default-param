@@ -15,7 +15,9 @@ pth2faults=$HOME/Map_project/faults/NOAFaults_v1.0.gmt
 #Path to input file directory
 # pth2inptf=$(pwd)
 pth2inpdir=../inp_historic/
-pth2inpfile=../inp_historic/${inputfile}.inp
+pth2datdir=../wert/ #$(pwd)
+pth2outcou=../output_files/
+
 #pth2gpsfile=../output_files/GPS_output.csv
 #pth2gpsfile=../gmt_files/${inputdata}.disp
 pth2gpsfile=${inputdata}.disp
