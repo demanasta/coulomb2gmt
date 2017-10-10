@@ -50,14 +50,16 @@ function help {
   echo "           -logogmt [:=gmt logo] Plot gmt logo and time stamp"
   echo "           -logocus [:=custom logo] Plot custom logo of your organization"
   echo ""
+  echo "/*** PLOT FAULT PARAMETERS ****************************************************/"
+  echo "           -fproj [:=Fault projection] "
+  echo "           -fsurf [:=Fault surface] "
+  echo "           -fdep [:=Fault calculation depth] "
+  echo ""
   echo "/*** PLOT COULOMB OUTPUTS *****************************************************/"
   echo "           -cstress [:=Coulomb Stress] "
   echo "           -sstress [:=Shear Stress] "
   echo "           -nstress [:=Normal strain] "
   echo "           -dilstrain [:= Dilatation strain] "
-  echo "           -fproj [:=Fault projection] "
-  echo "           -fsurf [:=Fault surface] "
-  echo "           -fdep [:=Fault calculation depth] "
   echo "           -fcross [:=plot cross section projections] "
   echo ""
   echo "/*** PLOT OKADA85 *************************************************************/"
@@ -398,7 +400,7 @@ if [ "$LOGOGMT" -eq 0 ]
 then
   logogmt_pos=""
 else
-  DEBUG echo "logo gmt position set: $logogmt_pos" >&2
+  DEBUG echo "[DEBUG] logo gmt position set: $logogmt_pos" >&2
 fi
 
 ### check LOGO file

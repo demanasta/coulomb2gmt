@@ -20,7 +20,73 @@ coulomb2gmt -- pre-released
 
 ## Features
 
+## Requirements
+
+* __GMT__:
+
+* __Coulomb 3__:
+
+* __python__:
+
 ## Usage details
+The main script is: `coulomb2gmt.sh`
+
+
+
+### Default parameters
+Many parameters configured at `default-param` file.
+
+`$ ./coulomb2gmt.sh <inputfile> <inputdata> | options`
+
+* `<inputfile>`: name of input file used from Coulomb. Extention `.inp` not needed. Path to the directory of input files  configured at `default-param`.
+
+* `<inputdata>`:  Name of input files include results of coulmb calculations. Input data files are:
+ 
+    * `<inputdata>-gmt_fault_surface.dat`:
+    * `<inputdata>-gmt_fault_map_proj.dat`:
+    * `<inputdata>-gmt_fault_calc_dep.dat`:
+    * `<inputdata>-dcff.cou`:
+
+### General options
+
+* `-r`:
+
+* `-topo`:
+
+* `-o`:
+
+* `-cmt`:
+
+*  `-faults`:
+
+* `-mt`:
+
+* `-h`:
+
+* `-debug`:
+
+* `-logogmt`:
+
+* `-logocus`:
+
+### Plot fault parameters
+
+* `-fproj`:
+
+* `-fsurf`:
+
+* `-fdep`:
+
+### Plot stress and strain
+
+* `-cstress`:
+
+* `-sstress`:
+
+* `-nstress`:
+
+* `-dilstrain`:
+
 
 
 
