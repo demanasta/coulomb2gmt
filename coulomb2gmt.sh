@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# set -x
-# PS4='Line ${LINENO}: ' 
-
 #plot Coulomb Stress change to GMT maps
 # //////////////////////////////////////////////////////////////////////////////
 # ==============================================================================
@@ -50,6 +47,8 @@ function help {
   echo "           -mt [:= map title] title map default none use quotes"
   echo "           -h [:= help] help menu"
   echo "           -debug [:=DEBUG] enable debug option"
+  echo "           -logogmt [:=gmt logo] Plot gmt logo and time stamp"
+  echo "           -logocus [:=custom logo] Plot custom logo of your organization"
   echo ""
   echo "/*** PLOT COULOMB OUTPUTS *****************************************************/"
   echo "           -cstress [:=Coulomb Stress] "
@@ -104,6 +103,8 @@ TOPOGRAPHY=0
 OUTFILES=0
 # LEGEND=0
 FAULTS=0
+LOGOGMT=0
+LOGOCUS=0
 
 RANGE=0
 CSTRESS=0
@@ -171,7 +172,7 @@ then
     case "$3" in
     -debug)
 	_DEBUG="on"
-	set -x
+# 	set -x
 	PS4='L ${LINENO}: '
 	shift
 	;;
@@ -199,6 +200,14 @@ then
 	shift
 	shift
 	;;
+    -logogmt)
+	LOGOGMT=1
+	shift
+	;;
+    -logocus)
+	LOGOCUS=1
+	shift
+	;;
 		-cmt)
 			echo "///////BUG--if you don't use input file at -cmt switch--you lose next option!!!xaxa\\\\\\\\\\\\"
 			if [ -f ${4} ];
@@ -208,7 +217,7 @@ then
 			else
 				echo "CMT file does not exist!CMT wil not plot"
 			fi
-			shift
+			shift # put shift into if to solve the bug!
 			shift
                         ;;
     -faults)
@@ -384,14 +393,22 @@ then
 	fi
 fi
 
+### set logogmt position
+if [ "$LOGOGMT" -eq 0 ]
+then
+  logogmt_pos=""
+else
+  DEBUG echo "logo gmt position set: $logogmt_pos" >&2
+fi
+
 ### check LOGO file
-if [ ! -f "$pth2logos" ]
+if [ ! -f "$pth2logo" ]
 then
 	echo "Logo file does not exist"
 	LOGO=0
 fi
 
-pth2gpsfile=${inputdata}.disp
+# pth2gpsfile=${inputdata}.disp
 
 
 
@@ -411,13 +428,17 @@ scale=-Lf${sclon}/${sclat}/36:24/20+l+jr
 range=-R$minlon/$maxlon/$minlat/$maxlat
 proj=-Jm$minlon/$minlat/1:$prjscale
 
+DEBUG echo "[DEBUG] scale set: $scale" >&2
+DEBUG echo "[DEBUG] range set: $range" >&2
+DEBUG echo "[DEBUG] projection set: $proj" >&2
+
 # //////////////////////////////////////////////////////////////////////////////
 # Define to plot coastlines or topography
 
 if [ "$CSTRESS" -eq 0 ] || [ "$SSTRESS" -eq 0 ] || [ "$NSTRESS" -eq 0 ] || [ "$DILSTRAIN" -eq 0 ]
 then
   ################## Plot coastlines only ######################
-  gmt pscoast $range $proj  -Df -W0.5/10 -G240  -UBL/4c/-2c/"DSO-HGL/NTUA" -K  -Y4.5c> $outfile 
+  gmt pscoast $range $proj  -Df -W0.25p,black -G240  $logogmt_pos -K  -Y4.5c > $outfile 
   gmt psbasemap -R -J -O -K -B$frame:."Coulomb outputs plot": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
@@ -632,7 +653,11 @@ fi
 # #20.78 37.93 0.02 0 0 0 0 20 mm
 # 20.50 37.50 0.02 0 0 0 0 20mm
 # EOF
-DEBUG echo "[DEBUG]: current test $DVERT" >&2
+#/////////////////PLOT LOGO DSO
+if [ "$LOGOCUS" -eq 1 ]
+then
+  gmt psimage $pth2logo -O $logocus_pos  -F0.4  -K >>$outfile
+fi
 
 
 #################--- Close eps output file ----#################################
