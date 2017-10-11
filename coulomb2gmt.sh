@@ -71,8 +71,8 @@ function help {
 #   echo "           -fcross [:=plot cross section projections] "
   echo ""
   echo "/*** PLOT OKADA85 *************************************************************/"
-  echo "           -dgpso :observed gps displacements"
-  echo "           -dgpsc :calculated deisplacements on gps site"
+  echo "           -dgpsho : observed gps horizontal displacements"
+  echo "           -dgpshm : modeled horizontal displacements on gps site"
   echo "           -dvert :plot vertical displacements"
   echo "           -dsc :scale for displacements"
   echo ""
@@ -101,10 +101,6 @@ function DEBUG()
 gmt gmtset PS_PAGE_ORIENTATION portrait
 gmt gmtset FONT_ANNOT_PRIMARY 8 FONT_LABEL 8 MAP_FRAME_WIDTH 0.10c FONT_TITLE 15p
 gmt gmtset PS_MEDIA 19cx22c
-
-# //////////////////////////////////////////////////////////////////////////////
-# range and other parameneters
-dscale=100
 
 # //////////////////////////////////////////////////////////////////////////////
 # Pre-defined parameters for bash script switches
@@ -138,8 +134,8 @@ FSURF=0
 FDEP=0
 FCROSS=0
 CMT=0
-DGPSO=0
-DGPSC=0
+DGPSHO=0
+DGPSHM=0
 DVERT=0
 
 
@@ -190,7 +186,7 @@ then
     case "$3" in
     -debug)
 	_DEBUG="on"
-# 	set -x
+	set -x
 	PS4='L ${LINENO}: '
 	shift
 	;;
@@ -316,15 +312,14 @@ then
 			FCROSS=1
 			shift
 			;;
-
-		-dgpso)
-			DGPSO=1
-			shift
-			;;
-		-dgpsc)
-			DGPSC=1
-			shift
-			;;
+    -dgpsho)
+	DGPSHO=1
+	shift
+	;;
+    -dgpshm)
+	DGPSHM=1
+	shift
+	;;
 		-dvert)
 			DVERT=1
 			shift
@@ -854,16 +849,23 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT GPS OBSERVED AND MODELED OKADA SURF DESPLACEMENTS
 
-scvlat=$(echo print $sclat + .07 | python)
-scvlon=$sclon
+scdhmlatl=$sclat
+scdhmlonl=$sclon
 
-if [ "$DGPSC" -eq 1 ]
+if [ "$DGPSHM" -eq 1 ]
 then
-        awk -F, 'NR>2 {print $1,$2,$6,$7,0,0,0}' $pth2gpsdfile | psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
-	
+  awk -F, 'NR>2 {print $1,$2,$6,$7,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile 
+
+  scdhmlat=$(echo print $sclat + .05 | python)
+  scdhmlon=$sclon
+  DEBUG echo "[DEBUG] scdhmlat = ${scdhmlat}  , scdhmlon = ${scdhmlon}"
+  scdhmlatl=$(echo print $scdhmlat + .1 | python)
+  scdhmlonl=$scdhmlon
+  DEBUG echo "[DEBUG] scdhmlatl = ${scdhmlatl}  , scdhmlonl = ${scdhmlonl}"
+
 # 	echo "$scvlon $scvlat 0.02 0 0 0 0 20 mm" | gmt psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
-	echo "$scvlon $scvlat 0.1 0 0 0 0 100 mm" | gmt psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
-	
+  echo "$scdhmlon $scdhmlat 0.01 0 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
+  echo "$scdhmlonl $scdhmlatl  9 0 1 CT Calculated" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V>> $outfile
 # psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,black -A10p+e -Gblack -O -L -V -K <<EOF>> $outfile
 # #20.78 37.93 0.02 0 0 0 0 20 mm
 # 20.50 37.50 0.02 0 0 0 0 20mm
@@ -872,18 +874,30 @@ then
         
 fi
 
-if [ "$DGPSO" -eq 1 ]
+if [ "$DGPSHO" -eq 1 ]
 then
-	awk -F, 'NR>2 {print $1,$2,$3,$4,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
+  awk -F, 'NR>2 {print $1,$2,$3,$4,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
+
+  scdholat=$(echo print $scdhmlatl + .05 | python)
+  scdholon=$scdhmlonl
+  DEBUG echo "[DEBUG] scdholat = ${scdholat}  , scdholon = ${scdholon}"
+  scdholatl=$(echo print $scdholat + .1 | python)
+  scdholonl=$scdholon
+  DEBUG echo "[DEBUG] scvholatl = ${scvholatl}  , scvholonl = ${scvholonl}"
+
+# 	echo "$scvlon $scvlat 0.02 0 0 0 0 20 mm" | gmt psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
+  echo "$scdholon $scdholat 0.01 0 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,red -A10p+e -Gred -O -L -V -K >> $outfile
+  echo "$scdholonl $scdholatl  9 0 1 CT Observed" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V>> $outfile
+
 fi
 
-if [ "$DVERT" -eq 1 ]
+if	 [ "$DVERT" -eq 1 ]
 then
 # 	awk -F, 'NR>2 {print $1,$2,0,$8,0,0,0}' $pth2gpsfile | psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
 # 	awk -F, 'NR>2 {print $1,$2,0,$5,0,0,0}' $pth2gpsfile | psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
 
-	awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
-	awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
+	awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
+	awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
 fi
 
 

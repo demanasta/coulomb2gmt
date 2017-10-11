@@ -28,6 +28,8 @@ coulomb2gmt -- pre-released
 
 * Plot Fault geometry (Projection, Surface, Depth)
 
+* Plot gps displacement observed and modeled
+
 * Plot Fault and CMT databases
 
 * Add GMT timestamp logo and custom logo of your organization.
@@ -95,8 +97,7 @@ Many parameters configured at `default-param` file.
 
 * `-fdep`:
 
-### Plot stress and strain
-
+### Plot stress 
 * `-cstress`: Plot Coulomb Stress change.
 
 * `-sstress`: Plot Shear Stress change.
@@ -109,7 +110,15 @@ Many parameters configured at `default-param` file.
 
 * `-strdil`: Plot dilatation (Exx + Eyy + Ezz )
 
+### Plot gps velocities, observed and modeled
 
+* `-dgpsho`:
+
+* `-dgpshm`:
+
+* `-dgpsvo`:
+
+* `-dgpsvm`:
 
 
 ### Output formats
