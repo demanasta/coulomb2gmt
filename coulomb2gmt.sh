@@ -458,7 +458,7 @@ then
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
-    echo "plot NOA FAULTS CATALOGUE Ganas et.al, 2013 ..."
+    echo "plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
 fi
@@ -484,23 +484,23 @@ fi
 
 if [ "$CSTRESS" -eq 1 ]
 then
+  echo "plot Coulomb Stress Change map... "
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd ${inputdata}-coulomb_out.dat -Gtest $range -I0.05
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > testcpt.cpt
-  gmt grdsample test -I4s -Gtest_sample.grd
-  grdgradient test_sample.grd -Nt -A90  -Gtest_i
-  gmt grdimage test_sample.grd -Ctestcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
-  rm test test_i test_sample.grd test.cpt
+  gmt xyz2grd ${inputdata}-coulomb_out.dat -Gtmpgrd $range -I0.05
+  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Coulomb Stress Change": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p>> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."Plot Coulomb Stress Change": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
-    echo "plot NOA FAULTS CATALOGUE Ganas et.al, 2013 ..."
+    echo "plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
-  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctestcpt  -B0.2/:bar: -O -K >> $outfile
+  ########### Plot scale Bar ####################
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  rm tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -508,58 +508,57 @@ fi
 
 if [ "$SSTRESS" -eq 1 ]
 then
+  echo "plot Shear Stress Change map..."
   # MAKE INPUT FILE........
-  awk '{print $1, $2}' ${inputdata}-coulomb_out.dat > tmp1
-  awk 'NR>3{print $5}' ../output_files/${inputdata}-dcff.cou > tmp2
-  paste -d" " tmp1 tmp2 >tmpall
-  ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpall -Gtest $range -I0.05
-
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > testcpt.cpt
-  gmt grdsample test -I4s -Gtest_sample.grd
-  #grdgradient test_sample.grd -Nt -A90  -Gtest_i
-  gmt grdimage test_sample.grd -Ctestcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
-  rm test test_i test_sample.grd 
+  awk '{print $1, $2}' ${inputdata}-coulomb_out.dat > tmpcou1
+  awk 'NR>3{print $5}' ${pth2outcou}/${inputdata}-dcff.cou > tmpcou2
+  paste -d" " tmpcou1 tmpcou2 >tmpcouall
+ 
+ ################# Plot Coulomb source AnD coastlines only ######################
+  gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05
+  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Shear Stress Change": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p>> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."Plot Shear Stress Change": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
-    echo "plot NOA FAULTS CATALOGUE Ganas et.al, 2013 ..."
+    echo "plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
-  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctestcpt.cpt  -B0.2/:bar: -O -K >> $outfile
-  rm tmp1 tmp2 tmpall testcpt.cpt
+  ########### Plot scale Bar ####################
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  rm tmpcou1 tmpcou2 tmpcouall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT NORMAL STRESS CHANGE
+
 if [ "$NSTRESS" -eq 1 ]
 then
+  echo "plot Normal Stress Change map..."
   # MAKE INPUT FILE........
-  awk '{print $1, $2}' ${inputdata}-coulomb_out.dat > tmp1
-  awk 'NR>3 {print $6}' ../output_files/${inputdata}-dcff.cou > tmp2
-  paste -d" " tmp1 tmp2 >tmpall
+  awk '{print $1, $2}' ${inputdata}-coulomb_out.dat > tmpcou1
+  awk 'NR>3 {print $6}' ${pth2outcou}/${inputdata}-dcff.cou > tmpcou2
+  paste -d" " tmpcou1 tmpcou2 > tmpcouall
+ 
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpall -Gtest $range -I0.05
-  
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > testcpt.cpt
-  gmt grdsample test -I4s -Gtest_sample.grd
-  # grdgradient test_sample.grd -Nt -A90  -Gtest_i
-  gmt grdimage test_sample.grd -Ctestcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
-  rm test test_i test_sample.grd
+  gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05
+  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Normal Stress Change": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p>> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."Plot Normal Stress Change": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
-    echo "plot NOA FAULTS CATALOGUE Ganas et.al, 2013 ..."
+    echo "plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
-  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctestcpt  -B0.2/:bar: -O -K >> $outfile
-  rm tmp1 tmp2 tmpall testcpt.cpt
+  ########### Plot scale Bar ####################
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  rm tmpcou1 tmpcou2 tmpcouall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -584,7 +583,7 @@ then
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
-    echo "plot NOA FAULTS CATALOGUE Ganas et.al, 2013 ..."
+    echo "plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
@@ -670,6 +669,7 @@ fi
 #/////////////////PLOT LOGO DSO
 if [ "$LOGOCUS" -eq 1 ]
 then
+  echo "add custom logo..."
   gmt psimage $pth2logo -O $logocus_pos  -F0.4  -K >>$outfile
 fi
 

@@ -59,6 +59,7 @@ Many parameters configured at `default-param` file.
     * `<inputdata>-gmt_fault_surface.dat`:
     * `<inputdata>-gmt_fault_map_proj.dat`:
     * `<inputdata>-gmt_fault_calc_dep.dat`:
+    * `<inputdata>-coulomb_out.dat`:
     * `<inputdata>-dcff.cou`:
 
 ### General options
