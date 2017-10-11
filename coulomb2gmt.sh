@@ -55,12 +55,16 @@ function help {
   echo "           -fsurf [:=Fault surface] "
   echo "           -fdep [:=Fault calculation depth] "
   echo ""
-  echo "/*** PLOT COULOMB OUTPUTS *****************************************************/"
+  echo "/*** PLOT STRESS CHANGE OUTPUTS ***********************************************/"
   echo "           -cstress [:=Coulomb Stress] "
   echo "           -sstress [:=Shear Stress] "
   echo "           -nstress [:=Normal strain] "
+  echo ""
+  echo "/*** PLOT COMPONENTS OF STRAIN FIELD ******************************************/"
+  echo "           -strexx [:= Exx component] "
+  
   echo "           -dilstrain [:= Dilatation strain] "
-  echo "           -fcross [:=plot cross section projections] "
+#   echo "           -fcross [:=plot cross section projections] "
   echo ""
   echo "/*** PLOT OKADA85 *************************************************************/"
   echo "           -dgpso :observed gps displacements"
@@ -112,6 +116,8 @@ RANGE=0
 CSTRESS=0
 SSTRESS=0
 NSTRESS=0
+
+STREXX=0
 DILSTRAIN=0
 
 TEROBS=0
@@ -126,6 +132,7 @@ CMT=0
 DGPSO=0
 DGPSC=0
 DVERT=0
+
 
 STRAIN=0
 STRSC=50
@@ -239,6 +246,10 @@ then
 	;;
     -nstress)
 	NSTRESS=1
+	shift
+	;;
+    -strexx)
+	STREXX=1
 	shift
 	;;
     -dilstrain)
@@ -559,6 +570,35 @@ then
   ########### Plot scale Bar ####################
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
   rm tmpcou1 tmpcou2 tmpcouall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+fi
+
+
+# //////////////////////////////////////////////////////////////////////////////
+# PLOT STRAIN COMPONENT Exx
+
+if [ "$STREXX" -eq 1 ]
+then
+  # MAKE INPUT FILE........
+  awk '{print $1, $2}' ${inputdata}-coulomb_out.dat > tmpstr1
+  awk 'NR>3 {print $4*1000000}' ${pth2outcou}/${inputdata}_Strain.cou > tmpstr2
+  paste -d" " tmpstr1 tmpstr2 > tmpstrall
+  
+  ################# Plot Coulomb source AnD coastlines only ######################
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
+  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Exx": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  if [ "$FAULTS" -eq 1 ]
+  then
+    echo "plot fault database catalogue..."
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+  fi
+  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
