@@ -210,19 +210,21 @@ then
 	LOGOCUS=1
 	shift
 	;;
-		-cmt)
-			echo "///////BUG--if you don't use input file at -cmt switch--you lose next option!!!xaxa\\\\\\\\\\\\"
-			if [ -f ${4} ];
-			then
-				CMT=1
-				inpcmt=${4}
-			else
-				echo "CMT file does not exist!CMT wil not plot"
-			fi
-			shift # put shift into if to solve the bug!
-			shift
-                        ;;
-    -faults)
+    -cmt)
+	echo
+	if [ -f ${4} ];
+	then
+	  CMT=1
+	  inpcmt=${4}
+	  DEBUG echo "cmt file is: $inpcmt"
+	  shift
+	  shift
+	else
+	  echo "CMT file does not exist!CMT wil not plot"
+	  shift
+	fi
+	;;
+   -faults)
 	FAULTS=1
 	shift
 	;;	
@@ -377,22 +379,32 @@ fi
 ### check dems
 if [ "$TOPOGRAPHY" -eq 1 ]
 then
-	if [ ! -f $inputTopoB ]
-	then
-		echo "grd file for topography toes not exist, var turn to coastline"
-		TOPOGRAPHY=0
-	fi
+  if [ ! -f $inputTopoB ]
+  then
+    echo "grd file for topography toes not exist, var turn to coastline"
+    TOPOGRAPHY=0
+  fi
 fi
 
 ### check NOA FAULT catalogue
 if [ "$FAULTS" -eq 1 ]
 then
-	if [ ! -f $pth2faults ]
-	then
-		echo "NOA Faults database does not exist"
-		echo "please download it and then use this switch"
-		FAULTS=0
-	fi
+  if [ ! -f $pth2faults ]
+  then
+    echo "NOA Faults database does not exist"
+    echo "please download it and then use this switch"
+    FAULTS=0
+  fi
+fi
+
+### check cmt file
+if [ "$CMT" -eq 1 ]
+then
+  if [ ! -f $inpcmt ]
+  then
+    echo " CMT file does not exist, moment tensors will not plot"
+    CMT=0
+  fi
 fi
 
 ### set logogmt position
@@ -601,9 +613,9 @@ fi
 
 if [ "$CMT" -eq 1 ]
 then
-	awk '{print $1,$2}' $inpcmt | psxy -Jm -O -R -Sa0.3c -Gred -K>> $outfile
-# 	gmt psmeca $inpcmt $range -Jm -Sc0.7/0 -CP0.05  -O -P -K>> $outfile
-	awk '{print $1,$2,$3,$4,$5,$6,$7,$8,$9}' $inpcmt | gmt psmeca -R -Jm -Sa0.4 -CP0.05 -K -O -P >> $outfile
+  awk '{print $1,$2}' $inpcmt | gmt psxy -Jm -O -R -Sa0.3c -Gred -K>> $outfile
+# gmt psmeca $inpcmt $range -Jm -Sc0.7/0 -CP0.05  -O -P -K>> $outfile
+  awk '{print $1,$2,$3,$4,$5,$6,$7,$8,$9}' $inpcmt | gmt psmeca -R -Jm -Sa0.4 -CP0.05 -K -O -P >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
