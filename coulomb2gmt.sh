@@ -400,6 +400,8 @@ pth2fdepfile=${pth2datdir}/${inputdata}-gmt_fault_calc_dep.dat
 pth2coutfile=${pth2datdir}/${inputdata}-coulomb_out.dat
 pth2dcfffile=${pth2coudir}/${inputdata}-dcff.cou
 pth2strnfile=${pth2coudir}/${inputdata}_Strain.cou
+
+pth2gpsdfile=${pth2gpsdir}/${inputdata}.disp
 # //////////////////////////////////////////////////////////////////////////////
 # Check if all input file exist
 
@@ -857,7 +859,7 @@ scvlon=$sclon
 
 if [ "$DGPSC" -eq 1 ]
 then
-        awk -F, 'NR>2 {print $1,$2,$6,$7,0,0,0}' $pth2gpsfile | psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
+        awk -F, 'NR>2 {print $1,$2,$6,$7,0,0,0}' $pth2gpsdfile | psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
 	
 # 	echo "$scvlon $scvlat 0.02 0 0 0 0 20 mm" | gmt psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
 	echo "$scvlon $scvlat 0.1 0 0 0 0 100 mm" | gmt psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
@@ -872,7 +874,7 @@ fi
 
 if [ "$DGPSO" -eq 1 ]
 then
-	awk -F, 'NR>2 {print $1,$2,$3,$4,0,0,0}' $pth2gpsfile | gmt psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
+	awk -F, 'NR>2 {print $1,$2,$3,$4,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
 fi
 
 if [ "$DVERT" -eq 1 ]
@@ -880,8 +882,8 @@ then
 # 	awk -F, 'NR>2 {print $1,$2,0,$8,0,0,0}' $pth2gpsfile | psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
 # 	awk -F, 'NR>2 {print $1,$2,0,$5,0,0,0}' $pth2gpsfile | psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
 
-	awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsfile | gmt psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
-	awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsfile | gmt psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
+	awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
+	awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
 fi
 
 

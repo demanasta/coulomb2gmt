@@ -26,9 +26,8 @@ pth2datdir=$(pwd)
 # Path to directory of *.cou files
 pth2coudir=../output_files/
 
-
-
 # Path to directory of *.disp files. GPS displacements
+pth2gpsdir=$(pwd)
 
 # pth2gpsfile=${inputdata}.disp
 #pth2inpdata=../input_zakynthos/${inputfile}.inp
