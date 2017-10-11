@@ -20,13 +20,27 @@ coulomb2gmt -- pre-released
 
 ## Features
 
+* configure map lat-long from input files (.inp)
+
+* Plot Stress changes (Coulomb, Normal, Shear)
+
+* Plot Fault geometry (Projection, Surface, Depth)
+
+* Plot Fault and CMT databases
+
+* Add GMT timestamp logo and custom logo of your organization.
+
+*Adjust paper size to map and convert in different output formats (.jpg, .png, .eps, .pdf)
+
+
 ## Requirements
 
-* __GMT__:
+* __GMT__:  [The Generic Mappting Tools - GMT](http://gmt.soest.hawaii.edu/) version > 5.1.1 . Recommented installation from source code.
+	*  for _Ubuntu/Debian_ if you use default package installation you have to install also `libgmt-dev` package
 
-* __Coulomb 3__:
+* __Coulomb 3__: [Coulomb 3, developed by USGS](https://earthquake.usgs.gov/research/software/coulomb/) 
 
-* __python__:
+* __python__: required for some calculation included in the main script.
 
 ## Usage details
 The main script is: `coulomb2gmt.sh`
