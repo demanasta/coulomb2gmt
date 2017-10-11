@@ -62,8 +62,12 @@ function help {
   echo ""
   echo "/*** PLOT COMPONENTS OF STRAIN FIELD ******************************************/"
   echo "           -strexx [:= Exx component] "
-  
-  echo "           -dilstrain [:= Dilatation strain] "
+  echo "           -streyy [:= Eyy component] "
+  echo "           -strezz [:= Ezz component] "
+  echo "           -streyz [:= Eyz component] "
+  echo "           -strexz [:= Exz component] "
+  echo "           -strexy [:= Exy component] "
+  echo "           -strdil [:= Dilatation strain] "
 #   echo "           -fcross [:=plot cross section projections] "
   echo ""
   echo "/*** PLOT OKADA85 *************************************************************/"
@@ -118,7 +122,12 @@ SSTRESS=0
 NSTRESS=0
 
 STREXX=0
-DILSTRAIN=0
+STREYY=0
+STREZZ=0
+STREYZ=0
+STREXZ=0
+STREXY=0
+STRDIL=0
 
 TEROBS=0
 TEROBS_EXCL=0
@@ -252,8 +261,28 @@ then
 	STREXX=1
 	shift
 	;;
-    -dilstrain)
-	DILSTRAIN=1
+    -streyy)
+	STREYY=1
+	shift
+	;;
+    -strezz)
+	STREZZ=1
+	shift
+	;;
+    -streyz)
+	STREYZ=1
+	shift
+	;;
+    -strexz)
+	STREXZ=1
+	shift
+	;;
+    -strexy)
+	STREXY=1
+	shift
+	;;
+    -strdil)
+	STRDIL=1
 	shift
 	;;
 		-terobs)
@@ -363,26 +392,35 @@ then
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
+# Paths to all input files
+pth2fprojfile=${pth2datdir}/${inputdata}-gmt_fault_map_proj.dat
+pth2fsurffile=${pth2datdir}/${inputdata}-gmt_fault_surface.dat
+pth2fdepfile=${pth2datdir}/${inputdata}-gmt_fault_calc_dep.dat
+
+pth2coutfile=${pth2datdir}/${inputdata}-coulomb_out.dat
+pth2dcfffile=${pth2coudir}/${inputdata}-dcff.cou
+pth2strnfile=${pth2coudir}/${inputdata}_Strain.cou
+# //////////////////////////////////////////////////////////////////////////////
 # Check if all input file exist
 
 ### check fault map projection file
-if [ ! -f "${pth2datdir}/${inputdata}-gmt_fault_map_proj.dat" ]
+if [ ! -f "${pth2fprojfile}" ]
 then
-  echo "fault map projection file: "${pth2datdir}/${inputdata}-gmt_fault_map_proj.dat" does not exist"
+  echo "fault map projection file: "${pth2fprojfile}" does not exist"
   FPROJ=0
 fi
 
 ### check fault surface file
-if [ ! -f "${pth2datdir}/${inputdata}-gmt_fault_surface.dat" ]
+if [ ! -f "${pth2fsurffile}" ]
 then
-  echo "fault surfece file: "${pth2datdir}/${inputdata}-gmt_fault_surface.dat" does not exist"
+  echo "fault surfece file: "${pth2fsurffile}" does not exist"
   FSURF=0
 fi
 
 ### check fault surface file
-if [ ! -f "${pth2datdir}/${inputdata}-gmt_fault_calc_dep.dat" ]
+if [ ! -f "${pth2fdepfile}" ]
 then
-  echo "fault surfece file: "${pth2datdir}/${inputdata}-gmt_fault_calc_dep.dat" does not exist"
+  echo "fault surfece file: "${pth2fdepfile}" does not exist"
   FDEP=0
 fi
 
@@ -469,7 +507,7 @@ then
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
-    echo "plot fault database catalogue..."
+    echo "...plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
 fi
@@ -495,7 +533,7 @@ fi
 
 if [ "$CSTRESS" -eq 1 ]
 then
-  echo "plot Coulomb Stress Change map... "
+  echo "...plot Coulomb Stress Change map... "
   ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd ${inputdata}-coulomb_out.dat -Gtmpgrd $range -I0.05
   gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
@@ -506,7 +544,7 @@ then
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
-    echo "plot fault database catalogue..."
+    echo "...plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   ########### Plot scale Bar ####################
@@ -519,10 +557,10 @@ fi
 
 if [ "$SSTRESS" -eq 1 ]
 then
-  echo "plot Shear Stress Change map..."
+  echo "...plot Shear Stress Change map..."
   # MAKE INPUT FILE........
-  awk '{print $1, $2}' ${inputdata}-coulomb_out.dat > tmpcou1
-  awk 'NR>3{print $5}' ${pth2outcou}/${inputdata}-dcff.cou > tmpcou2
+  awk '{print $1, $2}' ${pth2coutfile} > tmpcou1
+  awk 'NR>3{print $5}' ${pth2dcfffile} > tmpcou2
   paste -d" " tmpcou1 tmpcou2 >tmpcouall
  
  ################# Plot Coulomb source AnD coastlines only ######################
@@ -535,7 +573,7 @@ then
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
-    echo "plot fault database catalogue..."
+    echo "...plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   ########### Plot scale Bar ####################
@@ -548,10 +586,10 @@ fi
 
 if [ "$NSTRESS" -eq 1 ]
 then
-  echo "plot Normal Stress Change map..."
+  echo "...plot Normal Stress Change map..."
   # MAKE INPUT FILE........
-  awk '{print $1, $2}' ${inputdata}-coulomb_out.dat > tmpcou1
-  awk 'NR>3 {print $6}' ${pth2outcou}/${inputdata}-dcff.cou > tmpcou2
+  awk '{print $1, $2}' ${pth2coutfile} > tmpcou1
+  awk 'NR>3 {print $6}' ${pth2dcfffile} > tmpcou2
   paste -d" " tmpcou1 tmpcou2 > tmpcouall
  
   ################# Plot Coulomb source AnD coastlines only ######################
@@ -564,7 +602,7 @@ then
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
-    echo "plot fault database catalogue..."
+    echo "...plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   ########### Plot scale Bar ####################
@@ -578,9 +616,10 @@ fi
 
 if [ "$STREXX" -eq 1 ]
 then
+  echo "...plot Strain Component Exx..."
   # MAKE INPUT FILE........
-  awk '{print $1, $2}' ${inputdata}-coulomb_out.dat > tmpstr1
-  awk 'NR>3 {print $4*1000000}' ${pth2outcou}/${inputdata}_Strain.cou > tmpstr2
+  awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
+  awk 'NR>3 {print $4*1000000}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   ################# Plot Coulomb source AnD coastlines only ######################
@@ -593,7 +632,152 @@ then
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
-    echo "plot fault database catalogue..."
+    echo "...plot fault database catalogue..."
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+  fi
+  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+fi
+
+# //////////////////////////////////////////////////////////////////////////////
+# PLOT STRAIN COMPONENT Eyy
+
+if [ "$STREYY" -eq 1 ]
+then
+  echo "...plot Strain Component Eyy..."
+  # MAKE INPUT FILE........
+  awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
+  awk 'NR>3 {print $5*1000000}' ${pth2strnfile} > tmpstr2
+  paste -d" " tmpstr1 tmpstr2 > tmpstrall
+  
+  ################# Plot Coulomb source AnD coastlines only ######################
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
+  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Eyy": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  if [ "$FAULTS" -eq 1 ]
+  then
+    echo "...plot fault database catalogue..."
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+  fi
+  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+fi
+
+# //////////////////////////////////////////////////////////////////////////////
+# PLOT STRAIN COMPONENT Ezz
+
+if [ "$STREZZ" -eq 1 ]
+then
+  echo "...plot Strain Component Ezz..."
+  # MAKE INPUT FILE........
+  awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
+  awk 'NR>3 {print $6*1000000}' ${pth2strnfile} > tmpstr2
+  paste -d" " tmpstr1 tmpstr2 > tmpstrall
+  
+  ################# Plot Coulomb source AnD coastlines only ######################
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
+  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Ezz": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  if [ "$FAULTS" -eq 1 ]
+  then
+    echo "...plot fault database catalogue..."
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+  fi
+  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+fi
+
+# //////////////////////////////////////////////////////////////////////////////
+# PLOT STRAIN COMPONENT Eyz
+
+if [ "$STREYZ" -eq 1 ]
+then
+  echo "...plot Strain Component Eyz..."
+  # MAKE INPUT FILE........
+  awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
+  awk 'NR>3 {print $7*1000000}' ${pth2strnfile} > tmpstr2
+  paste -d" " tmpstr1 tmpstr2 > tmpstrall
+  
+  ################# Plot Coulomb source AnD coastlines only ######################
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
+  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Eyz": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  if [ "$FAULTS" -eq 1 ]
+  then
+    echo "...plot fault database catalogue..."
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+  fi
+  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+fi
+
+# //////////////////////////////////////////////////////////////////////////////
+# PLOT STRAIN COMPONENT Exz
+
+if [ "$STREXZ" -eq 1 ]
+then
+  echo "...plot Strain Component Exz..."
+  # MAKE INPUT FILE........
+  awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
+  awk 'NR>3 {print $8*1000000}' ${pth2strnfile} > tmpstr2
+  paste -d" " tmpstr1 tmpstr2 > tmpstrall
+  
+  ################# Plot Coulomb source AnD coastlines only ######################
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
+  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Exz": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  if [ "$FAULTS" -eq 1 ]
+  then
+    echo "...plot fault database catalogue..."
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+  fi
+  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+fi
+
+# //////////////////////////////////////////////////////////////////////////////
+# PLOT STRAIN COMPONENT Exy
+
+if [ "$STREXY" -eq 1 ]
+then
+  echo "...plot Strain Component Exy..."
+  # MAKE INPUT FILE........
+  awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
+  awk 'NR>3 {print $9*1000000}' ${pth2strnfile} > tmpstr2
+  paste -d" " tmpstr1 tmpstr2 > tmpstrall
+  
+  ################# Plot Coulomb source AnD coastlines only ######################
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
+  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Exy": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  if [ "$FAULTS" -eq 1 ]
+  then
+    echo "...plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
@@ -604,31 +788,30 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT DILATATION STRAIN
 
-if [ "$DILSTRAIN" -eq 1 ]
+if [ "$STRDIL" -eq 1 ]
 then
+  echo "...plot Dilatation (Exx + Eyy + Ezz)..."
   # MAKE INPUT FILE........
-  awk '{print $1, $2}' ${inputdata}-coulomb_out.dat > tmp1
-  awk 'NR>3 {print $10*1000000}' ../output_files/${inputdata}_Strain.cou > tmp2
-  paste -d" " tmp1 tmp2 >tmpall
+  awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
+  awk 'NR>3 {print $10*1000000}' ${pth2strnfile} > tmpstr2
+  paste -d" " tmpstr1 tmpstr2 > tmpstrall
+  
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpall -Gtest $range -I0.05
-
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > testcpt.cpt
-  gmt grdsample test -I4s -Gtest_sample.grd
-  ##grdgradient test_sample.grd -Nt -A90  -Gtest_i
-  gmt grdimage test_sample.grd -Ctestcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
-  rm test test_i test_sample.grd
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
+  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Diletation Strain": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p>> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."Plot Dilatation (Exx + Eyy + Ezz)": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
-    echo "plot fault database catalogue..."
+    echo "...plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctestcpt.cpt  -B0.2/:bar: -O -K >> $outfile
-  rm tmp1 tmp2 tmpall testcpt.cpt
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -636,15 +819,15 @@ fi
 
 if [ "$FPROJ" -eq 1 ]
 then
-  gmt psxy ${inputdata}-gmt_fault_map_proj.dat -Jm -O -R  -W1,red  -K >> $outfile
+  gmt psxy ${pth2fprojfile} -Jm -O -R  -W1,red  -K >> $outfile
 fi
 if [ "$FSURF" -eq 1 ]
 then
-  gmt psxy ${inputdata}-gmt_fault_surface.dat -Jm -O -R  -W0.4,0  -K >> $outfile
+  gmt psxy ${pth2fsurffile} -Jm -O -R  -W0.4,0  -K >> $outfile
 fi
 if [ "$FDEP" -eq 1 ]
 then
-  gmt psxy ${inputdata}-gmt_fault_calc_dep.dat -Jm -O -R -W0.4,black -K >> $outfile
+  gmt psxy ${pth2fdepfile} -Jm -O -R -W0.4,black -K >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -738,3 +921,5 @@ fi
 ################--- Convert to gif format ----##################################
 # ps2raster -E$dpi -Tt $map.ps
 # convert -delay 180 -loop 0 *.tif IonMap$date.gif
+
+echo "Finished. Exit status: $?"

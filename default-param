@@ -24,7 +24,9 @@ pth2inpdir=../inp_historic/
 pth2datdir=$(pwd)
 
 # Path to directory of *.cou files
-pth2outcou=../output_files/
+pth2coudir=../output_files/
+
+
 
 # Path to directory of *.disp files. GPS displacements
 
