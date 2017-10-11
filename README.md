@@ -20,9 +20,11 @@ coulomb2gmt -- pre-released
 
 ## Features
 
-* configure map lat-long from input files (.inp)
+* auto-configure map lat-long from input files (.inp)
 
 * Plot Stress changes (Coulomb, Normal, Shear)
+
+* Plot all strain components
 
 * Plot Fault geometry (Projection, Surface, Depth)
 
@@ -40,17 +42,12 @@ coulomb2gmt -- pre-released
 
 * __Coulomb 3__: [Coulomb 3, developed by USGS](https://earthquake.usgs.gov/research/software/coulomb/) 
 
-* __python__: required for some calculation included in the main script.
+* __python__: required for some calculations included in the main script.
 
 ## Usage details
 The main script is: `coulomb2gmt.sh`
 
-
-
-### Default parameters
-Many parameters configured at `default-param` file.
-
-`$ ./coulomb2gmt.sh <inputfile> <inputdata> | options`
+run: `$ ./coulomb2gmt.sh <inputfile> <inputdata> | options`
 
 * `<inputfile>`: name of input file used from Coulomb. Extention `.inp` not needed. Path to the directory of input files  configured at `default-param`.
 
@@ -61,6 +58,12 @@ Many parameters configured at `default-param` file.
     * `<inputdata>-gmt_fault_calc_dep.dat`:
     * `<inputdata>-coulomb_out.dat`:
     * `<inputdata>-dcff.cou`:
+
+
+
+### Default parameters
+Many parameters configured at `default-param` file.
+
 
 ### General options
 
@@ -94,13 +97,17 @@ Many parameters configured at `default-param` file.
 
 ### Plot stress and strain
 
-* `-cstress`:
+* `-cstress`: Plot Coulomb Stress change.
 
-* `-sstress`:
+* `-sstress`: Plot Shear Stress change.
 
-* `-nstress`:
+* `-nstress`: Plot Normal Stress change.
 
-* `-dilstrain`:
+### Plot Strain components
+
+* `-stre**`: Where `**` you can fill all strain components `xx`,`yy`,`zz`, `yz`, `xz`, `xy`.
+
+* `-strdil`: Plot dilatation (Exx + Eyy + Ezz )
 
 
 
