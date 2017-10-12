@@ -1,0 +1,68 @@
+#!/bin/bash
+#use this file to cheange default parameters for plots
+
+# //////////////////////////////////////////////////////////////////////////////
+# Set PATHS parameters
+pth2dems=${HOME}/Map_project/dems
+
+inputTopoL=${pth2dems}/ETOPO1_gr_resample01m.grd   #ETOPO1_Bed_g_gmt4.grd
+inputTopoB=${pth2dems}/ETOPO1_gr_resample01m.grd    #ETOPO1_Bed_g_gmt4.grd
+
+# Path to logo file
+pth2logo=$HOME/Map_project/logos/DSOlogo2.eps
+
+# Path to faults database file
+pth2faults=$HOME/Map_project/faults/NOAFaults_v1.0.gmt
+
+# //////////////////////////////////////////////////////////////////////////////
+# Path to input file directory
+
+# Path to directory of input files *.inp
+pth2inpdir=../inp_historic/
+
+# Path to directory of *.dat files
+pth2datdir=$(pwd)
+
+# Path to directory of *.cou files
+pth2coudir=../output_files/
+
+# Path to directory of *.disp files. GPS displacements
+pth2gpsdir=$(pwd)
+
+# pth2gpsfile=${inputdata}.disp
+#pth2inpdata=../input_zakynthos/${inputfile}.inp
+
+# //////////////////////////////////////////////////////////////////////////////
+#outfiles
+# outfile=output.ps
+# out_jpg=output.jpg
+
+# //////////////////////////////////////////////////////////////////////////////
+
+#colormaps
+landcpt=land_man.cpt
+bathcpt=bath_man.cpt
+coulombcpt=Coulomb_anatolia.cpt
+
+# //////////////////////////////////////////////////////////////////////////////
+# minlon=20.2
+# maxlon=20.9
+# minlat=37.9
+# maxlat=38.5
+# prjscale=500000
+frame=0.5
+
+# //////////////////////////////////////////////////////////////////////////////
+# scale variables
+
+dhscale=100
+dvscale=100
+
+dhscmagn=10 #use mm
+dvscmagn=12 #use mm
+
+# //////////////////////////////////////////////////////////////////////////////
+logogmt_pos="-UBL/0.05c/0.05c/DemAnast"
+logocus_pos="-Dx13.57c/10.05c+w1.1c"
+# legendc="-Jx1i -R0/8/0/8 -Dx18.5c/12.6c/3.6c/3.5c/BL"	
+# 

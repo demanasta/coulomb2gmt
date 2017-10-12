@@ -1,32 +1,17 @@
-# Prerequisites
-*.d
+# gmt tmp files
+gmt.conf
+gmt.history
+*.log
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# gmt outputs
+*.eps
+*.ps
+*.jpg
+*.png
+*.gif
 
-# Precompiled Headers
-*.gch
-*.pch
+#coulomb output files
+*.dat
+*.disp
+*.inp
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
