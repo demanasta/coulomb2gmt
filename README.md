@@ -4,11 +4,9 @@ coulomb2gmt -- pre-released
 > Bash scripts to plot coulomb results on gmt
 
 
-[![Build Status](https://api.travis-ci.org/demanasta/coulomb2gmt.svg)](https://travis-ci.org/demanasta/coulomb2gmt)
 [![License MIT](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/demanasta/coulomb2gmt/blob/master/LICENSE)
 [![](https://img.shields.io/github/release/demanasta/doulomb2gmt.svg)](https://github.com/coulomb2gmt/pres-templates/releases/latest)
 [![](https://img.shields.io/github/tag/demanasta/coulomb2gmt.svg)](https://github.com/demanasta/coulomb2gmt/tags)
-
 [![](https://img.shields.io/github/stars/demanasta/coulomb2gmt.svg)](https://github.com/demanasta/coulomb2gmt/stargazers)
 [![](https://img.shields.io/github/forks/demanasta/coulomb2gmt.svg)](https://github.com/demanasta/coulomb2gmt/network)
 [![](https://img.shields.io/github/issues/demanasta/coulomb2gmt.svg)](https://github.com/demanasta/coulomb2gmt/issues)
@@ -69,33 +67,33 @@ Many parameters configured at `default-param` file.
 
 ### General options
 
-* `-r`:
+* `-r`: set custom region parameters. _Structure_ `-r minlon maxlon minlat maxlat prjscale`
 
-* `-topo`:
+* `-topo`:  plot topography using dem file
 
-* `-o`:
+* `-o`:  set custom name of output file. Default is `<inputadata>`.
 
-* `-cmt`:
+* `-cmt` :  Plot Centroid Moment Tensors of earthquakes. 
 
-*  `-faults`:
+*  `-faults`: Plot custom fault database catalogue.
 
 * `-mt`:
 
-* `-h`:
+* `-h`: Help menu
 
-* `-debug`:
+* `-debug`:Enable Debug option 
 
-* `-logogmt`:
+* `-logogmt`: Plot GMT logo and time stamp.
 
-* `-logocus`:
+* `-logocus`: Plot custom logo of your organization.
 
 ### Plot fault parameters
 
-* `-fproj`:
+* `-fproj`: Plot source and receiver faults' trace at surface.
 
-* `-fsurf`:
+* `-fsurf`: Plot surface of source and receiver faults.
 
-* `-fdep`:
+* `-fdep`: Plot intersection of target depth with fault plane.
 
 ### Plot stress 
 * `-cstress`: Plot Coulomb Stress change.
@@ -112,13 +110,13 @@ Many parameters configured at `default-param` file.
 
 ### Plot gps velocities, observed and modeled
 
-* `-dgpsho`:
+* `-dgpsho`: Observed GPS horizontal displacements.
 
-* `-dgpshm`:
+* `-dgpshm`: Modeled horizontal displacements on GPS sites (Okada 1985).
 
-* `-dgpsvo`:
+* `-dgpsvo`: Observed GPS vertical desplacements.
 
-* `-dgpsvm`:
+* `-dgpsvm`: Modeled vertical displacements on GPS sites (Okada 1985).
 
 
 ### Output formats

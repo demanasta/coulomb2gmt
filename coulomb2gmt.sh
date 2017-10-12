@@ -38,12 +38,12 @@ function help {
   echo " Switches: "
   echo "/*** GENERAL OPTIONS **********************************************************/"
   echo "           -r [:=region] set different region minlon maxlon minlat maxlat prjscale"
-  echo "           -topo [:=topography] plot dem file if exist "
+  echo "           -topo [:=topography] plot topography using dem file if exist "
   echo "           -o [:= output] name of output files"
 #   echo "           -l [:=labels] plot labels"
 #   echo "           -leg [:=legend] insert legends"
   echo "           -cmt [:=Plot central moment tensors] insert file "
-  echo "           -faults [:= faults] plot NOA fault database"
+  echo "           -faults [:= faults] plot fault database catalogue"
   echo "           -mt [:= map title] title map default none use quotes"
   echo "           -h [:= help] help menu"
   echo "           -debug [:=DEBUG] enable debug option"
@@ -71,9 +71,10 @@ function help {
 #   echo "           -fcross [:=plot cross section projections] "
   echo ""
   echo "/*** PLOT OKADA85 *************************************************************/"
-  echo "           -dgpsho : observed gps horizontal displacements"
+  echo "           -dgpsho : observed GPS horizontal displacements"
   echo "           -dgpshm : modeled horizontal displacements on gps site"
-  echo "           -dvert :plot vertical displacements"
+  echo "           -dgpsvo : observed GPS vertical displacements"
+  echo "           -dgpsvm : modeled vertical displacements on gps sites"
   echo "           -dsc :scale for displacements"
   echo ""
   echo "/*** OUTPUT FORMATS ***********************************************************/"
@@ -134,10 +135,11 @@ FSURF=0
 FDEP=0
 FCROSS=0
 CMT=0
+
 DGPSHO=0
 DGPSHM=0
-DVERT=0
-
+DGPSVO=0
+DGPSVM=0
 
 STRAIN=0
 STRSC=50
@@ -186,7 +188,7 @@ then
     case "$3" in
     -debug)
 	_DEBUG="on"
-	set -x
+# 	set -x
 	PS4='L ${LINENO}: '
 	shift
 	;;
@@ -320,10 +322,14 @@ then
 	DGPSHM=1
 	shift
 	;;
-		-dvert)
-			DVERT=1
-			shift
-			;;
+    -dgpsvo)
+	DGPSVO=1
+	shift
+	;;
+    -dgpsvm)
+	DGPSVM=1
+	shift
+	;;
 		-str)
 			pth2inptf=../../GeoToolbox/output
 			pth2work=${pth2inptf}/${4}
@@ -865,7 +871,7 @@ then
 
 # 	echo "$scvlon $scvlat 0.02 0 0 0 0 20 mm" | gmt psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
   echo "$scdhmlon $scdhmlat 0.01 0 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
-  echo "$scdhmlonl $scdhmlatl  9 0 1 CT Calculated" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V>> $outfile
+  echo "$scdhmlonl $scdhmlatl  9 0 1 CT Modeled" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V>> $outfile
 # psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,black -A10p+e -Gblack -O -L -V -K <<EOF>> $outfile
 # #20.78 37.93 0.02 0 0 0 0 20 mm
 # 20.50 37.50 0.02 0 0 0 0 20mm
@@ -891,16 +897,39 @@ then
 
 fi
 
-if	 [ "$DVERT" -eq 1 ]
-then
-# 	awk -F, 'NR>2 {print $1,$2,0,$8,0,0,0}' $pth2gpsfile | psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
-# 	awk -F, 'NR>2 {print $1,$2,0,$5,0,0,0}' $pth2gpsfile | psvelo -R -Jm -Se${dscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
+DEBUG set -x
+scdvmlatl=$sclat
+scdvmlonl=$sclon
 
-	awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
-	awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
+
+if [ "$DGPSVM" -eq 1 ]
+then
+  awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
+  awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
+  
+  scdvmlat=$(echo print $sclat + .05 | python)
+  scdvmlon=$(echo print $sclon + .05 | python)
+  DEBUG echo "[DEBUG] scdvmlat = ${scdvmlat}  , scdvmlon = ${scdvmlon}"
+  scdvmlatl=$(echo print $scdvmlat + .1 | python)
+  scdvmlonl=$(echo print $scdvmlon + .1 | python)
+  DEBUG echo "[DEBUG] scdvmlatl = ${scdvmlatl}  , scdvmlonl = ${scdvmlonl}"
+
+# 	echo "$scvlon $scvlat 0.0200 0 0 0 20 mm" | gmt psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
+  echo "$scdvmlon $scdvmlat 0 0.01 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
+  echo "$scdvmlonl $scdvmlatl 9,1,black 181 CT Modeled" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V>> $outfile
+
 fi
 
 
+if	 [ "$DGPSVO" -eq 1 ]
+then
+	awk -F, 'NR>2 {if ($5<0) print $1,$2,0,$5,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,3/3/75 -A10p+e -G3/3/75 -O -K -L -V >> $outfile
+	awk -F, 'NR>2 {if ($5>=0) print $1,$2,0,$5,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,105/20/20 -A10p+e -G105/20/20 -O -K -L -V >> $outfile
+	
+	
+fi
+
+DEBUG set +x
 # psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,black -A10p+e -Gblack -O -L -V -K <<EOF>> $outfile
 # #20.78 37.93 0.02 0 0 0 0 20 mm
 # 20.50 37.50 0.02 0 0 0 0 20mm
