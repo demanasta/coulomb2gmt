@@ -911,10 +911,9 @@ then
   scdvmlon=$(echo print $sclon + .05 | python)
   DEBUG echo "[DEBUG] scdvmlat = ${scdvmlat}  , scdvmlon = ${scdvmlon}"
   scdvmlatl=$(echo print $scdvmlat + .1 | python)
-  scdvmlonl=$(echo print $scdvmlon + .1 | python)
+  scdvmlonl=$(echo print $scdvmlon - .1 | python)
   DEBUG echo "[DEBUG] scdvmlatl = ${scdvmlatl}  , scdvmlonl = ${scdvmlonl}"
 
-# 	echo "$scvlon $scvlat 0.0200 0 0 0 20 mm" | gmt psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
   echo "$scdvmlon $scdvmlat 0 0.01 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
   echo "$scdvmlonl $scdvmlatl 9,1,black 181 CT Modeled" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V>> $outfile
 
