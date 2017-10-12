@@ -75,7 +75,6 @@ function help {
   echo "           -dgpshm : modeled horizontal displacements on gps site"
   echo "           -dgpsvo : observed GPS vertical displacements"
   echo "           -dgpsvm : modeled vertical displacements on gps sites"
-  echo "           -dsc :scale for displacements"
   echo ""
   echo "/*** OUTPUT FORMATS ***********************************************************/"
   echo "            -outjpg : Adjust and convert to JPEG"
@@ -897,8 +896,7 @@ then
 
 fi
 
-DEBUG set -x
-scdvmlatl=$sclat
+scdvmlat=$(echo print $sclat + .25 | python)
 scdvmlonl=$sclon
 
 
@@ -907,28 +905,46 @@ then
   awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
   awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
   
-  scdvmlat=$(echo print $sclat + .05 | python)
-  scdvmlon=$(echo print $sclon + .05 | python)
+#   scdvmlat=$(echo print $sclat + .2 | python)
+  scdvmlon=$(echo print $sclon - 0.04 | python)
   DEBUG echo "[DEBUG] scdvmlat = ${scdvmlat}  , scdvmlon = ${scdvmlon}"
-  scdvmlatl=$(echo print $scdvmlat + .1 | python)
-  scdvmlonl=$(echo print $scdvmlon - .1 | python)
+  scdvmlatl=$scdvmlat
+  scdvmlonl=$(echo print $scdvmlon - 0.06 | python)
   DEBUG echo "[DEBUG] scdvmlatl = ${scdvmlatl}  , scdvmlonl = ${scdvmlonl}"
 
-  echo "$scdvmlon $scdvmlat 0 0.01 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
-  echo "$scdvmlonl $scdvmlatl 9,1,black 181 CT Modeled" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V>> $outfile
+  echo "$scdvmlon $scdvmlat 0 -0.01 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
+  echo "$scdvmlon $scdvmlat 0 0.01 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -L -V -K >> $outfile
+  echo "$scdvmlonl $scdvmlatl 9,1,black 181 CM Modeled" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V>> $outfile
 
 fi
 
 
-if	 [ "$DGPSVO" -eq 1 ]
+if [ "$DGPSVO" -eq 1 ]
 then
-	awk -F, 'NR>2 {if ($5<0) print $1,$2,0,$5,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,3/3/75 -A10p+e -G3/3/75 -O -K -L -V >> $outfile
-	awk -F, 'NR>2 {if ($5>=0) print $1,$2,0,$5,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,105/20/20 -A10p+e -G105/20/20 -O -K -L -V >> $outfile
-	
-	
+  DEBUG echo "[DEBUG] -X.08c add in mext line"
+  awk -F, 'NR>2 {if ($5<0) print $1,$2,0,$5,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,0/255/0 -G0/255/0 -O -K -L -V -X.08c >> $outfile
+  awk -F, 'NR>2 {if ($5>=0) print $1,$2,0,$5,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 -O -K -L -V >> $outfile
+
+  scdvolat=$scdvmlat
+  scdvolon=$(echo print $sclon + 0.1 | python)
+  DEBUG echo "[DEBUG] scdvolat = ${scdvolat}  , scdvmlon = ${scdvolon}"
+  scdvolatl=$scdvolat
+  scdvolonl=$(echo print $scdvolon - 0.06 | python)
+  DEBUG echo "[DEBUG] scdvolatl = ${scdvolatl}  , scdvolonl = ${scdvolonl}"
+
+  echo "$scdvolon $scdvolat 0 -0.01 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,0/255/0 -A10p+e -G0/255/0 -O -L -V -K >> $outfile
+  echo "$scdvolon $scdvolat 0 0.01 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 -O -L -V -K >> $outfile
+  echo "$scdvolonl $scdvolatl 9,1,black 181 CM Observed" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V>> $outfile
+
 fi
 
-DEBUG set +x
+if [ "$DGPSVM" -eq 1 ] || [ "$DGPSVO" -eq 1 ]
+then
+  scdvmolat=$(echo print $sclat + .07 | python)
+  DEBUG echo "[DEBUG] -X-.08 added next line"
+  echo "$sclon $scdvmolat 9,1,black 0 CM \261 10 mm" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V -X-.08c >> $outfile
+fi
+
 # psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,black -A10p+e -Gblack -O -L -V -K <<EOF>> $outfile
 # #20.78 37.93 0.02 0 0 0 0 20 mm
 # 20.50 37.50 0.02 0 0 0 0 20mm
@@ -936,7 +952,7 @@ DEBUG set +x
 #/////////////////PLOT LOGO DSO
 if [ "$LOGOCUS" -eq 1 ]
 then
-  echo "add custom logo..."
+  echo "...add custom logo..."
   gmt psimage $pth2logo -O $logocus_pos  -F0.4  -K >>$outfile
 fi
 

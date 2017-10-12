@@ -1,4 +1,4 @@
-coulomb2gmt -- pre-released
+coulomb2gmt -- pre-released v1.0-beta*
 ==================
 
 > Bash scripts to plot coulomb results on gmt
@@ -117,6 +117,8 @@ Many parameters configured at `default-param` file.
 * `-dgpsvo`: Observed GPS vertical desplacements.
 
 * `-dgpsvm`: Modeled vertical displacements on GPS sites (Okada 1985).
+
+> Configure displacement scale in `default-param` file
 
 
 ### Output formats
