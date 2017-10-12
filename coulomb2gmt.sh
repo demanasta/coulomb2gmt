@@ -34,7 +34,7 @@ function help {
   echo " Program Name : coulomb2gmt.sh"
   echo " Version : v-1.0-beta*"
   echo " Purpose : Plot Coulomb Stress change results"
-  echo " Usage   : coulomb2gmt.sh  <inputfile> <input data> | options | "
+  echo " Usage   : coulomb2gmt.sh  <inputfile> <inputdata> | options | "
   echo " Switches: "
   echo "/*** GENERAL OPTIONS **********************************************************/"
   echo "           -r [:=region] set different region minlon maxlon minlat maxlat prjscale"
@@ -77,10 +77,10 @@ function help {
   echo "           -dgpsvm : modeled vertical displacements on gps sites"
   echo ""
   echo "/*** OUTPUT FORMATS ***********************************************************/"
-  echo "            -outjpg : Adjust and convert to JPEG"
-  echo "            -outpng : Adjust and convert to PNG (transparent where nothing is plotted)"
-  echo "            -outeps : Adjust and convert to EPS"
-  echo "            -outpdf : Adjust and convert to PDF"
+  echo "           -outjpg : Adjust and convert to JPEG"
+  echo "           -outpng : Adjust and convert to PNG (transparent where nothing is plotted)"
+  echo "           -outeps : Adjust and convert to EPS"
+  echo "           -outpdf : Adjust and convert to PDF"
   echo ""
   echo " Exit Status:    1 -> help message or error"
   echo " Exit Status: >= 0 -> sucesseful exit"
@@ -282,21 +282,6 @@ then
 	STRDIL=1
 	shift
 	;;
-		-terobs)
-			TEROBS=1
-			terobs_file=$4
-			TEROBS_STRSC=$5
-			TEROBS_EXCL=$6
-			shift
-			shift
-			shift
-			shift
-			;;
-		-pscleg)
-			PSCLEG=$4
-			shift
-			shift
-			;;
     -fproj)
 	FPROJ=1
 	shift
@@ -329,27 +314,6 @@ then
 	DGPSVM=1
 	shift
 	;;
-		-str)
-			pth2inptf=../../GeoToolbox/output
-			pth2work=${pth2inptf}/${4}
-			pth2comp=${pth2inptf}/${4}.comp
-			pth2ext=${pth2inptf}/${4}.ext
-			pth2strpar=${pth2inptf}/${4}par.str
-			STRAIN=1
-			shift
-			shift
-			;;
-		-strsc)
-			STRSC=$4
-			shift
-			shift
-			;;
-		-dsc)
-			dscale=${4}
-			shift
-			shift
-			;;
-
 		-l)
 			LABELS=1
 			shift
@@ -472,9 +436,6 @@ then
 	echo "Logo file does not exist"
 	LOGO=0
 fi
-
-# pth2gpsfile=${inputdata}.disp
-
 
 
 
@@ -868,15 +829,11 @@ then
   scdhmlonl=$scdhmlon
   DEBUG echo "[DEBUG] scdhmlatl = ${scdhmlatl}  , scdhmlonl = ${scdhmlonl}"
 
-# 	echo "$scvlon $scvlat 0.02 0 0 0 0 20 mm" | gmt psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
-  echo "$scdhmlon $scdhmlat 0.01 0 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
+  tmpmagn=$(echo $dhscmagn | awk '{print $1/1000}')
+  DEBUG echo "[DEBUG]" $tmpmagn
+
+  echo "$scdhmlon $scdhmlat $tmpmagn 0 0 0 0 $dhscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
   echo "$scdhmlonl $scdhmlatl  9 0 1 CT Modeled" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V>> $outfile
-# psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,black -A10p+e -Gblack -O -L -V -K <<EOF>> $outfile
-# #20.78 37.93 0.02 0 0 0 0 20 mm
-# 20.50 37.50 0.02 0 0 0 0 20mm
-# EOF
-        
-        
 fi
 
 if [ "$DGPSHO" -eq 1 ]
@@ -890,10 +847,10 @@ then
   scdholonl=$scdholon
   DEBUG echo "[DEBUG] scvholatl = ${scvholatl}  , scvholonl = ${scvholonl}"
 
-# 	echo "$scvlon $scvlat 0.02 0 0 0 0 20 mm" | gmt psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
-  echo "$scdholon $scdholat 0.01 0 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,red -A10p+e -Gred -O -L -V -K >> $outfile
+  tmpmagn=$(echo $dhscmagn | awk '{print $1/1000}')
+  DEBUG echo "[DEBUG]" $tmpmagn
+  echo "$scdholon $scdholat $tmpmagn 0 0 0 0 $dhscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,red -A10p+e -Gred -O -L -V -K >> $outfile
   echo "$scdholonl $scdholatl  9 0 1 CT Observed" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V>> $outfile
-
 fi
 
 scdvmlat=$(echo print $sclat + .25 | python)
@@ -905,15 +862,16 @@ then
   awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
   awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
   
-#   scdvmlat=$(echo print $sclat + .2 | python)
   scdvmlon=$(echo print $sclon - 0.04 | python)
   DEBUG echo "[DEBUG] scdvmlat = ${scdvmlat}  , scdvmlon = ${scdvmlon}"
   scdvmlatl=$scdvmlat
   scdvmlonl=$(echo print $scdvmlon - 0.06 | python)
   DEBUG echo "[DEBUG] scdvmlatl = ${scdvmlatl}  , scdvmlonl = ${scdvmlonl}"
 
-  echo "$scdvmlon $scdvmlat 0 -0.01 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
-  echo "$scdvmlon $scdvmlat 0 0.01 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -L -V -K >> $outfile
+  tmpmagn=$(echo $dvscmagn | awk '{print $1/1000}')
+  DEBUG echo "[DEBUG]" $tmpmagn
+  echo "$scdvmlon $scdvmlat 0 -$tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
+  echo "$scdvmlon $scdvmlat 0 $tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -L -V -K >> $outfile
   echo "$scdvmlonl $scdvmlatl 9,1,black 181 CM Modeled" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V>> $outfile
 
 fi
@@ -932,8 +890,10 @@ then
   scdvolonl=$(echo print $scdvolon - 0.06 | python)
   DEBUG echo "[DEBUG] scdvolatl = ${scdvolatl}  , scdvolonl = ${scdvolonl}"
 
-  echo "$scdvolon $scdvolat 0 -0.01 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,0/255/0 -A10p+e -G0/255/0 -O -L -V -K >> $outfile
-  echo "$scdvolon $scdvolat 0 0.01 0 0 0 10 mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 -O -L -V -K >> $outfile
+  tmpmagn=$(echo $dvscmagn | awk '{print $1/1000}')
+  DEBUG echo "[DEBUG]" $tmpmagn
+  echo "$scdvolon $scdvolat 0 -$tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,0/255/0 -A10p+e -G0/255/0 -O -L -V -K >> $outfile
+  echo "$scdvolon $scdvolat 0 $tmpmagn 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 -O -L -V -K >> $outfile
   echo "$scdvolonl $scdvolatl 9,1,black 181 CM Observed" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V>> $outfile
 
 fi
@@ -942,21 +902,20 @@ if [ "$DGPSVM" -eq 1 ] || [ "$DGPSVO" -eq 1 ]
 then
   scdvmolat=$(echo print $sclat + .07 | python)
   DEBUG echo "[DEBUG] -X-.08 added next line"
-  echo "$sclon $scdvmolat 9,1,black 0 CM \261 10 mm" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V -X-.08c >> $outfile
+  echo "$sclon $scdvmolat 9,1,black 0 CM \261 $dvscmagn mm" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V -X-.08c >> $outfile
 fi
 
-# psvelo -R -Jm -Se${dscale}/0.95/10 -W2p,black -A10p+e -Gblack -O -L -V -K <<EOF>> $outfile
-# #20.78 37.93 0.02 0 0 0 0 20 mm
-# 20.50 37.50 0.02 0 0 0 0 20mm
-# EOF
-#/////////////////PLOT LOGO DSO
+# //////////////////////////////////////////////////////////////////////////////
+# Plot custom logo configured at default-param
+
 if [ "$LOGOCUS" -eq 1 ]
 then
   echo "...add custom logo..."
   gmt psimage $pth2logo -O $logocus_pos  -F0.4  -K >>$outfile
 fi
 
-
+# //////////////////////////////////////////////////////////////////////////////
+# FINAL SECTION
 #################--- Close eps output file ----#################################
 echo "909 909" | gmt psxy -Sc.1 -Jm -O -R  -W1,red >> $outfile
 
@@ -978,8 +937,6 @@ if [ "$OUTPDF" -eq 1 ]
 then
 	gmt psconvert $outfile -A0.2c -Tf	
 fi
-################--- Convert to gif format ----##################################
-# ps2raster -E$dpi -Tt $map.ps
-# convert -delay 180 -loop 0 *.tif IonMap$date.gif
 
+# Print exit status
 echo "Finished. Exit status: $?"
