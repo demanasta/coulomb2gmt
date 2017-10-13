@@ -32,7 +32,7 @@ coulomb2gmt -- pre-released v1.0-beta*
 
 * Add GMT timestamp logo and custom logo of your organization.
 
-*Adjust paper size to map and convert in different output formats (.jpg, .png, .eps, .pdf)
+* Adjust paper size to map and convert in different output formats (.jpg, .png, .eps, .pdf)
 
 
 ## Requirements
@@ -77,7 +77,7 @@ Many parameters configured at `default-param` file.
 
 *  `-faults`: Plot custom fault database catalogue.
 
-* `-mt`:
+* `-mt`: Custom map title. __Not enable yet__
 
 * `-h`: Help menu
 

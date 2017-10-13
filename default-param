@@ -50,13 +50,15 @@ coulombcpt=Coulomb_anatolia.cpt
 # minlat=37.9
 # maxlat=38.5
 # prjscale=500000
-frame=0.5
+frame=0.5		## Default 0.5
 
 # //////////////////////////////////////////////////////////////////////////////
 # scale variables
 
-dhscale=100
-dvscale=100
+barrange=1		## Default 1
+
+dhscale=100		## Default 100
+dvscale=100		## Default 100
 
 dhscmagn=10 #use mm
 dvscmagn=12 #use mm

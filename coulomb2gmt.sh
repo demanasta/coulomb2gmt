@@ -499,7 +499,7 @@ then
   echo "...plot Coulomb Stress Change map... "
   ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd ${inputdata}-coulomb_out.dat -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
@@ -511,7 +511,8 @@ then
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   ########### Plot scale Bar ####################
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  bartick=$(echo $barrange | awk '{print $1/5}')
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
   rm tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -528,7 +529,7 @@ then
  
  ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
@@ -540,7 +541,8 @@ then
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   ########### Plot scale Bar ####################
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  bartick=$(echo $barrange | awk '{print $1/5}')
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
   rm tmpcou1 tmpcou2 tmpcouall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -557,7 +559,7 @@ then
  
   ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
@@ -569,7 +571,8 @@ then
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   ########### Plot scale Bar ####################
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  bartick=$(echo $barrange | awk '{print $1/5}')
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
   rm tmpcou1 tmpcou2 tmpcouall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -587,7 +590,7 @@ then
   
   ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
@@ -599,7 +602,8 @@ then
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  bartick=$(echo $barrange | awk '{print $1/5}')
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -616,7 +620,7 @@ then
   
   ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
@@ -628,7 +632,8 @@ then
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  bartick=$(echo $barrange | awk '{print $1/5}')
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -645,7 +650,7 @@ then
   
   ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
@@ -657,7 +662,8 @@ then
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  bartick=$(echo $barrange | awk '{print $1/5}')
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -674,7 +680,7 @@ then
   
   ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
@@ -686,7 +692,8 @@ then
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  bartick=$(echo $barrange | awk '{print $1/5}')
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -703,7 +710,7 @@ then
   
   ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
@@ -715,7 +722,8 @@ then
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  bartick=$(echo $barrange | awk '{print $1/5}')
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -732,7 +740,7 @@ then
   
   ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
@@ -744,7 +752,8 @@ then
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  bartick=$(echo $barrange | awk '{print $1/5}')
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -761,7 +770,7 @@ then
   
   ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-1/1/0.002 -Z > tmpcpt.cpt
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
@@ -773,7 +782,8 @@ then
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B0.2/:bar: -O -K >> $outfile
+  bartick=$(echo $barrange | awk '{print $1/5}')
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
