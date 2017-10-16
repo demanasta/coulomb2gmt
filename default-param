@@ -2,7 +2,7 @@
 #use this file to cheange default parameters for plots
 
 # //////////////////////////////////////////////////////////////////////////////
-# Set PATHS parameters
+# Set path for general files
 pth2dems=${HOME}/Map_project/dems
 
 inputTopoL=${pth2dems}/ETOPO1_gr_resample01m.grd   #ETOPO1_Bed_g_gmt4.grd
@@ -15,7 +15,7 @@ pth2logo=$HOME/Map_project/logos/DSOlogo2.eps
 pth2faults=$HOME/Map_project/faults/NOAFaults_v1.0.gmt
 
 # //////////////////////////////////////////////////////////////////////////////
-# Path to input file directory
+# Path to input file directories
 
 # Path to directory of input files *.inp
 pth2inpdir=../inp_historic/
@@ -34,7 +34,7 @@ pth2gpsdir=$(pwd)
 
 
 # //////////////////////////////////////////////////////////////////////////////
-#colormaps
+# Colormap Palettes
 landcpt=land_man.cpt
 bathcpt=bath_man.cpt
 coulombcpt=Coulomb_anatolia.cpt
