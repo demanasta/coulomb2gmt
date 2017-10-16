@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#plot Coulomb Stress change to GMT maps
 # //////////////////////////////////////////////////////////////////////////////
 # ==============================================================================
 #   
@@ -111,6 +110,7 @@ OUTFILES=0
 FAULTS=0
 LOGOGMT=0
 LOGOCUS=0
+MTITLE=0
 
 RANGE=0
 CSTRESS=0
@@ -141,7 +141,6 @@ DGPSVO=0
 DGPSVM=0
 
 STRAIN=0
-STRSC=50
 
 OUTJPG=0
 OUTPNG=0
@@ -162,6 +161,7 @@ fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # GET COMMAND LINE ARGUMENTS
+echo "...get command line arguments"
 if [ "$#" == "0" ]
 then
   help
@@ -224,7 +224,6 @@ then
 	shift
 	;;
     -cmt)
-	echo
 	if [ -f ${4} ];
 	then
 	  CMT=1
@@ -237,11 +236,16 @@ then
 	  shift
 	fi
 	;;
-   -faults)
+    -faults)
 	FAULTS=1
 	shift
 	;;	
-
+    -mt)
+	MTITLE=1
+	mtitle=$4
+	shift
+	shift
+	;;
     -cstress)
 	CSTRESS=1
 	shift
@@ -459,13 +463,57 @@ DEBUG echo "[DEBUG] range set: $range" >&2
 DEBUG echo "[DEBUG] projection set: $proj" >&2
 
 # //////////////////////////////////////////////////////////////////////////////
+# Configure Map title
+
+if [ "$MTITLE" -eq 1 ]
+then
+  echo "...set custom Map title..."
+elif [ "$CSTRESS" -eq 1 ]
+then
+  mtitle="Coulomb Stress Change"
+elif [ "$SSTRESS" -eq 1 ]
+then
+  mtitle="Shear Stress Change"
+elif [ "$NSTRESS" -eq 1 ]
+then
+  mtitle="Normal Stress Change"
+elif [ "$STREXX" -eq 1 ]
+then 
+  mtitle="Strain Component Exx"
+elif [ "$STREYY" -eq 1 ]
+then
+  mtitle="Strain Component Eyy"
+elif [ "$STREZZ" -eq 1 ]
+then
+  mtitle="Strain Component Ezz"
+elif [ "$STREYZ" -eq 1 ]
+then
+  mtitle="Strain Component Eyz"
+elif [ "$STREXZ" -eq 1 ]
+then
+  mtitle="Strain Component Exz"
+elif [ "$STREXY" -eq 1 ]
+then
+  mtitle="Strain Component Exy"
+elif [ "$DGPSHO" -eq 1 ] || [ "$DGPSHM" -eq 1 ]
+then
+  mtitle="Horizontal Displacements"
+elif [ "$DGPSVO" -eq 1 ] || [ "$DGPSVM" -eq 1 ]
+then
+  mtitle="Vertical Displacements"
+else
+  mtitle="Plots of Coulomb outputs"
+fi
+
+
+# //////////////////////////////////////////////////////////////////////////////
 # Define to plot coastlines or topography
 
 if [ "$CSTRESS" -eq 0 ] || [ "$SSTRESS" -eq 0 ] || [ "$NSTRESS" -eq 0 ] || [ "$DILSTRAIN" -eq 0 ]
 then
   ################## Plot coastlines only ######################
   gmt pscoast $range $proj  -Df -W0.25p,black -G240  $logogmt_pos -K  -Y4.5c > $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Coulomb outputs plot": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
@@ -503,7 +551,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Coulomb Stress Change": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -533,7 +581,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Shear Stress Change": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -563,7 +611,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Normal Stress Change": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -594,7 +642,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Exx": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -624,7 +672,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Eyy": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -654,7 +702,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Ezz": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -684,7 +732,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Eyz": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -714,7 +762,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Exz": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -744,7 +792,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Strain Component Exy": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -774,7 +822,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."Plot Dilatation (Exx + Eyy + Ezz)": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then

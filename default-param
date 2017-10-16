@@ -32,19 +32,15 @@ pth2gpsdir=$(pwd)
 # pth2gpsfile=${inputdata}.disp
 #pth2inpdata=../input_zakynthos/${inputfile}.inp
 
-# //////////////////////////////////////////////////////////////////////////////
-#outfiles
-# outfile=output.ps
-# out_jpg=output.jpg
 
 # //////////////////////////////////////////////////////////////////////////////
-
 #colormaps
 landcpt=land_man.cpt
 bathcpt=bath_man.cpt
 coulombcpt=Coulomb_anatolia.cpt
 
 # //////////////////////////////////////////////////////////////////////////////
+# Only frame nust set in this section
 # minlon=20.2
 # maxlon=20.9
 # minlat=37.9
