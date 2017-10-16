@@ -1,4 +1,4 @@
-coulomb2gmt -- pre-released v1.0-beta*
+coulomb2gmt -- pre-released v1.0-beta5.0
 ==================
 
 > Bash scripts to plot coulomb results on gmt
@@ -22,17 +22,17 @@ coulomb2gmt -- pre-released v1.0-beta*
 
 * Plot Stress changes (Coulomb, Normal, Shear)
 
-* Plot all strain components
+* Plot all strain components (E**, Dilatation)
 
 * Plot Fault geometry (Projection, Surface, Depth)
 
-* Plot gps displacement observed and modeled
+* Plot GPS displacement observed and modeled
 
 * Plot Fault and CMT databases
 
 * Add GMT timestamp logo and custom logo of your organization.
 
-*Adjust paper size to map and convert in different output formats (.jpg, .png, .eps, .pdf)
+* Adjust paper size to map and convert in different output formats (.jpg, .png, .eps, .pdf)
 
 
 ## Requirements
@@ -63,7 +63,10 @@ run: `$ ./coulomb2gmt.sh <inputfile> <inputdata> | options`
 
 ### Default parameters
 Many parameters configured at `default-param` file.
-
+1. Paths to general files (DEM, logo, faults)
+2. Paths to input file directories (.inp, .dat, .cou, .disp)
+3. ColorMaps Palette, frame variable.
+4. Scale parameters.
 
 ### General options
 
@@ -71,13 +74,13 @@ Many parameters configured at `default-param` file.
 
 * `-topo`:  plot topography using dem file
 
-* `-o`:  set custom name of output file. Default is `<inputadata>`.
+* `-o <filename>`:  set custom name of output file. Default is `<inputadata>`.
 
-* `-cmt` :  Plot Centroid Moment Tensors of earthquakes. 
+* `-cmt <path to file>` :  Plot Centroid Moment Tensors of earthquakes. 
 
 *  `-faults`: Plot custom fault database catalogue.
 
-* `-mt`:
+* `-mt "map title"`: Custom map title.
 
 * `-h`: Help menu
 

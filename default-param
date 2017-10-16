@@ -2,7 +2,7 @@
 #use this file to cheange default parameters for plots
 
 # //////////////////////////////////////////////////////////////////////////////
-# Set PATHS parameters
+# Set path for general files
 pth2dems=${HOME}/Map_project/dems
 
 inputTopoL=${pth2dems}/ETOPO1_gr_resample01m.grd   #ETOPO1_Bed_g_gmt4.grd
@@ -15,7 +15,7 @@ pth2logo=$HOME/Map_project/logos/DSOlogo2.eps
 pth2faults=$HOME/Map_project/faults/NOAFaults_v1.0.gmt
 
 # //////////////////////////////////////////////////////////////////////////////
-# Path to input file directory
+# Path to input file directories
 
 # Path to directory of input files *.inp
 pth2inpdir=../inp_historic/
@@ -32,31 +32,29 @@ pth2gpsdir=$(pwd)
 # pth2gpsfile=${inputdata}.disp
 #pth2inpdata=../input_zakynthos/${inputfile}.inp
 
-# //////////////////////////////////////////////////////////////////////////////
-#outfiles
-# outfile=output.ps
-# out_jpg=output.jpg
 
 # //////////////////////////////////////////////////////////////////////////////
-
-#colormaps
+# Colormap Palettes
 landcpt=land_man.cpt
 bathcpt=bath_man.cpt
 coulombcpt=Coulomb_anatolia.cpt
 
 # //////////////////////////////////////////////////////////////////////////////
+# Only frame nust set in this section
 # minlon=20.2
 # maxlon=20.9
 # minlat=37.9
 # maxlat=38.5
 # prjscale=500000
-frame=0.5
+frame=0.5		## Default 0.5
 
 # //////////////////////////////////////////////////////////////////////////////
 # scale variables
 
-dhscale=100
-dvscale=100
+barrange=1		## Default 1
+
+dhscale=100		## Default 100
+dvscale=100		## Default 100
 
 dhscmagn=10 #use mm
 dvscmagn=12 #use mm
