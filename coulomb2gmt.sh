@@ -161,7 +161,7 @@ fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # GET COMMAND LINE ARGUMENTS
-echo "...get command line arguments"
+echo "...get command line arguments..."
 if [ "$#" == "0" ]
 then
   help
@@ -232,7 +232,7 @@ then
 	  shift
 	  shift
 	else
-	  echo "CMT file does not exist!CMT wil not plot"
+	  echo "CMT file does not exist!CMT will not plot"
 	  shift
 	fi
 	;;
@@ -372,7 +372,7 @@ pth2strnfile=${pth2coudir}/${inputdata}_Strain.cou
 pth2gpsdfile=${pth2gpsdir}/${inputdata}.disp
 # //////////////////////////////////////////////////////////////////////////////
 # Check if all input file exist
-
+echo "...check all input files and paths"
 ### check fault map projection file
 if [ ! -f "${pth2fprojfile}" ]
 then
@@ -560,7 +560,7 @@ then
   fi
   ########### Plot scale Bar ####################
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt -B$bartick/:bar: -O -K >> $outfile
   rm tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -856,6 +856,7 @@ fi
 
 if [ "$CMT" -eq 1 ]
 then
+  echo "...plot Centroid Moment Tensor file..."
   awk '{print $1,$2}' $inpcmt | gmt psxy -Jm -O -R -Sa0.3c -Gred -K>> $outfile
 # gmt psmeca $inpcmt $range -Jm -Sc0.7/0 -CP0.05  -O -P -K>> $outfile
   awk '{print $1,$2,$3,$4,$5,$6,$7,$8,$9}' $inpcmt | gmt psmeca -R -Jm -Sa0.4 -CP0.05 -K -O -P >> $outfile
@@ -878,6 +879,7 @@ scdhmlonl=$sclon
 
 if [ "$DGPSHM" -eq 1 ]
 then
+  echo "...plot Horizontal Modeled Displacements..."
   awk -F, 'NR>2 {print $1,$2,$6,$7,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile 
 
   scdhmlat=$(echo print $sclat + .05 | python)
@@ -896,6 +898,7 @@ fi
 
 if [ "$DGPSHO" -eq 1 ]
 then
+  echo "...plot Horizontal Observed Displacements..."
   awk -F, 'NR>2 {print $1,$2,$3,$4,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
 
   scdholat=$(echo print $scdhmlatl + .05 | python)
@@ -917,6 +920,7 @@ scdvmlonl=$sclon
 
 if [ "$DGPSVM" -eq 1 ]
 then
+  echo "...plot Vertical Modeled Displacements..."
   awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
   awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
   
@@ -937,6 +941,7 @@ fi
 
 if [ "$DGPSVO" -eq 1 ]
 then
+  echo "...plot Vertical Observed Displacements..."
   DEBUG echo "[DEBUG] -X.08c add in mext line"
   awk -F, 'NR>2 {if ($5<0) print $1,$2,0,$5,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,0/255/0 -G0/255/0 -O -K -L -V -X.08c >> $outfile
   awk -F, 'NR>2 {if ($5>=0) print $1,$2,0,$5,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 -O -K -L -V >> $outfile
@@ -974,26 +979,30 @@ fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # FINAL SECTION
-#################--- Close eps output file ----#################################
+#################--- Close ps output file ----##################################
 echo "909 909" | gmt psxy -Sc.1 -Jm -O -R  -W1,red >> $outfile
 
 #################--- Convert to other format ----###############################
 if [ "$OUTJPG" -eq 1 ]
 then
-	#gs -sDEVICE=jpeg -dJPEGQ=100 -dNOPAUSE -dBATCH -dSAFER -r300 -sOutputFile=$out_jpg $outfile
-	gmt psconvert $outfile -A0.2c -Tj	
+  echo "...adjust and convert to JPEG format..."
+#   gs -sDEVICE=jpeg -dJPEGQ=100 -dNOPAUSE -dBATCH -dSAFER -r300 -sOutputFile=$out_jpg $outfile
+  gmt psconvert $outfile -A0.2c -Tj	
 fi
 if [ "$OUTPNG" -eq 1 ]
 then
-	gmt psconvert $outfile -A0.2c -TG	
+  echo "...adjust and convert to PNG format..."
+  gmt psconvert $outfile -A0.2c -TG	
 fi
 if [ "$OUTEPS" -eq 1 ]
 then
-	gmt psconvert $outfile -A0.2c -Te	
+  echo "...adjust and convert to EPS format..."
+  gmt psconvert $outfile -A0.2c -Te	
 fi
 if [ "$OUTPDF" -eq 1 ]
 then
-	gmt psconvert $outfile -A0.2c -Tf	
+  echo "...adjust and convert to PDF format..."
+  gmt psconvert $outfile -A0.2c -Tf	
 fi
 
 # Print exit status

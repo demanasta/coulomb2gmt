@@ -22,11 +22,11 @@ coulomb2gmt -- pre-released v1.0-beta*
 
 * Plot Stress changes (Coulomb, Normal, Shear)
 
-* Plot all strain components
+* Plot all strain components (E**, Dilatation)
 
 * Plot Fault geometry (Projection, Surface, Depth)
 
-* Plot gps displacement observed and modeled
+* Plot GPS displacement observed and modeled
 
 * Plot Fault and CMT databases
 
@@ -63,7 +63,7 @@ run: `$ ./coulomb2gmt.sh <inputfile> <inputdata> | options`
 
 ### Default parameters
 Many parameters configured at `default-param` file.
-
+1. Path to general files
 
 ### General options
 
