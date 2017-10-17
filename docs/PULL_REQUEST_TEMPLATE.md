@@ -4,7 +4,7 @@ Please include a summary of the change and which issue is fixed. Please also inc
 
 Fixes: # (issue)
 
-Link to files chenged: []()
+Link to files chenged:
 
 #### Type of change
 
