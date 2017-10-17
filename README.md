@@ -147,7 +147,7 @@ Default format is `*.ps` file. You can use  the options bellow to convert  to ot
 
 ## ChangeLog
 
-The history of releases can be viewed at [ChangeLog](ChangeLog.md)
+The history of releases can be viewed at [ChangeLog](docs/ChangeLog.md)
 
 ## Acknowlegments
 
