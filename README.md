@@ -1,4 +1,4 @@
-coulomb2gmt -- pre-released v1.0-beta5.0
+coulomb2gmt -- pre-released v1.0-beta5.1
 ==================
 
 > Bash scripts to plot coulomb results on gmt
@@ -147,11 +147,13 @@ Default format is `*.ps` file. You can use  the options bellow to convert  to ot
 
 ## ChangeLog
 
-The history of releases can be viewed at [ChangeLog](ChangeLog.md)
+The history of releases can be viewed at [ChangeLog](docs/ChangeLog.md)
 
 ## Acknowlegments
 
 ## References
 * [Coulomb 3, developed by USGS](https://earthquake.usgs.gov/research/software/coulomb/)
+
+* Toda, Shinji, Stein, R.S., Sevilgen, Volkan, and Lin, Jian, 2011, Coulomb 3.3 Graphic-rich deformation and stress-change software for earthquake, tectonic, and volcano research and teaching—user guide: U.S. Geological Survey Open-File Report 2011-1060, 63 p., available at http://pubs.usgs.gov/of/2011/1060/.
 
 * [The Generic Mappting Tools - GMT](http://gmt.soest.hawaii.edu/)
