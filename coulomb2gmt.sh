@@ -38,12 +38,13 @@ function help {
   echo "/*** GENERAL OPTIONS **********************************************************/"
   echo "           -r [:=region] set different region minlon maxlon minlat maxlat prjscale"
   echo "           -topo [:=topography] plot topography using dem file if exist "
-  echo "           -o [:= output] name of output files"
+  echo "           -o <name> [:= output] name of output files"
 #   echo "           -l [:=labels] plot labels"
 #   echo "           -leg [:=legend] insert legends"
-  echo "           -cmt [:=Plot central moment tensors] insert file "
+  echo "           -cmt <file> [:=Plot central moment tensors] insert file "
   echo "           -faults [:= faults] plot fault database catalogue"
-  echo "           -mt [:= map title] title map default none use quotes"
+  echo "           -mt <title> [:= map title] title map default none use quotes"
+  echo "           -ctext <file>[:=cusotm text] Plot custom text in map"
   echo "           -h [:= help] help menu"
   echo "           -debug [:=DEBUG] enable debug option"
   echo "           -logogmt [:=gmt logo] Plot gmt logo and time stamp"
@@ -111,6 +112,7 @@ FAULTS=0
 LOGOGMT=0
 LOGOCUS=0
 MTITLE=0
+CTEXT=0
 
 RANGE=0
 CSTRESS=0
@@ -245,6 +247,25 @@ then
 	mtitle=$4
 	shift
 	shift
+	;;
+    -ctext)
+	if  [ $# -gt 3 ] && [ -f ${4} ];
+	then
+	  CTEXT=1
+	  pth2ctextfile=${4}
+	  DEBUG echo "custom text file is: $pth2ctextfile"
+	  shift
+	  shift
+	elif  [ $# -gt 3 ] && [ ! -f ${4} ];
+	then
+	  echo "Text file does not exist! 1"
+	  shift
+	  shift
+	elif [ $# -eq 3 ];
+	then
+	  echo "test"
+	  shift
+	fi
 	;;
     -cstress)
 	CSTRESS=1
@@ -979,6 +1000,14 @@ then
   scdvmolat=$(echo print $sclat + .07 | python)
   DEBUG echo "[DEBUG:${LINENO}] -X-.08 added next line"
   echo "$sclon $scdvmolat 9,1,black 0 CM \261 $dvscmagn mm" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V -X-.08c >> $outfile
+fi
+
+
+# //////////////////////////////////////////////////////////////////////////////
+# Plot custom text configured at custom_text file
+if [ "$CTEXT" -eq 1 ]
+then
+  grep -v "#" $pth2ctextfile | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V  >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
