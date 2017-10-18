@@ -226,15 +226,21 @@ then
 	shift
 	;;
     -cmt)
-	if [ -f ${4} ];
+	if  [ $# -gt 3 ] && [ -f ${4} ];
 	then
 	  CMT=1
 	  inpcmt=${4}
 	  DEBUG echo "cmt file is: $inpcmt"
 	  shift
 	  shift
-	else
-	  echo "CMT file does not exist!CMT will not plot"
+# 	elif  [ $# -gt 4 ] && [ ! -f ${4} ];
+# 	then
+# 	  echo "[WARNING] CMT file does not exist!CMT will not plot"
+# 	  shift
+# 	  shift
+	elif [ $# -eq 3 ];
+	then
+	  echo "[WARNING] CMT file does not exist!CMT will not plot"
 	  shift
 	fi
 	;;
@@ -256,14 +262,14 @@ then
 	  DEBUG echo "custom text file is: $pth2ctextfile"
 	  shift
 	  shift
-	elif  [ $# -gt 3 ] && [ ! -f ${4} ];
-	then
-	  echo "Text file does not exist! 1"
-	  shift
-	  shift
+# 	elif  [ $# -gt 3 ] && [ ! -f ${4} ];
+# 	then
+# 	  echo "[WARNING] Text file does not exist!"
+# 	  shift
+# 	  shift
 	elif [ $# -eq 3 ];
 	then
-	  echo "test"
+	  echo "[WARNING] Text file does not exist!"
 	  shift
 	fi
 	;;
@@ -410,21 +416,21 @@ echo "...check all input files and paths"
 ### check fault map projection file
 if [ ! -f "${pth2fprojfile}" ]
 then
-  echo "fault map projection file: "${pth2fprojfile}" does not exist"
+  echo "[WARNING] fault map projection file: "${pth2fprojfile}" does not exist"
   FPROJ=0
 fi
 
 ### check fault surface file
 if [ ! -f "${pth2fsurffile}" ]
 then
-  echo "fault surfece file: "${pth2fsurffile}" does not exist"
+  echo "[WARNING] fault surface file: "${pth2fsurffile}" does not exist"
   FSURF=0
 fi
 
 ### check fault surface file
 if [ ! -f "${pth2fdepfile}" ]
 then
-  echo "fault surfece file: "${pth2fdepfile}" does not exist"
+  echo "[WARNING] fault surfece file: "${pth2fdepfile}" does not exist"
   FDEP=0
 fi
 
@@ -434,7 +440,7 @@ if [ "$TOPOGRAPHY" -eq 1 ]
 then
   if [ ! -f $inputTopoB ]
   then
-    echo "grd file for topography toes not exist, var turn to coastline"
+    echo "[WARNING] grd file for topography toes not exist, var turn to coastline"
     TOPOGRAPHY=0
   fi
 fi
@@ -444,8 +450,8 @@ if [ "$FAULTS" -eq 1 ]
 then
   if [ ! -f $pth2faults ]
   then
-    echo "NOA Faults database does not exist"
-    echo "please download it and then use this switch"
+    echo "[WARNING] NOA Faults database does not exist"
+    echo "[WARNING] please download it and then use this switch"
     FAULTS=0
   fi
 fi
@@ -455,7 +461,7 @@ if [ "$CMT" -eq 1 ]
 then
   if [ ! -f $inpcmt ]
   then
-    echo " CMT file does not exist, moment tensors will not plot"
+    echo "[WARNING]  CMT file does not exist, moment tensors will not plot"
     CMT=0
   fi
 fi
@@ -471,7 +477,7 @@ fi
 ### check LOGO file
 if [ ! -f "$pth2logo" ]
 then
-	echo "Logo file does not exist"
+	echo "[WARNING] Logo file does not exist"
 	LOGO=0
 fi
 
