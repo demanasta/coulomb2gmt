@@ -1,0 +1,243 @@
+\section{coulomb2gmt -- pre-released
+v1.0-beta5.1}\label{coulomb2gmt-pre-released-v1.0-beta5.1}
+
+\begin{quote}
+Bash scripts to plot coulomb results on gmt
+\end{quote}
+
+\subsection{Author(s)}\label{authors}
+
+\begin{itemize}
+
+\item
+  Demitris G. Anastasiou
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection{Features}\label{features}
+
+\begin{itemize}
+\item
+  auto-configure map lat-long from input files (.inp)
+\item
+  Plot Stress changes (Coulomb, Normal, Shear)
+\item
+  Plot all strain components (E**, Dilatation)
+\item
+  Plot Fault geometry (Projection, Surface, Depth)
+\item
+  Plot GPS displacement observed and modeled
+\item
+  Plot Fault and CMT databases
+\item
+  Add GMT timestamp logo and custom logo of your organization.
+\item
+  Adjust paper size to map and convert in different output formats
+  (.jpg, .png, .eps, .pdf)
+\end{itemize}
+
+\subsection{Requirements}\label{requirements}
+
+\begin{itemize}
+\item
+  \textbf{GMT}: \href{http://gmt.soest.hawaii.edu/}{The Generic Mappting
+  Tools - GMT} version \textgreater{} 5.1.1 . Recommented installation
+  from source code.
+
+  \begin{itemize}
+  
+  \item
+    for \emph{Ubuntu/Debian} if you use default package installation you
+    have to install also \texttt{libgmt-dev} package
+  \end{itemize}
+\item
+  \textbf{Coulomb 3}:
+  \href{https://earthquake.usgs.gov/research/software/coulomb/}{Coulomb
+  3, developed by USGS}
+\item
+  \textbf{python}: required for some calculations included in the main
+  script.
+\end{itemize}
+
+\subsection{Usage details}\label{usage-details}
+
+The main script is: \texttt{coulomb2gmt.sh}
+
+run:
+\texttt{\$\ ./coulomb2gmt.sh\ \textless{}inputfile\textgreater{}\ \textless{}inputdata\textgreater{}\ \textbar{}\ options}
+
+\begin{itemize}
+\item
+  \texttt{\textless{}inputfile\textgreater{}}: name of input file used
+  from Coulomb. Extention \texttt{.inp} not needed. Path to the
+  directory of input files configured at \texttt{default-param}.
+\item
+  \texttt{\textless{}inputdata\textgreater{}}: Name of input files
+  include results of coulmb calculations. Input data files are:
+
+  \begin{itemize}
+  
+  \item
+    \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_surface.dat}:
+  \item
+    \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_map\_proj.dat}:
+  \item
+    \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_calc\_dep.dat}:
+  \item
+    \texttt{\textless{}inputdata\textgreater{}-coulomb\_out.dat}:
+  \item
+    \texttt{\textless{}inputdata\textgreater{}-dcff.cou}:
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Default parameters}\label{default-parameters}
+
+Many parameters configured at \texttt{default-param} file. 1. Paths to
+general files (DEM, logo, faults) 2. Paths to input file directories
+(.inp, .dat, .cou, .disp) 3. ColorMaps Palette, frame variable. 4. Scale
+parameters.
+
+\subsubsection{General options}\label{general-options}
+
+\begin{itemize}
+\item
+  \texttt{-r}: set custom region parameters. \emph{Structure}
+  \texttt{-r\ minlon\ maxlon\ minlat\ maxlat\ prjscale}
+\item
+  \texttt{-topo}: plot topography using dem file
+\item
+  \texttt{-o\ \textless{}filename\textgreater{}}: set custom name of
+  output file. Default is \texttt{\textless{}inputadata\textgreater{}}.
+\item
+  \texttt{-cmt\ \textless{}path\ to\ file\textgreater{}} : Plot Centroid
+  Moment Tensors of earthquakes.
+\item
+  \texttt{-faults}: Plot custom fault database catalogue.
+\item
+  \texttt{-mt\ "map\ title"}: Custom map title.
+\item
+  \texttt{-h}: Help menu
+\item
+  \texttt{-debug}:Enable Debug option
+\item
+  \texttt{-logogmt}: Plot GMT logo and time stamp.
+\item
+  \texttt{-logocus}: Plot custom logo of your organization.
+\end{itemize}
+
+\subsubsection{Plot fault parameters}\label{plot-fault-parameters}
+
+\begin{itemize}
+\item
+  \texttt{-fproj}: Plot source and receiver faults' trace at surface.
+\item
+  \texttt{-fsurf}: Plot surface of source and receiver faults.
+\item
+  \texttt{-fdep}: Plot intersection of target depth with fault plane.
+\end{itemize}
+
+\subsubsection{Plot stress}\label{plot-stress}
+
+\begin{itemize}
+\item
+  \texttt{-cstress}: Plot Coulomb Stress change.
+\item
+  \texttt{-sstress}: Plot Shear Stress change.
+\item
+  \texttt{-nstress}: Plot Normal Stress change.
+\end{itemize}
+
+\subsubsection{Plot Strain components}\label{plot-strain-components}
+
+\begin{itemize}
+\item
+  \texttt{-stre**}: Where \texttt{**} you can fill all strain components
+  \texttt{xx},\texttt{yy},\texttt{zz}, \texttt{yz}, \texttt{xz},
+  \texttt{xy}.
+\item
+  \texttt{-strdil}: Plot dilatation (Exx + Eyy + Ezz )
+\end{itemize}
+
+\subsubsection{Plot gps velocities, observed and
+modeled}\label{plot-gps-velocities-observed-and-modeled}
+
+\begin{itemize}
+\item
+  \texttt{-dgpsho}: Observed GPS horizontal displacements.
+\item
+  \texttt{-dgpshm}: Modeled horizontal displacements on GPS sites (Okada
+  1985).
+\item
+  \texttt{-dgpsvo}: Observed GPS vertical desplacements.
+\item
+  \texttt{-dgpsvm}: Modeled vertical displacements on GPS sites (Okada
+  1985).
+\end{itemize}
+
+\begin{quote}
+Configure displacement scale in \texttt{default-param} file
+\end{quote}
+
+\subsubsection{Output formats}\label{output-formats}
+
+Default format is \texttt{*.ps} file. You can use the options bellow to
+convert to other format and adjust paper size to map size.
+
+\begin{itemize}
+\item
+  \texttt{-outjpg} : Adjust and convert to JPEG.
+\item
+  \texttt{-outpng} : Adjust and convert to PNG (transparent where
+  nothing is plotted)
+\item
+  \texttt{-outeps} : Adjust and convert to EPS"
+\item
+  \texttt{-outpdf} : Adjust and convert to PDF
+\end{itemize}
+
+\subsection{Contributing}\label{contributing}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+
+\item
+  Create an issue and describe your idea
+\item
+  \href{https://github.com/demanasta/coulomb2gmt/network\#fork-destination-box}{Fork
+  it}
+\item
+  Create your feature branch (\texttt{git\ checkout\ -b\ my-new-idea})
+\item
+  Commit your changes
+  (\texttt{git\ commit\ -am\ Add\ some\ feature})
+\item
+  Publish the branch (\texttt{git\ push\ origin\ my-new-idea})
+\item
+  Create a new Pull Request
+\item
+  Profit! :white\_check\_mark:
+\end{enumerate}
+
+\subsection{ChangeLog}\label{changelog}
+
+The history of releases can be viewed at
+\href{docs/ChangeLog.md}{ChangeLog}
+
+\subsection{Acknowlegments}\label{acknowlegments}
+
+\subsection{References}\label{references}
+
+\begin{itemize}
+\item
+  \href{https://earthquake.usgs.gov/research/software/coulomb/}{Coulomb
+  3, developed by USGS}
+\item
+  Toda, Shinji, Stein, R.S., Sevilgen, Volkan, and Lin, Jian, 2011,
+  Coulomb 3.3 Graphic-rich deformation and stress-change software for
+  earthquake, tectonic, and volcano research and teaching---user guide:
+  U.S. Geological Survey Open-File Report 2011-1060, 63 p., available at
+  http://pubs.usgs.gov/of/2011/1060/.
+\item
+  \href{http://gmt.soest.hawaii.edu/}{The Generic Mappting Tools - GMT}
+\end{itemize}

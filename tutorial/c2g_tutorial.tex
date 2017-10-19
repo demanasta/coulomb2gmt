@@ -1,0 +1,66 @@
+\PassOptionsToPackage{usenames,dvipsnames}{xcolor}
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{shapes,shapes.geometric, arrows}
+\usepackage{hyperref}
+\usepackage{fancyvrb}
+\usepackage{listings}
+\usepackage{graphicx} % Required for the inclusion of images
+\usepackage{natbib}   % Required to change bibliography style to APA
+\usepackage{amsmath}  % Required for some math elements
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{makeidx}
+\usepackage[tikz]{bclogo} % Pretty formating of warning blocks
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
+
+% warning box
+\definecolor{warningbackground}{RGB}{252,226,158}
+%\usepackage{floatflt}
+\newcommand{\alertwarningbox}[1]{
+    \centering
+    \colorbox{warningbackground}{\parbox{400pt} {
+            \vskip 10pt
+            \begin{floatingfigure}[l]{50pt}
+                \includegraphics[scale=.05]{img/danger.pdf}
+            \end{floatingfigure}
+            #1
+            \vskip 10pt
+        }
+    }
+}
+
+\title{coulomb2gmt \\ Reference \& User Guide} % Title
+\author{Demitris G. \textsc{Anastasiou} \\ \scriptsize{Dr.Eng | Rural \& Surveying Engineer NTUA} } % Author name
+\date{\today} % Date for the report
+
+\makeindex
+
+\begin{document}
+\maketitle % Insert the title, author and date
+\begin{center}
+\begin{tabular}{l r}
+First Release : & October 10, 2017 \\
+Repository:    & \url{http://github.com/demanasta/coulomb2gmt} \\
+Version:        & v1.0-beta6.0
+\end{tabular}
+\end{center}
+
+\begin{abstract}
+{\small 
+This document describes the routine processing of GNSS data as developed at Dionysos Satellite Observatory (DSO), of National Technical University
+of Athens (NTUA).
+}
+\end{abstract}
+\clearpage
+
+\tableofcontents
+\clearpage
+
+\input{README.tex}
+
+\end{document}

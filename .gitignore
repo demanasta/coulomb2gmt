@@ -30,11 +30,11 @@
 *#*
 *.nls*
 *.nlg*
-thesis.pdf*
-thesis*.pdf
-thesis.txt*
-thesis.bcf*
-thesis.run.xml*
+*.pdf*
+*.pdf
+*.txt*
+*.bcf*
+*.run.xml*
 *run.xml*
 *.latexmkrc*
 *_latexmk*
