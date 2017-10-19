@@ -82,6 +82,8 @@ Many parameters configured at `default-param` file.
 
 * `-mt "map title"`: Custom map title.
 
+* `-ctext  <path to file>` :  Plot Custom text. Config custom text file.
+
 * `-h`: Help menu
 
 * `-debug`:Enable Debug option 

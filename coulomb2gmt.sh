@@ -226,6 +226,7 @@ then
 	shift
 	;;
     -cmt)
+	DEBUG echo "[DEBUG] cmt: next argument:" ${4}
 	if  [ $# -gt 3 ] && [ -f ${4} ];
 	then
 	  CMT=1
@@ -233,14 +234,18 @@ then
 	  DEBUG echo "cmt file is: $inpcmt"
 	  shift
 	  shift
-# 	elif  [ $# -gt 4 ] && [ ! -f ${4} ];
-# 	then
-# 	  echo "[WARNING] CMT file does not exist!CMT will not plot"
-# 	  shift
-# 	  shift
+	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ];
+	then
+	  echo "[WARNING] CMT file does not set! CMT will not plot"
+	  shift
+	elif  [ $# -gt 3 ] && [ ! -f ${4} ];
+	then
+	  echo "[WARNING] CMT file does not exist! CMT will not plot"
+	  shift
+	  shift
 	elif [ $# -eq 3 ];
 	then
-	  echo "[WARNING] CMT file does not exist!CMT will not plot"
+	  echo "[WARNING] CMT file does not exist! CMT will not plot"
 	  shift
 	fi
 	;;
@@ -255,6 +260,7 @@ then
 	shift
 	;;
     -ctext)
+	DEBUG echo "[DEBUG] ctext: next argument:" ${4}
 	if  [ $# -gt 3 ] && [ -f ${4} ];
 	then
 	  CTEXT=1
@@ -262,14 +268,18 @@ then
 	  DEBUG echo "custom text file is: $pth2ctextfile"
 	  shift
 	  shift
-# 	elif  [ $# -gt 3 ] && [ ! -f ${4} ];
-# 	then
-# 	  echo "[WARNING] Text file does not exist!"
-# 	  shift
-# 	  shift
+	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ];
+	then
+	  echo "[WARNING] Custom text file does not set! Custom text will not plot"
+	  shift
+	elif  [ $# -gt 3 ] && [ ! -f ${4} ];
+	then
+	  echo "[WARNING] Custom text file does not exist! Custom text will not plot"
+	  shift
+	  shift
 	elif [ $# -eq 3 ];
 	then
-	  echo "[WARNING] Text file does not exist!"
+	  echo "[WARNING] Custom text file does not set! Custom text will not plot"
 	  shift
 	fi
 	;;
@@ -369,9 +379,13 @@ then
 	OUTPDF=1
 	shift
 	;;
-	-h)
+    -h)
 	help
 	;;
+    *)
+      echo "[ERROR] Bad argument structure. Script Finished Unsuccesful!"
+      echo "[ERROR] Exit Status 1"
+      exit 1
     esac
   done
 else
