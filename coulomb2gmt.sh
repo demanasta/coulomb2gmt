@@ -95,6 +95,8 @@ function DEBUG()
  [ "$_DEBUG" == "on" ] &&  $@
 }
 
+source .checknum.sh
+
 # //////////////////////////////////////////////////////////////////////////////
 # GMT parameters
 #gmtset MAP_FRAME_TYPE fancy
@@ -194,18 +196,43 @@ then
 	shift
 	;;
     -r)
-	RANGE=1
-	minlon=${4}
-	maxlon=${5}
-	minlat=${6}
-	maxlat=${7}
-	prjscale=${8}
-	shift
-	shift
-	shift
-	shift
-	shift
-	shift
+	DEBUG echo "-r next arguments:" ${4} ${5} ${6} ${7} ${8}
+	if [ $# -ge 8 ];
+	then
+ 	  isNumber ${4};  if [ $? -eq 0 ]; then
+# 	    isNumber ${5}; if [ $? -eq 0 ] && [ ${5} -gt ${4} ]; then
+# 	      isNumber ${6}; if [ $? -eq 0 ]; then
+# 		isNumber ${7}; if [ $? -eq 0 ] && [ ${7} -gt ${6} ]; then
+# 		  isNumber ${8}; if [ $? -eq 0 ] && [ ${7} -gt 0 ]; then
+		    DEBUG echo "[DEBUG:${LINENO}] test if"
+		    	  RANGE=1
+			  minlon=${4}
+			  maxlon=${5}
+			  minlat=${6}
+			  maxlat=${7}
+			  prjscale=${8}
+			  shift
+			  shift
+			  shift
+			  shift
+			  shift
+# 		  fi
+# 		fi
+# 	      fi
+# 	  fi
+	    
+	else
+ 	  echo "[ERROR] Not enough input arguments at \"-r\" option."
+	  echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+	  exit 1
+ 
+	fi
+	else
+	  echo "[ERROR] Not enough input arguments at \"-r\" option."
+	  echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+	  exit 1
+	fi
+	shift # for -r
 	;;
     -topo)
 	TOPOGRAPHY=1
@@ -239,27 +266,24 @@ then
 	;;
     -cmt)
 	DEBUG echo "[DEBUG:${LINENO}] cmt: next argument:" ${4}
-	if  [ $# -gt 3 ] && [ -f ${4} ];
+	if  [ $# -ge 4 ] && [ -f ${4} ];
 	then
 	  CMT=1
 	  inpcmt=${4}
 	  DEBUG echo "cmt file is: $inpcmt"
 	  shift
-	  shift
-	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ];
+	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ];
 	then
 	  echo "[WARNING] CMT file does not set! CMT will not be plotted"
-	  shift
-	elif  [ $# -gt 3 ] && [ ! -f ${4} ];
+	elif  [ $# -ge 4 ] && [ ! -f ${4} ];
 	then
 	  echo "[WARNING] CMT file does not exist! CMT will not be plotted"
-	  shift
 	  shift
 	elif [ $# -eq 3 ];
 	then
 	  echo "[WARNING] CMT file does not exist! CMT will not be plotted"
-	  shift
 	fi
+	shift #shift for arg -cmt
 	;;
     -faults)
 	FAULTS=1
@@ -267,45 +291,40 @@ then
 	;;	
     -mt)
 	DEBUG echo "[DEBUG:${LINENO}] maptitle: next argument:" ${4}
-	if [ $# -gt 3 ] && [ ${4:0:1} != \- ];
+	if [ $# -ge 4 ] && [ ${4:0:1} != \- ];
 	then
 	  MTITLE=1
 	  mtitle=$4
 	  shift
-	  shift
-	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ];
+	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ];
 	then
 	  echo "[WARNING] No map title defined. Default title will be printed"
-	  shift
 	elif [ $# -eq 3 ];
 	then
 	  echo "[WARNING] No map title defined. Default title will be printed"
-	  shift
 	fi
+	shift #shift for the argument -mt
 	;;
     -ctext)
 	DEBUG echo "[DEBUG:${LINENO}] ctext: next argument:" ${4}
-	if  [ $# -gt 3 ] && [ -f ${4} ];
+	if  [ $# -ge 4 ] && [ -f ${4} ];
 	then
 	  CTEXT=1
 	  pth2ctextfile=${4}
 	  DEBUG echo "custom text file is: $pth2ctextfile"
 	  shift
-	  shift
-	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ];
+	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ];
 	then
 	  echo "[WARNING] Custom text file does not set! Custom text will not be plotted"
-	  shift
-	elif  [ $# -gt 3 ] && [ ! -f ${4} ];
+	elif  [ $# -ge 4 ] && [ ! -f ${4} ];
 	then
 	  echo "[WARNING] Custom text file does not exist! Custom text will not be plotted"
-	  shift
 	  shift
 	elif [ $# -eq 3 ];
 	then
 	  echo "[WARNING] Custom text file does not set! Custom text will not be plotted"
-	  shift
 	fi
+	shift # shift for the arg -ctext
 	;;
     -cstress)
 	CSTRESS=1
@@ -407,8 +426,8 @@ then
 	help
 	;;
     -*)
-      echo "[ERROR] Bad argument structure. Script Finished Unsuccesful!"
-      echo "[ERROR] Exit Status 1"
+      echo "[ERROR] Bad argument structure. argument \"$3\" is not right"
+      echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
       exit 1
     esac
   done
