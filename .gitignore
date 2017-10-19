@@ -1,0 +1,17 @@
+# gmt tmp files
+gmt.conf
+gmt.history
+*.log
+
+# gmt outputs
+*.eps
+*.ps
+*.jpg
+*.png
+*.gif
+
+#coulomb output files
+*.dat
+*.disp
+*.inp
+
