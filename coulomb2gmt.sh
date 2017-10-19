@@ -83,7 +83,7 @@ function help {
   echo "           -outpdf : Adjust and convert to PDF"
   echo ""
   echo " Exit Status:    1 -> help message or error"
-  echo " Exit Status: >= 0 -> sucesseful exit"
+  echo " Exit Status:  = 0 -> sucesseful exit"
   echo ""
   echo "/******************************************************************************/"
   exit 1
@@ -95,7 +95,9 @@ function DEBUG()
  [ "$_DEBUG" == "on" ] &&  $@
 }
 
-source .checknum.sh
+# //////////////////////////////////////////////////////////////////////////////
+# Source function files
+source .checknum.sh  # check number functions
 
 # //////////////////////////////////////////////////////////////////////////////
 # GMT parameters
@@ -199,34 +201,48 @@ then
 	DEBUG echo "-r next arguments:" ${4} ${5} ${6} ${7} ${8}
 	if [ $# -ge 8 ];
 	then
- 	  isNumber ${4};  if [ $? -eq 0 ]; then
-# 	    isNumber ${5}; if [ $? -eq 0 ] && [ ${5} -gt ${4} ]; then
-# 	      isNumber ${6}; if [ $? -eq 0 ]; then
-# 		isNumber ${7}; if [ $? -eq 0 ] && [ ${7} -gt ${6} ]; then
-# 		  isNumber ${8}; if [ $? -eq 0 ] && [ ${7} -gt 0 ]; then
-		    DEBUG echo "[DEBUG:${LINENO}] test if"
-		    	  RANGE=1
-			  minlon=${4}
-			  maxlon=${5}
-			  minlat=${6}
-			  maxlat=${7}
-			  prjscale=${8}
-			  shift
-			  shift
-			  shift
-			  shift
-			  shift
-# 		  fi
-# 		fi
-# 	      fi
-# 	  fi
-	    
-	else
- 	  echo "[ERROR] Not enough input arguments at \"-r\" option."
-	  echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
-	  exit 1
- 
-	fi
+ 	  isNumber ${4};  if [ $? -eq 0 ];  then
+	    isNumber ${5}; if [ $? -eq 0 ] && [ $(echo "$5 >$4" | bc) -eq 1 ]; then
+	      isNumber ${6}; if [ $? -eq 0 ]; then
+		isNumber ${7}; if [ $? -eq 0 ] && [ $(echo "$7 > $6" | bc) -eq 1 ]; then
+		  isNumber ${8}; if [ $? -eq 0 ] && [ $(echo "$8 > 0" | bc) -eq 1 ]; then
+		    DEBUG echo "[DEBUG:${LINENO}] test if $?"
+		    RANGE=1
+		    minlon=${4}
+		    maxlon=${5}
+		    minlat=${6}
+		    maxlat=${7}
+		    prjscale=${8}
+		    shift
+		    shift
+		    shift
+		    shift
+		    shift
+		  else
+		    echo "[ERROR] \"-r\": projscale must be a number and greater than 0."
+		    echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+		    exit 1
+		  fi
+		else
+		  echo "[ERROR] \"-r\": maxlat must be a number and greater than minlat."
+		  echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+		  exit 1
+		fi
+	      else
+		echo "[ERROR] \"-r\": minlat must be a number."
+		echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+		exit 1
+	      fi
+	    else
+	      echo "[ERROR] \"-r\": maxlon must be number and greater than minlon."
+	      echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+	      exit 1
+	    fi
+	  else
+	    echo "[ERROR] \"-r\": minlon must be number."
+	    echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+	    exit 1
+	  fi
 	else
 	  echo "[ERROR] Not enough input arguments at \"-r\" option."
 	  echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
