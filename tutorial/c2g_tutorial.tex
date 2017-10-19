@@ -1,8 +1,12 @@
-\PassOptionsToPackage{usenames,dvipsnames}{xcolor}
+% \PassOptionsToPackage{usenames,dvipsnames}{xcolor}
 \documentclass{article}
 \usepackage{tikz}
 \usetikzlibrary{shapes,shapes.geometric, arrows}
 \usepackage{hyperref}
+\hypersetup{
+    colorlinks = true,
+    urlcolor = {blue}
+    }
 \usepackage{fancyvrb}
 \usepackage{listings}
 \usepackage{graphicx} % Required for the inclusion of images
@@ -34,26 +38,27 @@
     }
 }
 
-\title{coulomb2gmt \\ Reference \& User Guide} % Title
-\author{Demitris G. \textsc{Anastasiou} \\ \scriptsize{Dr.Eng | Rural \& Surveying Engineer NTUA} } % Author name
+\title{Plot coulomb outputs on GMT \texttt{coulomb2gmt} \\ \large{Reference \& User Guide} } % Title
+\author{Demitris G. \textsc{Anastasiou} \\ \normalsize{Dr.Eng | Rural \& Surveying Engineer NTUA} } % Author name
 \date{\today} % Date for the report
-
 \makeindex
+
 
 \begin{document}
 \maketitle % Insert the title, author and date
 \begin{center}
+\vskip 1cm
 \begin{tabular}{l r}
 First Release : & October 10, 2017 \\
 Repository:    & \url{http://github.com/demanasta/coulomb2gmt} \\
-Version:        & v1.0-beta6.0
+Release:        & v1.0-beta6.0\\
+Develop:        & v1.0-beta8.3
 \end{tabular}
 \end{center}
-
+\vfill
 \begin{abstract}
 {\small 
-This document describes the routine processing of GNSS data as developed at Dionysos Satellite Observatory (DSO), of National Technical University
-of Athens (NTUA).
+This document describes all option of project \texttt{coulomb2gmt} that plot coulomb outputs on GMT enviroment.
 }
 \end{abstract}
 \clearpage
@@ -62,5 +67,6 @@ of Athens (NTUA).
 \clearpage
 
 \input{README.tex}
+
 
 \end{document}
