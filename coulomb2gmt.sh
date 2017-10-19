@@ -212,10 +212,22 @@ then
 	shift
 	;;
     -o)
-	OUTFILES=1
-	outfile=${4}.ps
-	shift
-	shift
+	DEBUG echo "[DEBUG:${LINENO}] -o: next argument:" ${4}
+	if [ $# -gt 3 ] && [ ${4:0:1} != \- ];
+	then
+	  OUTFILES=1
+	  outfile=${4}.ps
+	  shift
+	  shift
+	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ];
+	then
+	  echo "[WARNING] Not output file name set"
+	  shift
+	elif [ $# -eq 3 ];
+	then
+	  echo "[WARNING] Not output file name set"
+	  shift
+	fi
 	;;
     -logogmt)
 	LOGOGMT=1
@@ -226,7 +238,7 @@ then
 	shift
 	;;
     -cmt)
-	DEBUG echo "[DEBUG] cmt: next argument:" ${4}
+	DEBUG echo "[DEBUG:${LINENO}] cmt: next argument:" ${4}
 	if  [ $# -gt 3 ] && [ -f ${4} ];
 	then
 	  CMT=1
@@ -236,16 +248,16 @@ then
 	  shift
 	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ];
 	then
-	  echo "[WARNING] CMT file does not set! CMT will not plot"
+	  echo "[WARNING] CMT file does not set! CMT will not be plotted"
 	  shift
 	elif  [ $# -gt 3 ] && [ ! -f ${4} ];
 	then
-	  echo "[WARNING] CMT file does not exist! CMT will not plot"
+	  echo "[WARNING] CMT file does not exist! CMT will not be plotted"
 	  shift
 	  shift
 	elif [ $# -eq 3 ];
 	then
-	  echo "[WARNING] CMT file does not exist! CMT will not plot"
+	  echo "[WARNING] CMT file does not exist! CMT will not be plotted"
 	  shift
 	fi
 	;;
@@ -254,13 +266,25 @@ then
 	shift
 	;;	
     -mt)
-	MTITLE=1
-	mtitle=$4
-	shift
-	shift
+	DEBUG echo "[DEBUG:${LINENO}] maptitle: next argument:" ${4}
+	if [ $# -gt 3 ] && [ ${4:0:1} != \- ];
+	then
+	  MTITLE=1
+	  mtitle=$4
+	  shift
+	  shift
+	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ];
+	then
+	  echo "[WARNING] No map title defined. Default title will be printed"
+	  shift
+	elif [ $# -eq 3 ];
+	then
+	  echo "[WARNING] No map title defined. Default title will be printed"
+	  shift
+	fi
 	;;
     -ctext)
-	DEBUG echo "[DEBUG] ctext: next argument:" ${4}
+	DEBUG echo "[DEBUG:${LINENO}] ctext: next argument:" ${4}
 	if  [ $# -gt 3 ] && [ -f ${4} ];
 	then
 	  CTEXT=1
@@ -270,16 +294,16 @@ then
 	  shift
 	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ];
 	then
-	  echo "[WARNING] Custom text file does not set! Custom text will not plot"
+	  echo "[WARNING] Custom text file does not set! Custom text will not be plotted"
 	  shift
 	elif  [ $# -gt 3 ] && [ ! -f ${4} ];
 	then
-	  echo "[WARNING] Custom text file does not exist! Custom text will not plot"
+	  echo "[WARNING] Custom text file does not exist! Custom text will not be plotted"
 	  shift
 	  shift
 	elif [ $# -eq 3 ];
 	then
-	  echo "[WARNING] Custom text file does not set! Custom text will not plot"
+	  echo "[WARNING] Custom text file does not set! Custom text will not be plotted"
 	  shift
 	fi
 	;;
@@ -382,7 +406,7 @@ then
     -h)
 	help
 	;;
-    *)
+    -*)
       echo "[ERROR] Bad argument structure. Script Finished Unsuccesful!"
       echo "[ERROR] Exit Status 1"
       exit 1
