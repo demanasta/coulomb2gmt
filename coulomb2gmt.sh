@@ -534,7 +534,7 @@ if [ "$CMT" -eq 1 ]
 then
   if [ ! -f $inpcmt ]
   then
-    echo "[WARNING]  CMT file does not exist, moment tensors will not plot"
+    echo "[WARNING] CMT file does not exist, moment tensors will not plot"
     CMT=0
   fi
 fi
@@ -1127,4 +1127,4 @@ then
 fi
 
 # Print exit status
-echo "Finished. Exit status: $?"
+echo "[STATUS] Finished. Exit status: $?"
