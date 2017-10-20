@@ -549,7 +549,7 @@ if [ "$LOGOGMT" -eq 0 ]
 then
   logogmt_pos=""
 else
-  DEBUG echo "[DEBUG:${LINENO}] logo gmt position set: $logogmt_pos" >&2
+  DEBUG echo "[DEBUG:${LINENO}] logo gmt position set: $logogmt_pos"
 fi
 
 ### check LOGO file
@@ -1130,7 +1130,7 @@ fi
 # Plot custom text configured at custom_text file
 if [ "$CTEXT" -eq 1 ]
 then
-  
+  echo "...plot custom text file..."
   grep -v "#" $pth2ctextfile | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V  >> $outfile
 fi
 
