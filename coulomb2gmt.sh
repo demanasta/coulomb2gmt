@@ -168,12 +168,12 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # GET COMMAND LINE ARGUMENTS
 echo "...get command line arguments..."
-if [ "$#" == "0" ]
+if [ "$#" -eq 0 ];
 then
   help
-elif [ "$#" == "1" ]
+elif [ "$#" -eq 1 ];
 then
-  if [ "$1" == "-h" ]
+  if [ "$1" == "-h" ];
   then
     help
   else
@@ -181,11 +181,11 @@ then
     echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
     exit 1
   fi
-elif [ "$#" == "2" ]
+elif [ "$#" -eq 2 ];
 then
-    echo "[ERROR] Not enough input arguments."
-    echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
-    exit 1
+  echo "[ERROR] Not enough input arguments."
+  echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+  exit 1
 elif [ -f ${pth2inpdir}/${1}.inp ];
 then
   inputfile=${1}.inp
@@ -559,6 +559,37 @@ then
 	LOGO=0
 fi
 
+### check pth2coutfile
+if [ "$CSTRESS" -eq 1 ] || [ "$SSTRESS" -eq 1 ] || [ "$NSTRESS" -eq 1 ];
+then
+  if [ ! -f "$pth2coutfile" ] || [ ! -f "$pth2dcfffile" ];
+  then
+    echo "[WARNING] "$pth2coutfile" or  "$pth2dcfffile" does not exist!"
+    echo "[WARNING] Stress output will not plot"
+    CSTRESS=0; SSTRESS=0; NSTRESS=0;
+  fi
+fi
+
+if [ "$STREXX" -eq 1 ] || [ "$STREYY" -eq 1 ] || [ "$STREZZ" -eq 1 ] || \
+[ "$STREYZ" -eq 1 ] || [ "$STREXZ" -eq 1 ] || [ "$STREXY" -eq 1 ] || [ "$STRDIL" -eq 1 ];
+then
+  if [ ! -f "$pth2coutfile" ] || [ ! -f "$pth2strnfile" ];
+  then
+    echo "[WARNING] "$pth2coutfile" or  "$pth2strnfile" does not exist!"
+    echo "[WARNING] Stress or Strain output will not plot"
+    STREXX=0; STREYY=0;	STREZZ=0; STREYZ=0; STREXZ=0; STREXY=0; STRDIL=0;
+  fi
+fi
+
+## check for displacements file
+if [ "$DGPSHO" -eq 1 ] || [ "$DGPSHM" -eq 1 ] || [ "$DGPSVO" -eq 1 ] || [ "$DGPSVM" -eq 1 ];
+then
+  if [ ! -f "$pth2gpsdfile" ];
+  then
+    echo "[WARNING] "$pth2gpsdfile" does no exist. Velocities will not plotted."
+    DGPSHO=0; DGPSHM=0; DGPSVO=0; DGPSVM=0;
+  fi
+fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # Configure Map Range
