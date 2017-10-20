@@ -646,6 +646,9 @@ then
 elif [ "$STREXY" -eq 1 ]
 then
   mtitle="Strain Component Exy"
+elif [ "$STRDIL" -eq 1 ]
+then
+  mtitle="Dilatation (Exx + Eyy + Ezz)"
 elif [ "$DGPSHO" -eq 1 ] || [ "$DGPSHM" -eq 1 ]
 then
   mtitle="Horizontal Displacements"
@@ -663,8 +666,8 @@ fi
 if [ "$CSTRESS" -eq 0 ] || [ "$SSTRESS" -eq 0 ] || [ "$NSTRESS" -eq 0 ] || [ "$DILSTRAIN" -eq 0 ]
 then
   ################## Plot coastlines only ######################
-  gmt pscoast $range $proj  -Df -W0.25p,black -G240  $logogmt_pos -K  -Y4.5c > $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt pscoast $range $proj  -Df -W0.25p,black -G240   -K  -Y4.5c > $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
   
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
@@ -687,7 +690,7 @@ then
   gmt pscoast -R -J -O -K -Q >> $outfile
   #------- coastline -------------------------------------------
   gmt psbasemap -R -J -O -K -B$frame:."$maptitle":  $scale >> $outfile
-  gmt pscoast -J -R -Df -W0.25p,black -K  -O -U$logo_pos >> $outfile
+  gmt pscoast -J -R -Df -W0.25p,black -K  -O -$logogmt_pos >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -702,7 +705,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -732,7 +735,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -762,7 +765,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -793,7 +796,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -823,7 +826,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -853,7 +856,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -883,7 +886,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -913,7 +916,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -943,7 +946,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -973,7 +976,7 @@ then
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
@@ -991,15 +994,18 @@ fi
 
 if [ "$FPROJ" -eq 1 ]
 then
+  echo "...plot fault projection..."
   gmt psxy ${pth2fprojfile} -Jm -O -R  -W1,red  -K >> $outfile
 fi
 if [ "$FSURF" -eq 1 ]
 then
-  gmt psxy ${pth2fsurffile} -Jm -O -R  -W0.4,0  -K >> $outfile
+  echo "...plot fault surface..."
+  gmt psxy ${pth2fsurffile} -Jm -O -R  -W0.5,green  -K >> $outfile
 fi
 if [ "$FDEP" -eq 1 ]
 then
-  gmt psxy ${pth2fdepfile} -Jm -O -R -W0.4,black -K >> $outfile
+  echo "...plot depth calculation..."
+  gmt psxy ${pth2fdepfile} -Jm -O -R -W0.5,black -K >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -1124,6 +1130,7 @@ fi
 # Plot custom text configured at custom_text file
 if [ "$CTEXT" -eq 1 ]
 then
+  
   grep -v "#" $pth2ctextfile | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V  >> $outfile
 fi
 
