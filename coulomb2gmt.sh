@@ -177,17 +177,22 @@ then
   then
     help
   else
-    echo "***** not enough input arguments ******"
-    echo " use -h to present help documentation"
+    echo "[ERROR] Not enough input arguments."
+    echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
     exit 1
   fi
+elif [ "$#" == "2" ]
+then
+    echo "[ERROR] Not enough input arguments."
+    echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+    exit 1
 elif [ -f ${pth2inpdir}/${1}.inp ];
 then
   inputfile=${1}.inp
   pth2inpfile=${pth2inpdir}/${1}.inp
   inputdata=${2}
-  echo "input file exist"
-  echo "input coulomb file:" $inputfile " input data files code:" $inputdata
+  echo "[STATUS] input file exist"
+  echo "[STATUS] input coulomb file:" $inputfile " input data files code:" $inputdata
   while [ $# -gt 2 ]
   do
     case "$3" in
@@ -198,7 +203,7 @@ then
 	shift
 	;;
     -r)
-	DEBUG echo "-r next arguments:" ${4} ${5} ${6} ${7} ${8}
+	DEBUG echo "[DEBUG:${LINENO}] -r next arguments:" ${4} ${5} ${6} ${7} ${8}
 	if [ $# -ge 8 ];
 	then
  	  isNumber ${4};  if [ $? -eq 0 ];  then
@@ -448,7 +453,7 @@ then
     esac
   done
 else
-    echo " ************* File does not exist! use corret input file *********"
+    echo "[ERROR] Input file does not exist! use corret input file"
     help
 fi
 
@@ -487,23 +492,23 @@ pth2gpsdfile=${pth2gpsdir}/${inputdata}.disp
 # Check if all input file exist
 echo "...check all input files and paths"
 ### check fault map projection file
-if [ ! -f "${pth2fprojfile}" ]
+if [ "$FPROJ" -eq 1 ] && [ ! -f "${pth2fprojfile}" ]
 then
   echo "[WARNING] fault map projection file: "${pth2fprojfile}" does not exist"
   FPROJ=0
 fi
 
 ### check fault surface file
-if [ ! -f "${pth2fsurffile}" ]
+if [ "$FSURF" -eq 1 ] && [ ! -f "${pth2fsurffile}" ]
 then
   echo "[WARNING] fault surface file: "${pth2fsurffile}" does not exist"
   FSURF=0
 fi
 
 ### check fault surface file
-if [ ! -f "${pth2fdepfile}" ]
+if [ "$FDEP" -eq 1 ] && [ ! -f "${pth2fdepfile}" ]
 then
-  echo "[WARNING] fault surfece file: "${pth2fdepfile}" does not exist"
+  echo "[WARNING] fault Depth file: "${pth2fdepfile}" does not exist"
   FDEP=0
 fi
 
@@ -555,6 +560,8 @@ then
 fi
 
 
+# //////////////////////////////////////////////////////////////////////////////
+# Configure Map Range
 
 if [ "$RANGE" -eq 0 ]
 then
@@ -659,7 +666,7 @@ if [ "$CSTRESS" -eq 1 ]
 then
   echo "...plot Coulomb Stress Change map... "
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd ${inputdata}-coulomb_out.dat -Gtmpgrd $range -I0.05
+  gmt xyz2grd ${pth2coutfile} -Gtmpgrd $range -I0.05
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile

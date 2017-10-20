@@ -21,13 +21,13 @@ pth2faults=$HOME/Map_project/faults/NOAFaults_v1.0.gmt
 pth2inpdir=../inp_historic/
 
 # Path to directory of *.dat files
-pth2datdir=$(pwd)
+pth2datdir=../gmt_files_hokada01/
 
 # Path to directory of *.cou files
 pth2coudir=../output_files/
 
 # Path to directory of *.disp files. GPS displacements
-pth2gpsdir=$(pwd)
+pth2gpsdir=../gps_data/
 
 # pth2gpsfile=${inputdata}.disp
 #pth2inpdata=../input_zakynthos/${inputfile}.inp
