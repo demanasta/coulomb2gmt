@@ -487,7 +487,7 @@ pth2coutfile=${pth2datdir}/${inputdata}-coulomb_out.dat
 pth2dcfffile=${pth2coudir}/${inputdata}-dcff.cou
 pth2strnfile=${pth2coudir}/${inputdata}_Strain.cou
 
-pth2gpsdfile=${pth2gpsdir}/${inputdata}.disp
+pth2gpsdfile=${pth2gpsdir}/${inputdata}-gps.disp
 # //////////////////////////////////////////////////////////////////////////////
 # Check if all input file exist
 echo "...check all input files and paths"
