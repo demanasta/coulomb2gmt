@@ -23,6 +23,9 @@
 #    uses                  : 
 #    notes                 :
 #    detailed update list  : LAST_UPDATE=OCT-2017
+#                 OCT-2016 : Add logos, default parameters etc, 'didimoteixo v.' 
+#                 NOV-2015 : Strain plots, gps velocities, add topography
+#                 SEP-2015 : First release, stress plots, help, conversions
 #    contact               : Demitris Anastasiou (dganastasiou@gmail.com)
 #    ----------------------------------------------------------------------
 # ==============================================================================

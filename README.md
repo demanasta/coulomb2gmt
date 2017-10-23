@@ -137,6 +137,46 @@ Default format is `*.ps` file. You can use  the options bellow to convert  to ot
 
 * `-outpdf` : Adjust and convert to PDF
 
+## `mvclsbfiles.sh` script
+
+An assistant script `mvclbfiles.sh` developed to move` and rename all output files in specific directories on coulomb home directory.
+
+You must first set `CLB34_HOME` variable the path to coulomb home directory,
+etc. `$ export CLB34_HOME=${HOME}/coulomb34`
+
+__Usage__: `$ ./mvclsbfiles.sh <inputdata>`
+`<inputdata>` is the code as me ntioned in the main script above.
+
+__Files, Rename and move:__
+
+* `coulomb_out.dat` -> `/gmt_files/<inputdata>-coulomb_out.dat`
+
+_Fault geometry files_
+
+* `gmt_fault_calc_dep.dat` -> `/gmt_files/<inputdata>-gmt_fault_calc_dep.dat`
+
+* `gmt_fault_map_proj.dat` ->  `/gmt_files/<inputdata>-gmt_fault_map_proj.dat`
+
+* `gmt_fault_surface.dat` -> `/gmt_files/<inputdata>-gmt_fault_surface.dat`
+
+_GPS displacements_
+
+* `/output_files/GPS_output.csv` -> ` /gps_data/<inputdata>-gps.disp`
+
+_Stress change files_
+
+* `/output_files/Cross_section.dat` ->  `/output_files/<inputdata>-Cross_section.dat`
+
+* `/output_files/dcff.cou` ->  `/output_files/<inputdata>-dcff.cou`
+
+* `/output_files/dcff_section.cou` -> `/output_files/<inputdata>-dcff_section.cou`
+
+* `/output_files/Focal_mech_stress_output.csv` -> `/output_files/<inputdata>-Focal_mech_stress_output.csv`
+
+_Strain output files_
+
+* `/output_files/Strain.cou` -> `/output_files/<inputdata>-Strain.cou`
+
 ## Contributing
 
 1. Create an issue and describe your idea

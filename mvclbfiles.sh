@@ -11,11 +11,11 @@
 #    |** National Tecnical University of Athens**|
 #    |===========================================|
 #   
-#    filename              : coulomb2gmt.sh
-#                            NAME=coulomb2gmt
+#    filename              : mvclbfiles.sh
+#                            NAME=mvclbfiles
 #    version               : v-1.0
 #                            VERSION=v1.0
-#                            RELEASE=beta
+#                            RELEASE=v1.0
 #    licence               : MIT
 #    created               : SEP-2015
 #    usage                 :
@@ -24,18 +24,23 @@
 #    discription           : 
 #    uses                  : 
 #    notes                 :
-#    detailed update list  : LAST_UPDATE=OCT-2017
+#    detailed update list  : LAST_UPDATE=23-OCT-2017
+#              23-OCT-2017 : Add help, and CLB34_HOME variables
+#              10-SEP-2015 : first release
 #    contact               : Demitris Anastasiou (dganastasiou@gmail.com)
 #    ----------------------------------------------------------------------
 # ==============================================================================
 # HELP Function
 function help {
   echo "/******************************************************************************/"
-  echo " Program Name : mvgmtfiles.sh"
-  echo " Version : v-1.0-beta5.3"
+  echo " Program Name : mvclbfiles.sh"
+  echo " Version : v-1.0"
   echo " Purpose : raname and move input data files"
   echo " Usage   : mvgmtfile.sh <inputdata> "
+  echo "         : set first CLB34_HOME variable as coulomb home directory"
+  echo " oprions : -h [:= help] help function"
   echo "/******************************************************************************/"
+  echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
   exit 1
 }
 
@@ -43,10 +48,29 @@ function help {
 if [ "$#" -ne 1 ]
 then
   help
-else
+elif [ "${1}" == "-h" ];
+then
+  help
+elif [ "${1:0:1}" != "-" ];
+then
+  echo "...echo inputdata code set to :"${1}" ..."
   input=$1
+  echo "...start rename and move files..."
+else
+  echo "[ERROR] Bad argument structure. argument \"$1\" is not right"
+  help
 fi
-pth2clbdir=${HOME}/gh_project/coulomb34
+
+# set coulomb34 home dir 
+if [ ! -d "${CLB34_HOME}" ];
+then
+  echo "[ERROR] Coulomb home directory CLB34_HOME not set"
+  help
+else
+  pth2clbdir=${CLB34_HOME}
+  echo "CLB34_HOME set to: "$CLB34_HOME
+fi
+
 
 ## move file: coulomb_out.dat
 if [ -f ${pth2clbdir}/coulomb_out.dat ]; then
@@ -78,7 +102,7 @@ fi
 ## move file: gmt_fault_surface.dat
 if [ -f ${pth2clbdir}/gmt_fault_surface.dat ]; then
   mv ${pth2clbdir}/gmt_fault_surface.dat ${pth2clbdir}/gmt_files/${1}-gmt_fault_surface.dat
-  echo "...rename and move: gmt_fault_map_proj.dat..."
+  echo "...rename and move: gmt_fault_map_surface.dat..."
   echo "[NEWFILE]: "${pth2clbdir}/gmt_files/${1}-gmt_fault_surface.dat
 else
   echo "[WARNING] "${pth2clbdir}/gmt_fault_surface.dat" does not exist"
@@ -139,4 +163,7 @@ else
   echo "[WARNING] "${pth2clbdir}/output_files/Strain.cou" does not exist"
 fi
 
-echo "last input $1"
+echo "...last input: "$1" ..."
+
+# Print exit status
+echo "[STATUS] Finished. Exit status: $?"
