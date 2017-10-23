@@ -62,9 +62,10 @@ function help {
   echo "           -mt <title> [:= map title] title map default none use quotes"
   echo "           -ctext <file>[:=cusotm text] Plot custom text in map"
   echo "           -h [:= help] help menu"
-  echo "           -debug [:=DEBUG] enable debug option"
   echo "           -logogmt [:=gmt logo] Plot gmt logo and time stamp"
   echo "           -logocus [:=custom logo] Plot custom logo of your organization"
+  echo "           -v [:version] Plots script release"
+  echo "           -debug [:=DEBUG] enable debug option"
   echo ""
   echo "/*** PLOT FAULT PARAMETERS ****************************************************/"
   echo "           -fproj [:=Fault projection] "
@@ -192,6 +193,10 @@ then
   if [ "$1" == "-h" ];
   then
     help
+  elif [ "$1" == "-v" ];
+  then
+    echo "version: "$VERSION
+    exit 1
   else
     echo "[ERROR] Not enough input arguments."
     echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
@@ -285,11 +290,11 @@ then
 	  shift
 	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ];
 	then
-	  echo "[WARNING] Not output file name set"
+	  echo "[WARNING] No output file name set. Default name used."
 	  shift
 	elif [ $# -eq 3 ];
 	then
-	  echo "[WARNING] Not output file name set"
+	  echo "[WARNING] No output file name set. Default name used."
 	  shift
 	fi
 	;;
@@ -461,6 +466,11 @@ then
 	;;
     -h)
 	help
+	;;
+    -v)
+	echo "version: "$VERSION
+	exit 1
+	shift
 	;;
     -*)
       echo "[ERROR] Bad argument structure. argument \"$3\" is not right"

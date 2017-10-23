@@ -84,13 +84,17 @@ Many parameters configured at `default-param` file.
 
 * `-ctext  <path to file>` :  Plot Custom text. Config custom text file.
 
-* `-h`: Help menu
-
-* `-debug`:Enable Debug option 
-
 * `-logogmt`: Plot GMT logo and time stamp.
 
 * `-logocus`: Plot custom logo of your organization.
+
+* `-h`: Help menu
+
+* `-v`: Plot version
+
+* `-debug`:Enable Debug option 
+
+
 
 ### Plot fault parameters
 
