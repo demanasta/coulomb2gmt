@@ -29,12 +29,25 @@
 #    contact               : Demitris Anastasiou (dganastasiou@gmail.com)
 #    ----------------------------------------------------------------------
 # ==============================================================================
+
+# //////////////////////////////////////////////////////////////////////////////
+# pre define parameters
+
+# program version
+VERSION="v.1.0-beta5.6"
+
+# verbosity level for GMT, see http://gmt.soest.hawaii.edu/doc/latest/gmt.html#v-full
+# 
+VRBLEVM=n
+
+
+
 # //////////////////////////////////////////////////////////////////////////////
 # HELP FUNCTION
 function help {
   echo "/******************************************************************************/"
   echo " Program Name : coulomb2gmt.sh"
-  echo " Version : v-1.0-beta5.0"
+  echo " Version : $VERSION"
   echo " Purpose : Plot Coulomb Stress change results"
   echo " Usage   : coulomb2gmt.sh  <inputfile> <inputdata> | options | "
   echo " Switches: "
@@ -669,14 +682,14 @@ fi
 if [ "$CSTRESS" -eq 0 ] || [ "$SSTRESS" -eq 0 ] || [ "$NSTRESS" -eq 0 ] || [ "$DILSTRAIN" -eq 0 ]
 then
   ################## Plot coastlines only ######################
-  gmt pscoast $range $proj  -Df -W0.25p,black -G240   -K  -Y4.5c > $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
+  gmt pscoast $range $proj  -Df -W0.25p,black -G240   -K  -Y4.5c -V${VRBLEVM} > $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
   fi
 fi
 
@@ -684,16 +697,16 @@ if [ "$TOPOGRAPHY" -eq 1 ]
 then
   # ####################### TOPOGRAPHY ###########################
   # bathymetry
-  gmt makecpt -Cgebco.cpt -T-7000/0/50 -Z > $bathcpt
-  gmt grdimage $inputTopoB $range $proj -C$bathcpt -K > $outfile
-  gmt pscoast $proj -P $range -Df -Gc -K -O >> $outfile
+  gmt makecpt -Cgebco.cpt -T-7000/0/50 -Z -V${VRBLEVM} > $bathcpt
+  gmt grdimage $inputTopoB $range $proj -C$bathcpt -K -V${VRBLEVM} > $outfile
+  gmt pscoast $proj -P $range -Df -Gc -K -O -V${VRBLEVM} >> $outfile
   # land
-  gmt makecpt -Cgray.cpt -T-6000/1800/50 -Z > $landcpt
-  gmt grdimage $inputTopoL $range $proj -C$landcpt  -K -O >> $outfile
-  gmt pscoast -R -J -O -K -Q >> $outfile
+  gmt makecpt -Cgray.cpt -T-6000/1800/50 -Z -V${VRBLEVM} > $landcpt
+  gmt grdimage $inputTopoL $range $proj -C$landcpt  -K -O -V${VRBLEVM} >> $outfile
+  gmt pscoast -R -J -O -K -Q -V${VRBLEVM} >> $outfile
   #------- coastline -------------------------------------------
-  gmt psbasemap -R -J -O -K -B$frame:."$maptitle":  $scale >> $outfile
-  gmt pscoast -J -R -Df -W0.25p,black -K  -O -$logogmt_pos >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$maptitle":  $scale -V${VRBLEVM} >> $outfile
+  gmt pscoast -J -R -Df -W0.25p,black -K  -O -$logogmt_pos -V${VRBLEVM} >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -703,21 +716,21 @@ if [ "$CSTRESS" -eq 1 ]
 then
   echo "...plot Coulomb Stress Change map... "
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd ${pth2coutfile} -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
+  gmt xyz2grd ${pth2coutfile} -Gtmpgrd $range -I0.05 -V${VRBLEVM}
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
   fi
   ########### Plot scale Bar ####################
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt -B$bartick/:bar: -O -K >> $outfile
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
   rm tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -733,21 +746,21 @@ then
   paste -d" " tmpcou1 tmpcou2 >tmpcouall
  
  ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
+  gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05 -V${VRBLEVM}
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM}  >> $outfile
   fi
   ########### Plot scale Bar ####################
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
   rm tmpcou1 tmpcou2 tmpcouall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -763,21 +776,21 @@ then
   paste -d" " tmpcou1 tmpcou2 > tmpcouall
  
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c> $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
+  gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05 -V${VRBLEVM}
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
   fi
   ########### Plot scale Bar ####################
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
   rm tmpcou1 tmpcou2 tmpcouall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -794,21 +807,21 @@ then
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -824,21 +837,21 @@ then
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -854,21 +867,21 @@ then
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -884,21 +897,21 @@ then
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -914,21 +927,21 @@ then
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -944,21 +957,21 @@ then
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -974,21 +987,21 @@ then
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos >> $outfile
+  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
+  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   if [ "$FAULTS" -eq 1 ]
   then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  >> $outfile
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K >> $outfile
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
@@ -998,17 +1011,17 @@ fi
 if [ "$FPROJ" -eq 1 ]
 then
   echo "...plot fault projection..."
-  gmt psxy ${pth2fprojfile} -Jm -O -R  -W1,red  -K >> $outfile
+  gmt psxy ${pth2fprojfile} -Jm -O -R  -W1,red  -K -V${VRBLEVM} >> $outfile
 fi
 if [ "$FSURF" -eq 1 ]
 then
   echo "...plot fault surface..."
-  gmt psxy ${pth2fsurffile} -Jm -O -R  -W0.5,green  -K >> $outfile
+  gmt psxy ${pth2fsurffile} -Jm -O -R  -W0.5,green  -K -V${VRBLEVM} >> $outfile
 fi
 if [ "$FDEP" -eq 1 ]
 then
   echo "...plot depth calculation..."
-  gmt psxy ${pth2fdepfile} -Jm -O -R -W0.5,black -K >> $outfile
+  gmt psxy ${pth2fdepfile} -Jm -O -R -W0.5,black -K -V${VRBLEVM} >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -1017,9 +1030,9 @@ fi
 if [ "$CMT" -eq 1 ]
 then
   echo "...plot Centroid Moment Tensor file..."
-  awk '{print $1,$2}' $inpcmt | gmt psxy -Jm -O -R -Sa0.3c -Gred -K>> $outfile
+  awk '{print $1,$2}' $inpcmt | gmt psxy -Jm -O -R -Sa0.3c -Gred -K -V${VRBLEVM} >> $outfile
 # gmt psmeca $inpcmt $range -Jm -Sc0.7/0 -CP0.05  -O -P -K>> $outfile
-  awk '{print $1,$2,$3,$4,$5,$6,$7,$8,$9}' $inpcmt | gmt psmeca -R -Jm -Sa0.4 -CP0.05 -K -O -P >> $outfile
+  awk '{print $1,$2,$3,$4,$5,$6,$7,$8,$9}' $inpcmt | gmt psmeca -R -Jm -Sa0.4 -CP0.05 -K -O -P -V${VRBLEVM} >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -1028,7 +1041,7 @@ fi
 if [ "$FCROSS" -eq 1 ]
 then
 	psxy  ${inputdata}-cross.ll -Jm -O -R -W0.4,blue -K >> $outfile
-	awk '{print $1,$2,9,0,1,"RB",$3}' ${inputdata}-cross.ll | pstext -Jm -R -Dj0.1c/0.1c -O -V -K>> $outfile
+	awk '{print $1,$2,9,0,1,"RB",$3}' ${inputdata}-cross.ll | pstext -Jm -R -Dj0.1c/0.1c -O -V -K -V${VRBLEVM} >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -1052,14 +1065,14 @@ then
   tmpmagn=$(echo print $dhscmagn/1000.  | python )
   DEBUG echo "[DEBUG:${LINENO}]" $tmpmagn
 
-  echo "$scdhmlon $scdhmlat $tmpmagn 0 0 0 0 $dhscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
-  echo "$scdhmlonl $scdhmlatl  9 0 1 CT Modeled" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V>> $outfile
+  echo "$scdhmlon $scdhmlat $tmpmagn 0 0 0 0 $dhscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V${VRBLEVM} -K >> $outfile
+  echo "$scdhmlonl $scdhmlatl  9 0 1 CT Modeled" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V${VRBLEVM} >> $outfile
 fi
 
 if [ "$DGPSHO" -eq 1 ]
 then
   echo "...plot Horizontal Observed Displacements..."
-  awk -F, 'NR>2 {print $1,$2,$3,$4,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
+  awk -F, 'NR>2 {print $1,$2,$3,$4,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V${VRBLEVM} >> $outfile
 
   scdholat=$(echo print $scdhmlatl + .05 | python)
   scdholon=$scdhmlonl
@@ -1070,8 +1083,8 @@ then
 
   tmpmagn=$(echo print $dhscmagn/1000.  | python )
   DEBUG echo "[DEBUG:${LINENO}]" $tmpmagn
-  echo "$scdholon $scdholat $tmpmagn 0 0 0 0 $dhscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,red -A10p+e -Gred -O -L -V -K >> $outfile
-  echo "$scdholonl $scdholatl  9 0 1 CT Observed" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V>> $outfile
+  echo "$scdholon $scdholat $tmpmagn 0 0 0 0 $dhscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,red -A10p+e -Gred -O -L -V${VRBLEVM} -K >> $outfile
+  echo "$scdholonl $scdholatl  9 0 1 CT Observed" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V${VRBLEVM} >> $outfile
 fi
 
 scdvmlat=$(echo print $sclat + .25 | python)
@@ -1081,8 +1094,8 @@ scdvmlonl=$sclon
 if [ "$DGPSVM" -eq 1 ]
 then
   echo "...plot Vertical Modeled Displacements..."
-  awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile
-  awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V >> $outfile
+  awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V${VRBLEVM} >> $outfile
+  awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V${VRBLEVM} >> $outfile
   
   scdvmlon=$(echo print $sclon - 0.04 | python)
   DEBUG echo "[DEBUG:${LINENO}] scdvmlat = ${scdvmlat}  , scdvmlon = ${scdvmlon}"
@@ -1092,9 +1105,9 @@ then
 
   tmpmagn=$(echo print $dvscmagn/1000.  | python )
   DEBUG echo "[DEBUG:${LINENO}]"  $tmpmagn
-  echo "$scdvmlon $scdvmlat 0 -$tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -L -V -K >> $outfile
-  echo "$scdvmlon $scdvmlat 0 $tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -L -V -K >> $outfile
-  echo "$scdvmlonl $scdvmlatl 9,1,black 181 CM Modeled" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V>> $outfile
+  echo "$scdvmlon $scdvmlat 0 -$tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -L -V${VRBLEVM}  -K >> $outfile
+  echo "$scdvmlon $scdvmlat 0 $tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -L -V${VRBLEVM} -K >> $outfile
+  echo "$scdvmlonl $scdvmlatl 9,1,black 181 CM Modeled" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
 
 fi
 
@@ -1103,8 +1116,8 @@ if [ "$DGPSVO" -eq 1 ]
 then
   echo "...plot Vertical Observed Displacements..."
   DEBUG echo "[DEBUG:${LINENO}] -X.08c add in mext line"
-  awk -F, 'NR>2 {if ($5<0) print $1,$2,0,$5,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,0/255/0 -G0/255/0 -O -K -L -V -X.08c >> $outfile
-  awk -F, 'NR>2 {if ($5>=0) print $1,$2,0,$5,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 -O -K -L -V >> $outfile
+  awk -F, 'NR>2 {if ($5<0) print $1,$2,0,$5,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,0/255/0 -G0/255/0 -O -K -L -V${VRBLEVM} -X.08c >> $outfile
+  awk -F, 'NR>2 {if ($5>=0) print $1,$2,0,$5,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 -O -K -L -V${VRBLEVM} >> $outfile
 
   scdvolat=$scdvmlat
   scdvolon=$(echo print $sclon + 0.1 | python)
@@ -1115,9 +1128,9 @@ then
 
   tmpmagn=$(echo print $dvscmagn/1000.  | python )
   DEBUG echo "[DEBUG:${LINENO}]" $tmpmagn
-  echo "$scdvolon $scdvolat 0 -$tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,0/255/0 -A10p+e -G0/255/0 -O -L -V -K >> $outfile
-  echo "$scdvolon $scdvolat 0 $tmpmagn 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 -O -L -V -K >> $outfile
-  echo "$scdvolonl $scdvolatl 9,1,black 181 CM Observed" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V>> $outfile
+  echo "$scdvolon $scdvolat 0 -$tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,0/255/0 -A10p+e -G0/255/0 -O -L -V${VRBLEVM} -K >> $outfile
+  echo "$scdvolon $scdvolat 0 $tmpmagn 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 -O -L -V${VRBLEVM} -K >> $outfile
+  echo "$scdvolonl $scdvolatl 9,1,black 181 CM Observed" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
 
 fi
 
@@ -1125,7 +1138,7 @@ if [ "$DGPSVM" -eq 1 ] || [ "$DGPSVO" -eq 1 ]
 then
   scdvmolat=$(echo print $sclat + .07 | python)
   DEBUG echo "[DEBUG:${LINENO}] -X-.08 added next line"
-  echo "$sclon $scdvmolat 9,1,black 0 CM \261 $dvscmagn mm" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V -X-.08c >> $outfile
+  echo "$sclon $scdvmolat 9,1,black 0 CM \261 $dvscmagn mm" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V${VRBLEVM}  -X-.08c >> $outfile
 fi
 
 
@@ -1134,7 +1147,7 @@ fi
 if [ "$CTEXT" -eq 1 ]
 then
   echo "...plot custom text file..."
-  grep -v "#" $pth2ctextfile | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V  >> $outfile
+  grep -v "#" $pth2ctextfile | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V${VRBLEVM} >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -1143,35 +1156,35 @@ fi
 if [ "$LOGOCUS" -eq 1 ]
 then
   echo "...add custom logo..."
-  gmt psimage $pth2logo -O $logocus_pos  -F0.4  -K >>$outfile
+  gmt psimage $pth2logo -O $logocus_pos  -F0.4  -K -V${VRBLEVM} >>$outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # FINAL SECTION
 #################--- Close ps output file ----##################################
-echo "909 909" | gmt psxy -Sc.1 -Jm -O -R  -W1,red >> $outfile
+echo "909 909" | gmt psxy -Sc.1 -Jm -O -R  -W1,red -V${VRBLEVM} >> $outfile
 
 #################--- Convert to other format ----###############################
 if [ "$OUTJPG" -eq 1 ]
 then
   echo "...adjust and convert to JPEG format..."
 #   gs -sDEVICE=jpeg -dJPEGQ=100 -dNOPAUSE -dBATCH -dSAFER -r300 -sOutputFile=$out_jpg $outfile
-  gmt psconvert $outfile -A0.2c -Tj	
+  gmt psconvert $outfile -A0.2c -Tj -V${VRBLEVM} 
 fi
 if [ "$OUTPNG" -eq 1 ]
 then
   echo "...adjust and convert to PNG format..."
-  gmt psconvert $outfile -A0.2c -TG	
+  gmt psconvert $outfile -A0.2c -TG -V${VRBLEVM} 	
 fi
 if [ "$OUTEPS" -eq 1 ]
 then
   echo "...adjust and convert to EPS format..."
-  gmt psconvert $outfile -A0.2c -Te	
+  gmt psconvert $outfile -A0.2c -Te -V${VRBLEVM} 
 fi
 if [ "$OUTPDF" -eq 1 ]
 then
   echo "...adjust and convert to PDF format..."
-  gmt psconvert $outfile -A0.2c -Tf	
+  gmt psconvert $outfile -A0.2c -Tf -V${VRBLEVM} 
 fi
 
 # Print exit status
