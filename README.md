@@ -52,12 +52,32 @@ run: `$ ./coulomb2gmt.sh <inputfile> <inputdata> | options`
 * `<inputfile>`: name of input file used from Coulomb. Extention `.inp` not needed. Path to the directory of input files  configured at `default-param`.
 
 * `<inputdata>`:  Name of input files include results of coulmb calculations. Input data files are:
- 
-    * `<inputdata>-gmt_fault_surface.dat`:
-    * `<inputdata>-gmt_fault_map_proj.dat`:
-    * `<inputdata>-gmt_fault_calc_dep.dat`:
-    * `<inputdata>-coulomb_out.dat`:
-    * `<inputdata>-dcff.cou`:
+
+_Fault geometry files:_
+
+*  `<inputdata>-gmt_fault_surface.dat`:
+
+* `<inputdata>-gmt_fault_map_proj.dat`:
+
+* `<inputdata>-gmt_fault_calc_dep.dat`:
+
+_Stress change output files:_
+
+* `<inputdata>-coulomb_out.dat`:
+
+* `<inputdata>-dcff.cou`:
+
+* `<inputdata>-dcff_section.cou`:
+
+* `<inputdata>-Cross_section.dat`:
+
+* `<inputdata>-Focal_mech_stress_output.csv`:
+
+_Strain output files:_
+
+* `<inputdata>-Strain.cou`:
+
+_Earthquakes, GPS, custom text files:_
 
 
 
@@ -76,7 +96,9 @@ Many parameters configured at `default-param` file.
 
 * `-o <filename>`:  set custom name of output file. Default is `<inputadata>`.
 
-* `-cmt <path to file>` :  Plot Centroid Moment Tensors of earthquakes. 
+* `-cmt <file>` :  Plot Centroid Moment Tensors of earthquakes. 
+
+* `-eqdist <file>` : Plot earthquakes distribution. No classification. 
 
 *  `-faults`: Plot custom fault database catalogue.
 
