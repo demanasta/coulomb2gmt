@@ -29,6 +29,9 @@ pth2coudir=../output_files/
 # Path to directory of *.disp files. GPS displacements
 pth2gpsdir=../gps_data/
 
+# Path to earthquakes database
+pth2eqdir=../earthquake_data/
+
 # pth2gpsfile=${inputdata}.disp
 #pth2inpdata=../input_zakynthos/${inputfile}.inp
 

@@ -61,6 +61,7 @@ function help {
   echo "           -faults [:= faults] plot fault database catalogue"
   echo "           -mt <title> [:= map title] title map default none use quotes"
   echo "           -ctext <file>[:=cusotm text] Plot custom text in map"
+  echo "           -eqdist <file> [] Plot earthquake distribution"
   echo "           -h [:= help] help menu"
   echo "           -logogmt [:=gmt logo] Plot gmt logo and time stamp"
   echo "           -logocus [:=custom logo] Plot custom logo of your organization"
@@ -134,6 +135,7 @@ LOGOGMT=0
 LOGOCUS=0
 MTITLE=0
 CTEXT=0
+EQDIST=0
 
 RANGE=0
 CSTRESS=0
@@ -308,19 +310,15 @@ then
 	;;
     -cmt)
 	DEBUG echo "[DEBUG:${LINENO}] cmt: next argument:" ${4}
-	if  [ $# -ge 4 ] && [ -f ${4} ];
+	if  [ $# -ge 4 ] && [ ${4:0:1} != \- ];
 	then
 	  CMT=1
-	  inpcmt=${4}
+	  inpcmt=${pth2eqdir}/${4}
 	  DEBUG echo "cmt file is: $inpcmt"
 	  shift
 	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ];
 	then
 	  echo "[WARNING] CMT file does not set! CMT will not be plotted"
-	elif  [ $# -ge 4 ] && [ ! -f ${4} ];
-	then
-	  echo "[WARNING] CMT file does not exist! CMT will not be plotted"
-	  shift
 	elif [ $# -eq 3 ];
 	then
 	  echo "[WARNING] CMT file does not exist! CMT will not be plotted"
@@ -367,6 +365,22 @@ then
 	  echo "[WARNING] Custom text file does not set! Custom text will not be plotted"
 	fi
 	shift # shift for the arg -ctext
+	;;
+    -eqdist)
+	DEBUG echo "[DEBUG:${LINENO}] eqdist next argument: "${4}
+	if [ $# -ge 4 ] && [ ${4:0:1} != \- ];
+	then
+	  EQDIST=1
+	  pth2eqdistfile=${pth2eqdir}/$4
+	  shift
+	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ];
+	then
+	  echo "[WARNING] No earthquake data file defined."
+	elif [ $# -eq 3 ];
+	then
+	  echo "[WARNING] No earthquake data file defined."
+	fi
+	shift #shift for the argument -eqdist
 	;;
     -cstress)
 	CSTRESS=1
@@ -550,24 +564,25 @@ then
 fi
 
 ### check NOA FAULT catalogue
-if [ "$FAULTS" -eq 1 ]
+if [ "$FAULTS" -eq 1 ] && [ ! -f $pth2faults ]
 then
-  if [ ! -f $pth2faults ]
-  then
-    echo "[WARNING] NOA Faults database does not exist"
-    echo "[WARNING] please download it and then use this switch"
-    FAULTS=0
-  fi
+  echo "[WARNING] NOA Faults database does not exist"
+  echo "[WARNING] please download it and then use this switch"
+  FAULTS=0
 fi
 
 ### check cmt file
-if [ "$CMT" -eq 1 ]
+if [ "$CMT" -eq 1 ] && [ ! -f $inpcmt ]
 then
-  if [ ! -f $inpcmt ]
-  then
-    echo "[WARNING] CMT file does not exist, moment tensors will not plot"
-    CMT=0
-  fi
+  echo "[WARNING] CMT file does not exist, moment tensors will not plot"
+  CMT=0
+fi
+
+### check eqarthquake data file
+if [ "$EQDIST" -eq 1 ] && [ ! -f $pth2eqdistfile ]
+then
+  echo "[WARNING] earthquake data file  does not exist, earthquakes will not plot"
+  EQDIST=0
 fi
 
 ### set logogmt position
@@ -1044,6 +1059,15 @@ then
 # gmt psmeca $inpcmt $range -Jm -Sc0.7/0 -CP0.05  -O -P -K>> $outfile
   awk '{print $1,$2,$3,$4,$5,$6,$7,$8,$9}' $inpcmt | gmt psmeca -R -Jm -Sa0.4 -CP0.05 -K -O -P -V${VRBLEVM} >> $outfile
 fi
+
+# //////////////////////////////////////////////////////////////////////////////
+# PLOT earthquakes distributions 
+
+if [ "$EQDIST" -eq 1 ]
+then
+  echo "...plot earthquakes distribution..."
+  awk 'NR>2 {print $8, $7}' $pth2eqdistfile | gmt psxy -Jm -O -R -Sc0.1c -Gblack -K -V${VRBLEVM} >> $outfile
+fi 
 
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT CROSS SECTIO PROJECTION
