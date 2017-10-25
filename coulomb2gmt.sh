@@ -77,6 +77,7 @@ function help {
   echo "           -cstress [:=Coulomb Stress] "
   echo "           -sstress [:=Shear Stress] "
   echo "           -nstress [:=Normal strain] "
+  echo "           -fcross [:=plot cross section projections] "
   echo ""
   echo "/*** PLOT COMPONENTS OF STRAIN FIELD ******************************************/"
   echo "           -strexx [:= Exx component] "
@@ -86,7 +87,6 @@ function help {
   echo "           -strexz [:= Exz component] "
   echo "           -strexy [:= Exy component] "
   echo "           -strdil [:= Dilatation strain] "
-#   echo "           -fcross [:=plot cross section projections] "
   echo ""
   echo "/*** PLOT OKADA85 *************************************************************/"
   echo "           -dgpsho : observed GPS horizontal displacements"
@@ -434,10 +434,10 @@ then
 	FDEP=1
 	shift
 	;;
-		-fcross)
-			FCROSS=1
-			shift
-			;;
+    -fcross)
+	FCROSS=1
+	shift
+	;;
     -dgpsho)
 	DGPSHO=1
 	shift
@@ -528,6 +528,9 @@ pth2dcfffile=${pth2coudir}/${inputdata}-dcff.cou
 pth2strnfile=${pth2coudir}/${inputdata}_Strain.cou
 
 pth2gpsdfile=${pth2gpsdir}/${inputdata}-gps.disp
+
+pth2crossdat=${pth2coudir}/${inputdata}-Cross_section.dat
+pth2crossdcf=${pth2coudir}/${inputdata}-dcff_section.cou
 # //////////////////////////////////////////////////////////////////////////////
 # Check if all input file exist
 echo "...check all input files and paths"
@@ -608,6 +611,12 @@ then
     echo "[WARNING] "$pth2coutfile" or  "$pth2dcfffile" does not exist!"
     echo "[WARNING] Stress output will not plot"
     CSTRESS=0; SSTRESS=0; NSTRESS=0;
+  elif [ "$FCROSS" -eq 1 ]; then
+    if [ ! -f "$pth2crossdat" ] && [ ! -f "$pth2crossdcf" ]; then
+      echo "[WARNING] "$pth2crossdat" or "$pth2crossdcf" does not exist!"
+      echo "[WARNING] Cross section will not plot"
+      FCROSS=0;
+    fi
   fi
 fi
 
@@ -1030,6 +1039,7 @@ then
   rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
 fi
 
+
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT gmt_fault_map_proj.dat 
 
@@ -1047,6 +1057,44 @@ if [ "$FDEP" -eq 1 ]
 then
   echo "...plot depth calculation..."
   gmt psxy ${pth2fdepfile} -Jm -O -R -W0.5,black -K -V${VRBLEVM} >> $outfile
+fi
+
+# //////////////////////////////////////////////////////////////////////////////
+# PLOT CROSS SECTIO PROJECTION
+
+if [ "$FCROSS" -eq 1 ]
+then
+  # plot in the main map the cross section line
+  if [ $(awk 'NR==1 {print $7}' $pth2crossdat) -eq 2 ];
+  then
+    DEBUG echo "[DEBUG:${LINENO}] cross test coords true"
+    # read coordinates
+    start_lon=$(awk 'NR==2 {print $5}' $pth2crossdat)
+    start_lat=$(awk 'NR==3 {print $5}' $pth2crossdat)
+    finish_lon=$(awk 'NR==4 {print $5}' $pth2crossdat)
+    finish_lat=$(awk 'NR==5 {print $5}' $pth2crossdat)
+    DEBUG echo "[DEBUG:${LINENO}] $start_lon $start_lat $finish_lon $finish_lat"
+    # plot line
+    echo "$start_lon $start_lat" > tmpcrossline
+    echo "$finish_lon $finish_lat" >> tmpcrossline
+    gmt psxy tmpcrossline -Jm -O -R -W1,black -K -V${VRBLEVM} >> $outfile
+    echo "$start_lon $start_lat 9,1,black 90 RM A" | gmt pstext -R -Jm -Dj.1c/0.1c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
+    echo "$finish_lon $finish_lat 9,1,black 90 LM B" | gmt pstext -R -Jm -Dj.1c/0.1c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
+  else
+    echo "[ERROR] Cross coordinates must be latlon input"
+    echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+    exit 1
+  fi
+
+
+# west=0
+# east=100
+# dmin=0
+# dmax=30
+
+  rm tmpcrossline
+# 	psxy  ${inputdata}-cross.ll -Jm -O -R -W0.4,blue -K >> $outfile
+# 	awk '{print $1,$2,9,0,1,"RB",$3}' ${inputdata}-cross.ll | pstext -Jm -R -Dj0.1c/0.1c -O -V -K -V${VRBLEVM} >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -1069,14 +1117,7 @@ then
   awk 'NR>2 {print $8, $7}' $pth2eqdistfile | gmt psxy -Jm -O -R -Sc0.1c -Gblack -K -V${VRBLEVM} >> $outfile
 fi 
 
-# //////////////////////////////////////////////////////////////////////////////
-# PLOT CROSS SECTIO PROJECTION
 
-if [ "$FCROSS" -eq 1 ]
-then
-	psxy  ${inputdata}-cross.ll -Jm -O -R -W0.4,blue -K >> $outfile
-	awk '{print $1,$2,9,0,1,"RB",$3}' ${inputdata}-cross.ll | pstext -Jm -R -Dj0.1c/0.1c -O -V -K -V${VRBLEVM} >> $outfile
-fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT GPS OBSERVED AND MODELED OKADA SURF DESPLACEMENTS
