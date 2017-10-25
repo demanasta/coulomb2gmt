@@ -38,9 +38,7 @@ VERSION="v.1.0-beta5.6"
 
 # verbosity level for GMT, see http://gmt.soest.hawaii.edu/doc/latest/gmt.html#v-full
 # 
-VRBLEVM=n
-
-
+VRBLEVM=d
 
 # //////////////////////////////////////////////////////////////////////////////
 # HELP FUNCTION
@@ -753,7 +751,7 @@ then
   gmt xyz2grd ${pth2coutfile} -Gtmpgrd $range -I0.05 -V${VRBLEVM}
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y8c -V${VRBLEVM} > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
   gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
@@ -1073,6 +1071,7 @@ then
     start_lat=$(awk 'NR==3 {print $5}' $pth2crossdat)
     finish_lon=$(awk 'NR==4 {print $5}' $pth2crossdat)
     finish_lat=$(awk 'NR==5 {print $5}' $pth2crossdat)
+#     zdepth=$(awk 'NR==7 {print $5}' $pth2crossdat)
     DEBUG echo "[DEBUG:${LINENO}] $start_lon $start_lat $finish_lon $finish_lat"
     # plot line
     echo "$start_lon $start_lat" > tmpcrossline
@@ -1081,18 +1080,43 @@ then
     echo "$start_lon $start_lat 9,1,black 90 RM A" | gmt pstext -R -Jm -Dj.1c/0.1c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
     echo "$finish_lon $finish_lat 9,1,black 90 LM B" | gmt pstext -R -Jm -Dj.1c/0.1c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
   else
-    echo "[ERROR] Cross coordinates must be latlon input"
+    echo "[ERROR] Cross coordinates must be latlon at dat file."
+    echo "        Cross line will not plotted"
     echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
     exit 1
   fi
+  awk 'NR>3' $pth2crossdcf > tmpcrossdcf
+  tmpstartx=$(awk 'NR==4 {print $1}' tmpcrossdcf)
+  DEBUG echo "[DEBUG:${LINENO}] start x " $tmpstartx
+  tmpstarty=$(awk 'NR==4 {print $2}' tmpcrossdcf)
+  DEBUG echo "[DEBUG:${LINENO}] start y " $tmpstarty
+  # make proj file
+  awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $4}' $pth2crossdcf > tmpcrossdcf2
 
+  # create range
+  west=$(awk 'NR==1 {print $1}' tmpcrossdcf2)
+  east=$(awk 'END {print $1}' tmpcrossdcf2)
+  zmin=0
+  zmax=$(awk 'NR==7 {print $5}' $pth2crossdat)
+  
+  rangep="-R$west/$east/$zmin/$zmax"
+  DEBUG echo "[DEBUG:${LINENO}]  proj range: "$rangep
+  projp=-JX14.8/-4
+  tick=-B50:Distance\(km\):/5:Depth:WSen
+  
+  gmt psbasemap $rangep $projp -O -K $tick  -V${VRBLEVM} -Y-6.5c>> $outfile
 
-# west=0
-# east=100
-# dmin=0
-# dmax=30
+  gmt xyz2grd tmpcrossdcf2 -Gtmpgrd $rangep -I0.05 -V${VRBLEVM} 
+  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
+  gmt grdsample tmpgrd -I1 -Gtmpgrd_sample.grd -V${VRBLEVM} 
+#   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt -K -Ei -Q -V${VRBLEVM} >> $outfile
+  gmt grdimage  tmpgrd_sample.grd $projp -Ctmpcpt.cpt -K -Ei -Q -V${VRBLEVM}  >> $outfile
 
-  rm tmpcrossline
+# awk '{print $1, $2}' tmpcrossdcf2 | gmt psxy $rangep $projp $tick -W1 -Sc.1 -G200 -O  -Y-6.5c -P -K >> $outfile
+#     gmt psbasemap -R -J -O -K $tick --FONT_ANNOT_PRIMARY=10p --FONT_LABEL=10p -V${VRBLEVM} >> $outfile
+
+  
+#   rm tmpcrossline tmpcrossdcf tmpcrossdcf2
 # 	psxy  ${inputdata}-cross.ll -Jm -O -R -W0.4,blue -K >> $outfile
 # 	awk '{print $1,$2,9,0,1,"RB",$3}' ${inputdata}-cross.ll | pstext -Jm -R -Dj0.1c/0.1c -O -V -K -V${VRBLEVM} >> $outfile
 fi
