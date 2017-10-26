@@ -38,7 +38,7 @@ VERSION="v.1.0-beta5.6"
 
 # verbosity level for GMT, see http://gmt.soest.hawaii.edu/doc/latest/gmt.html#v-full
 # 
-VRBLEVM=d
+VRBLEVM=c
 
 # //////////////////////////////////////////////////////////////////////////////
 # HELP FUNCTION
@@ -1104,24 +1104,29 @@ then
   projp=-JX14.8/-4
   tick=-B50:Distance\(km\):/5:Depth\(km\):WSen
   
-  gmt psbasemap $rangep $projp -O -K $tick  -V${VRBLEVM} -Ya-6.5c>> $outfile
+  gmt psbasemap $rangep $projp -O -K $tick  -V${VRBLEVM} -Ya-6.5c >> $outfile
 
   gmt xyz2grd tmpcrossdcf2 -Gtmpgrd $rangep -I2 -V${VRBLEVM} 
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I.05 -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt -J -K -Ei -Q -V${VRBLEVM} -O -Ya-6.5c>> $outfile
-#   gmt grdimage  tmpgrd_sample.grd -Jx.9/2.1 -Ctmpcpt.cpt -K -Ei -Q -V${VRBLEVM} \
-#   $tick -Y-110c --FONT_ANNOT_PRIMARY=200p --FONT_LABEL=200p --MAP_FRAME_WIDTH=0.10c\
-#   --MAP_TICK_LENGTH_PRIMARY=50p/25p >> $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt -J -K -Ei -Q -V${VRBLEVM} -O -Ya-6.5c >> $outfile
+  
+  # Plot A-B in projection
+  echo "$west $zmin  9,1,black 0 LT A" | gmt pstext -R -J -Dj0.1c/0.1c -F+f+a+j  -O -K -V${VRBLEVM} -Ya-6.5c >> $outfile
+  echo "$east $zmin  9,1,black 0 RT B" | gmt pstext -R -J -Dj0.1c/0.1c -F+f+a+j  -O -K -V${VRBLEVM} -Ya-6.5c >> $outfile
 
-# awk '{print $1, $2}' tmpcrossdcf2 | gmt psxy $rangep $projp $tick -W1 -Sc.1 -G200 -O  -Y-6.5c -P -K >> $outfile
-#     gmt psbasemap -R -Jx.9/2.1 -O -K $tick -V${VRBLEVM} >> $outfile
+  gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie
+#   echo "20.6880216251	37.9962257911" | gmt psxy -Jm -O -R -Sc0.2c -Gblack -K -V${VRBLEVM} >> $outfile
+#   echo "20.8592929984	38.0916670907" | gmt psxy -Jm -O -R -Sc0.2c -Gblack -K -V${VRBLEVM} >> $outfile
 
-#     gmt psbasemap -R -O -K -J  -V${VRBLEVM} >> $outfile
+  echo "20.6880216251	37.9962257911" | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k
+  echo "20.8592929984	38.0916670907" | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k
+  
+  echo "41.7157205628 12.4993" > tmpasd
+  echo "60.1030133878  3.5007" >> tmpasd
+  gmt psxy tmpasd -Jm -O -R -W1,black -K -V${VRBLEVM} -Ya-6.5c >> $outfile
 
-#   rm tmpcrossline tmpcrossdcf tmpcrossdcf2
-# 	psxy  ${inputdata}-cross.ll -Jm -O -R -W0.4,blue -K >> $outfile
-# 	awk '{print $1,$2,9,0,1,"RB",$3}' ${inputdata}-cross.ll | pstext -Jm -R -Dj0.1c/0.1c -O -V -K -V${VRBLEVM} >> $outfile
+
 
 # remove templorary files
 rm tmp*
