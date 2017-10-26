@@ -1104,23 +1104,27 @@ then
   projp=-JX14.8/-4
   tick=-B50:Distance\(km\):/5:Depth\(km\):WSen
   
-#   gmt psbasemap $rangep $projp -O -K $tick  -V${VRBLEVM} -Y-6.5c>> $outfile
+  gmt psbasemap $rangep $projp -O -K $tick  -V${VRBLEVM} -Ya-6.5c>> $outfile
 
   gmt xyz2grd tmpcrossdcf2 -Gtmpgrd $rangep -I2 -V${VRBLEVM} 
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I.05 -Gtmpgrd_sample.grd -V${VRBLEVM} 
-#   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt -K -Ei -Q -V${VRBLEVM} >> $outfi-le
-  gmt grdimage  tmpgrd_sample.grd -Jx.9/2.1 -Ctmpcpt.cpt -K -Ei -Q -V${VRBLEVM} \
-  $tick -Y-110c --FONT_ANNOT_PRIMARY=200p --FONT_LABEL=200p --MAP_FRAME_WIDTH=0.10c\
-  --MAP_TICK_LENGTH_PRIMARY=50p/25p >> $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt -J -K -Ei -Q -V${VRBLEVM} -O -Ya-6.5c>> $outfile
+#   gmt grdimage  tmpgrd_sample.grd -Jx.9/2.1 -Ctmpcpt.cpt -K -Ei -Q -V${VRBLEVM} \
+#   $tick -Y-110c --FONT_ANNOT_PRIMARY=200p --FONT_LABEL=200p --MAP_FRAME_WIDTH=0.10c\
+#   --MAP_TICK_LENGTH_PRIMARY=50p/25p >> $outfile
 
 # awk '{print $1, $2}' tmpcrossdcf2 | gmt psxy $rangep $projp $tick -W1 -Sc.1 -G200 -O  -Y-6.5c -P -K >> $outfile
 #     gmt psbasemap -R -Jx.9/2.1 -O -K $tick -V${VRBLEVM} >> $outfile
 
-  
+#     gmt psbasemap -R -O -K -J  -V${VRBLEVM} >> $outfile
+
 #   rm tmpcrossline tmpcrossdcf tmpcrossdcf2
 # 	psxy  ${inputdata}-cross.ll -Jm -O -R -W0.4,blue -K >> $outfile
 # 	awk '{print $1,$2,9,0,1,"RB",$3}' ${inputdata}-cross.ll | pstext -Jm -R -Dj0.1c/0.1c -O -V -K -V${VRBLEVM} >> $outfile
+
+# remove templorary files
+rm tmp*
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -1269,7 +1273,7 @@ echo "909 909" | gmt psxy -Sc.1 -Jm -O -R  -W1,red -V${VRBLEVM} >> $outfile
 if [ "$OUTJPG" -eq 1 ]
 then
   echo "...adjust and convert to JPEG format..."
-#   gs -sDEVICE=jpeg -dJPEGQ=100 -dNOPAUSE -dBATCH -dSAFER -r300 -sOutputFile=$out_jpg $outfile
+#   gs -sDEVICE=jpeg -dJPEGQ=100 -dNOPAUSE -dBATCH -dSAFER -r300 -sOutputFile=test.jpg $outfile
   gmt psconvert $outfile -A0.2c -Tj -V${VRBLEVM} 
 fi
 if [ "$OUTPNG" -eq 1 ]
