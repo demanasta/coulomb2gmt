@@ -1102,18 +1102,20 @@ then
   rangep="-R$west/$east/$zmin/$zmax"
   DEBUG echo "[DEBUG:${LINENO}]  proj range: "$rangep
   projp=-JX14.8/-4
-  tick=-B50:Distance\(km\):/5:Depth:WSen
+  tick=-B50:Distance\(km\):/5:Depth\(km\):WSen
   
-  gmt psbasemap $rangep $projp -O -K $tick  -V${VRBLEVM} -Y-6.5c>> $outfile
+#   gmt psbasemap $rangep $projp -O -K $tick  -V${VRBLEVM} -Y-6.5c>> $outfile
 
-  gmt xyz2grd tmpcrossdcf2 -Gtmpgrd $rangep -I0.05 -V${VRBLEVM} 
+  gmt xyz2grd tmpcrossdcf2 -Gtmpgrd $rangep -I2 -V${VRBLEVM} 
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
-  gmt grdsample tmpgrd -I1 -Gtmpgrd_sample.grd -V${VRBLEVM} 
-#   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt -K -Ei -Q -V${VRBLEVM} >> $outfile
-  gmt grdimage  tmpgrd_sample.grd $projp -Ctmpcpt.cpt -K -Ei -Q -V${VRBLEVM}  >> $outfile
+  gmt grdsample tmpgrd -I.05 -Gtmpgrd_sample.grd -V${VRBLEVM} 
+#   gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt -K -Ei -Q -V${VRBLEVM} >> $outfi-le
+  gmt grdimage  tmpgrd_sample.grd -Jx.9/2.1 -Ctmpcpt.cpt -K -Ei -Q -V${VRBLEVM} \
+  $tick -Y-110c --FONT_ANNOT_PRIMARY=200p --FONT_LABEL=200p --MAP_FRAME_WIDTH=0.10c\
+  --MAP_TICK_LENGTH_PRIMARY=50p/25p >> $outfile
 
 # awk '{print $1, $2}' tmpcrossdcf2 | gmt psxy $rangep $projp $tick -W1 -Sc.1 -G200 -O  -Y-6.5c -P -K >> $outfile
-#     gmt psbasemap -R -J -O -K $tick --FONT_ANNOT_PRIMARY=10p --FONT_LABEL=10p -V${VRBLEVM} >> $outfile
+#     gmt psbasemap -R -Jx.9/2.1 -O -K $tick -V${VRBLEVM} >> $outfile
 
   
 #   rm tmpcrossline tmpcrossdcf tmpcrossdcf2
