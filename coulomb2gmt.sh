@@ -1076,7 +1076,7 @@ then
     # plot line
     echo "$start_lon $start_lat" > tmpcrossline
     echo "$finish_lon $finish_lat" >> tmpcrossline
-    gmt psxy tmpcrossline -Jm -O -R -W1,black -K -V${VRBLEVM} >> $outfile
+    gmt psxy tmpcrossline -Jm -O -R -W1,black -S~D50k:+sc.2 -K -V${VRBLEVM} >> $outfile
     echo "$start_lon $start_lat 9,1,black 90 RM A" | gmt pstext -R -Jm -Dj.1c/0.1c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
     echo "$finish_lon $finish_lat 9,1,black 90 LM B" | gmt pstext -R -Jm -Dj.1c/0.1c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
   else
@@ -1085,6 +1085,8 @@ then
     echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
     exit 1
   fi
+  
+  # make file to plot cross sections
   awk 'NR>3' $pth2crossdcf > tmpcrossdcf
   tmpstartx=$(awk 'NR==4 {print $1}' tmpcrossdcf)
   DEBUG echo "[DEBUG:${LINENO}] start x " $tmpstartx
@@ -1093,7 +1095,20 @@ then
   # make proj file
   awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $4}' $pth2crossdcf > tmpcrossdcf2
 
-  # create range
+  # fault across line
+  fault_west=$(gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie \
+  | awk 'NR==1 {print $1, $2}' \
+  | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
+  | awk 'NR==1 {print $3}')
+  DEBUG echo "[DEBUG:${LINENO}] fault west= "$fault_west
+  fault_east=$(gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie \
+  | awk 'NR==2 {print $1, $2}' \
+  | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
+  | awk 'NR==1 {print $3}')
+  DEBUG echo "[DEBUG:${LINENO}] fault_east= "$fault_east
+  
+  gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie
+  # create range for projection
   west=$(awk 'NR==1 {print $1}' tmpcrossdcf2)
   east=$(awk 'END {print $1}' tmpcrossdcf2)
   zmin=0
@@ -1114,20 +1129,15 @@ then
   # Plot A-B in projection
   echo "$west $zmin  9,1,black 0 LT A" | gmt pstext -R -J -Dj0.1c/0.1c -F+f+a+j  -O -K -V${VRBLEVM} -Ya-6.5c >> $outfile
   echo "$east $zmin  9,1,black 0 RT B" | gmt pstext -R -J -Dj0.1c/0.1c -F+f+a+j  -O -K -V${VRBLEVM} -Ya-6.5c >> $outfile
-
-  gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie
-#   echo "20.6880216251	37.9962257911" | gmt psxy -Jm -O -R -Sc0.2c -Gblack -K -V${VRBLEVM} >> $outfile
-#   echo "20.8592929984	38.0916670907" | gmt psxy -Jm -O -R -Sc0.2c -Gblack -K -V${VRBLEVM} >> $outfile
-
-  echo "20.6880216251	37.9962257911" | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k
-  echo "20.8592929984	38.0916670907" | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k
   
-  echo "41.7157205628 12.4993" > tmpasd
-  echo "60.1030133878  3.5007" >> tmpasd
-  gmt psxy tmpasd -Jm -O -R -W1,black -K -V${VRBLEVM} -Ya-6.5c >> $outfile
+  echo "$fault_west 13.9999" > tmpasd
+  echo "$fault_east  2.009" >> tmpasd
+  gmt psxy tmpasd -J -O -R -W1,black -K -V${VRBLEVM} -Ya-6.5c >> $outfile
 
-
-
+  echo "$west 8" >tmpdep
+  echo "$east 8" >>tmpdep
+  gmt psxy tmpdep -R -J -O -W.15,black,- -K -V${VRBLEM} -Ya-6.5c >>$outfile
+# psxy -R -J -O -SqD1000k:+g+LD+an+p -W1p transect.d >>
 # remove templorary files
 rm tmp*
 fi
