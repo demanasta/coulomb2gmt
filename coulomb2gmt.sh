@@ -661,6 +661,16 @@ DEBUG echo "[DEBUG:${LINENO}] scale set: $scale" >&2
 DEBUG echo "[DEBUG:${LINENO}] range set: $range" >&2
 DEBUG echo "[DEBUG:${LINENO}] projection set: $proj" >&2
 
+# Set calculation depth
+if [ -z ${CALC_DEPTH+x} ];
+then
+  echo "[WARNING] CALC_DEPTH variable is not set. Input file will used."
+  CALC_DEPTH=$(grep "DEPTH=" ${pth2inpfile} | awk '{print $6}')
+  echo "[STATUS] Calculation depth set to: "$CALC_DEPTH" km"
+else
+  echo "[STATUS] Calculation depth set to: "$CALC_DEPTH" km"
+fi
+
 # //////////////////////////////////////////////////////////////////////////////
 # Configure Map title
 
@@ -1062,6 +1072,7 @@ fi
 
 if [ "$FCROSS" -eq 1 ]
 then
+  echo "...plot cross sections..."
   # plot in the main map the cross section line
   if [ $(awk 'NR==1 {print $7}' $pth2crossdat) -eq 2 ];
   then
@@ -1095,19 +1106,30 @@ then
   # make proj file
   awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $4}' $pth2crossdcf > tmpcrossdcf2
 
+  # Fault top-bottom parameters
+  fault_top=$(awk 'NR==14 {print $10}' $pth2inpfile)
+  DEBUG echo "[DEBUG:${LINENO}] fault top= "$fault_top
+  fault_bot=$(awk 'NR==14 {print $11}' $pth2inpfile)
+  DEBUG echo "[DEBUG:${LINENO}] fault bot= "$fault_bot
+
   # fault across line
   fault_west=$(gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie \
-  | awk 'NR==1 {print $1, $2}' \
-  | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
-  | awk 'NR==1 {print $3}')
+    | awk 'NR==1 {print $1, $2}' \
+    | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
+    | awk 'NR==1 {print $3}')
   DEBUG echo "[DEBUG:${LINENO}] fault west= "$fault_west
   fault_east=$(gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie \
-  | awk 'NR==2 {print $1, $2}' \
-  | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
-  | awk 'NR==1 {print $3}')
+    | awk 'NR==2 {print $1, $2}' \
+    | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
+    | awk 'NR==1 {print $3}')
   DEBUG echo "[DEBUG:${LINENO}] fault_east= "$fault_east
+  fault_surf=$(gmt spatial tmpcrossline $pth2fsurffile -Fl -Ie \
+    | awk 'NR==2 {print $1, $2}' \
+    | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
+    | awk 'NR==1 {print $3}')
+  DEBUG echo "[DEBUG:${LINENO}] fault_surf= "$fault_surf
   
-  gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie
+#   gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie
   # create range for projection
   west=$(awk 'NR==1 {print $1}' tmpcrossdcf2)
   east=$(awk 'END {print $1}' tmpcrossdcf2)
@@ -1129,14 +1151,31 @@ then
   # Plot A-B in projection
   echo "$west $zmin  9,1,black 0 LT A" | gmt pstext -R -J -Dj0.1c/0.1c -F+f+a+j  -O -K -V${VRBLEVM} -Ya-6.5c >> $outfile
   echo "$east $zmin  9,1,black 0 RT B" | gmt pstext -R -J -Dj0.1c/0.1c -F+f+a+j  -O -K -V${VRBLEVM} -Ya-6.5c >> $outfile
-  
-  echo "$fault_west 13.9999" > tmpasd
-  echo "$fault_east  2.009" >> tmpasd
-  gmt psxy tmpasd -J -O -R -W1,black -K -V${VRBLEVM} -Ya-6.5c >> $outfile
 
-  echo "$west 8" >tmpdep
-  echo "$east 8" >>tmpdep
-  gmt psxy tmpdep -R -J -O -W.15,black,- -K -V${VRBLEM} -Ya-6.5c >>$outfile
+#   [[ $(echo "if (${float1} > ${float2}) 1 else 0" | bc) -eq 1 ]]
+  tmp_fault=($fault_surf $fault_west $fault_east)
+  if [[ $(echo "if (${fault_surf} > ${fault_east}) 1 else 0" | bc) -eq 1 ]];
+  then
+    IFS=$'\n' tmp_faultsort=($(sort <<<"${tmp_fault[*]}"))
+    DEBUG echo "[DEBUG:${LINENO}] sort1 "${tmp_faultsort[*]}
+  else
+    IFS=$'\n' tmp_faultsort=($(sort -r <<<"${tmp_fault[*]}"))
+    DEBUG echo "[DEBUG:${LINENO}] sort2 "${tmp_faultsort[*]}
+  fi
+  # Plot fault in cross section part
+  echo "${tmp_faultsort[1]} $fault_top" > tmpasd
+  echo "${tmp_faultsort[0]} $fault_bot" >> tmpasd
+  gmt psxy tmpasd -J -O -R -W1,black -K -V${VRBLEVM} -Ya-6.5c >> $outfile
+  
+  echo "${tmp_faultsort[2]} 0" > tmpasd
+  echo "${tmp_faultsort[1]} $fault_top" >> tmpasd
+  gmt psxy tmpasd -J -O -R -W.2,black,- -K -V${VRBLEVM} -Ya-6.5c >> $outfile
+
+
+  # Plot calculation depth
+  echo "$west $CALC_DEPTH" >tmpdep
+  echo "$east $CALC_DEPTH" >>tmpdep
+  gmt psxy tmpdep -R -J -O -W.15,black,- -K -V${VRBLEVM} -Ya-6.5c >>$outfile
 # psxy -R -J -O -SqD1000k:+g+LD+an+p -W1p transect.d >>
 # remove templorary files
 rm tmp*

@@ -62,6 +62,8 @@ dvscale=100		## Default 100
 dhscmagn=10 #use mm
 dvscmagn=12 #use mm
 
+# CALC_DEPTH=8 #use km
+
 # //////////////////////////////////////////////////////////////////////////////
 logogmt_pos="-UBL/0.05c/0.05c/DemAnast"
 logocus_pos="-Dx13.57c/10.05c+w1.1c"
