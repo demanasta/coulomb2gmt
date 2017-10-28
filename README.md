@@ -22,13 +22,15 @@ coulomb2gmt -- pre-released v1.0-beta5.1
 
 * Plot Stress changes (Coulomb, Normal, Shear)
 
+* Plot cross section for stress chages.
+
 * Plot all strain components (E**, Dilatation)
 
 * Plot Fault geometry (Projection, Surface, Depth)
 
 * Plot GPS displacement observed and modeled
 
-* Plot Fault and CMT databases
+* Plot Fault and CMT databases and earhtquake distribution
 
 * Add GMT timestamp logo and custom logo of your organization.
 
@@ -133,6 +135,8 @@ Many parameters configured at `default-param` file.
 
 * `-nstress`: Plot Normal Stress change.
 
+* `-fcross`: Plot cross section of stress change.
+
 ### Plot Strain components
 
 * `-stre**`: Where `**` you can fill all strain components `xx`,`yy`,`zz`, `yz`, `xz`, `xy`.
@@ -225,3 +229,6 @@ The history of releases can be viewed at [ChangeLog](docs/ChangeLog.md)
 * Toda, Shinji, Stein, R.S., Sevilgen, Volkan, and Lin, Jian, 2011, Coulomb 3.3 Graphic-rich deformation and stress-change software for earthquake, tectonic, and volcano research and teaching—user guide: U.S. Geological Survey Open-File Report 2011-1060, 63 p., available at http://pubs.usgs.gov/of/2011/1060/.
 
 * [The Generic Mappting Tools - GMT](http://gmt.soest.hawaii.edu/)
+
+* Python Software Foundation. Python Language Reference, version 2.7. Available at http://www.python.org
+
