@@ -486,7 +486,7 @@ fi
 ### check fcross plot only with stress change
 if  [ "$STREXX" -eq 1 ] || [ "$STREYY" -eq 1 ] || [ "$STREZZ" -eq 1 ] \
 || [ "$STREYZ" -eq 1 ] || [ "$STREXZ" -eq 1 ] || [ "$STREXY" -eq 1 ] \
-|| [ "$STRDIL" -eq 1 ] && [ "$FCROSS" -eq 1 ]; then
+ && [ "$FCROSS" -eq 1 ]; then
   echo "[WARNING] Cross section is in conflict with strain options"
   echo "          Only strain component will plotted in map"
   DEBUG echo "[DEBUG:${LINENO}] fcross set it )"
@@ -513,6 +513,7 @@ pth2gpsdfile=${pth2gpsdir}/${inputdata}-gps.disp
 
 pth2crossdat=${pth2coudir}/${inputdata}-Cross_section.dat
 pth2crossdcf=${pth2coudir}/${inputdata}-dcff_section.cou
+pth2crossdil=${pth2coudir}/${inputdata}-dilatation_section.cou
 # //////////////////////////////////////////////////////////////////////////////
 # Check if all input file exist
 echo "...check all input files and paths"
@@ -596,6 +597,14 @@ if [ "$STREXX" -eq 1 ] || [ "$STREYY" -eq 1 ] || [ "$STREZZ" -eq 1 ] \
     echo "[WARNING] "$pth2coutfile" or  "$pth2strnfile" does not exist!"
     echo "[WARNING] Stress or Strain output will not plot"
     STREXX=0; STREYY=0;	STREZZ=0; STREYZ=0; STREXZ=0; STREXY=0; STRDIL=0;
+  fi
+fi
+
+if [ "$STRDIL" -eq 1 ] && [ "$FCROSS" -eq 1 ]; then
+  if [ ! -f "$pth2crossdat" ] && [ ! -f "$pth2crossdil" ]; then
+    echo "[WARNING] "$pth2crossdat" or "$pth2crossdil" does not exist!"
+    echo "[WARNING] Cross section will not plot"
+    FCROSS=0;
   fi
 fi
 
@@ -1006,7 +1015,7 @@ if [ "$STRDIL" -eq 1 ]; then
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y8c \
     -Q -K -V${VRBLEVM} > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
@@ -1224,22 +1233,36 @@ if [ "$FCROSS" -eq 1 ]; then
   fi
   
   # make file to plot cross sections
-  awk 'NR>3' $pth2crossdcf > tmpcrossdcf
-  tmpstartx=$(awk 'NR==4 {print $1}' tmpcrossdcf)
-  DEBUG echo "[DEBUG:${LINENO}] start x " $tmpstartx
-  tmpstarty=$(awk 'NR==4 {print $2}' tmpcrossdcf)
-  DEBUG echo "[DEBUG:${LINENO}] start y " $tmpstarty
-  # make proj file
-  if [ "$CSTRESS" -eq 1 ];  then
-    awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $4}' \
-      $pth2crossdcf > tmpcrossdcf2
-  elif [ "$SSTRESS" -eq 1 ]; then
-    awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $5}' \
-      $pth2crossdcf > tmpcrossdcf2
-  elif [ "$NSTRESS" -eq 1 ]; then
-    awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $6}' \
-      $pth2crossdcf > tmpcrossdcf2
+  if [ "$STRDIL" -eq 1 ]; then
+    awk 'NR>3' $pth2crossdil > tmpcrossdcf
+    tmpstartx=$(awk 'NR==4 {print $1}' tmpcrossdcf)
+    DEBUG echo "[DEBUG:${LINENO}] start x " $tmpstartx
+    tmpstarty=$(awk 'NR==4 {print $2}' tmpcrossdcf)
+    DEBUG echo "[DEBUG:${LINENO}] start y " $tmpstarty
+    # make proj file
+      awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $4*1000000}' \
+	$pth2crossdil > tmpcrossdcf2
+  else
+    awk 'NR>3' $pth2crossdcf > tmpcrossdcf
+    tmpstartx=$(awk 'NR==4 {print $1}' tmpcrossdcf)
+    DEBUG echo "[DEBUG:${LINENO}] start x " $tmpstartx
+    tmpstarty=$(awk 'NR==4 {print $2}' tmpcrossdcf)
+    DEBUG echo "[DEBUG:${LINENO}] start y " $tmpstarty
+    # make proj file
+    if [ "$CSTRESS" -eq 1 ];  then
+      awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $4}' \
+	$pth2crossdcf > tmpcrossdcf2
+    elif [ "$SSTRESS" -eq 1 ]; then
+      awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $5}' \
+	$pth2crossdcf > tmpcrossdcf2
+    elif [ "$NSTRESS" -eq 1 ]; then
+      awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $6}' \
+	$pth2crossdcf > tmpcrossdcf2
+    fi
   fi
+  
+  
+  
   
   # Fault top-bottom parameters
   fault_top=$(awk 'NR==14 {print $10}' $pth2inpfile)

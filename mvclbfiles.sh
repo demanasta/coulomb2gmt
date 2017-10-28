@@ -163,6 +163,15 @@ else
   echo "[WARNING] "${pth2clbdir}/output_files/Strain.cou" does not exist"
 fi
 
+## rename file: dilatation_section.cou
+if [ -f ${pth2clbdir}/output_files/dilatation_section.cou ]; then
+  mv ${pth2clbdir}/output_files/dilatation_section.cou ${pth2clbdir}/output_files/${1}-dilatation_section.cou
+  echo "...rename and move: dilatation_section.cou..."
+  echo "[NEWFILE]: "${pth2clbdir}/output_files/${1}-dilatation_section.cou
+else
+  echo "[WARNING] "${pth2clbdir}/output_files/dilatation_section.cou" does not exist"
+fi
+
 echo "...last input: "$1" ..."
 
 # Print exit status

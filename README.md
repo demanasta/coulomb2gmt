@@ -1,4 +1,4 @@
-coulomb2gmt -- pre-released v1.0-beta5.1
+coulomb2gmt -- pre-released v1.0-beta6.0
 ==================
 
 > Bash scripts to plot coulomb results on gmt
@@ -22,7 +22,7 @@ coulomb2gmt -- pre-released v1.0-beta5.1
 
 * Plot Stress changes (Coulomb, Normal, Shear)
 
-* Plot cross section for stress chages.
+* Plot cross section for stress changes and dilatation.
 
 * Plot all strain components (E**, Dilatation)
 
@@ -57,33 +57,50 @@ run: `$ ./coulomb2gmt.sh <inputfile> <inputdata> | options`
 
 _Fault geometry files:_
 
-*  `<inputdata>-gmt_fault_surface.dat`:
+*  `<inputdata>-gmt_fault_surface.dat`: Source and receiver faults’ trace at surface.
 
-* `<inputdata>-gmt_fault_map_proj.dat`:
+* `<inputdata>-gmt_fault_map_proj.dat`: Surface of source and receiver faults.
 
-* `<inputdata>-gmt_fault_calc_dep.dat`:
+* `<inputdata>-gmt_fault_calc_dep.dat`: Intersection of target depth with fault plane.
 
 _Stress change output files:_
 
-* `<inputdata>-coulomb_out.dat`:
+* `<inputdata>-coulomb_out.dat`:  Coulomb matrix data output.
 
-* `<inputdata>-dcff.cou`:
+* `<inputdata>-dcff.cou`:  Output of all stress components.
 
-* `<inputdata>-dcff_section.cou`:
+* `<inputdata>-dcff_section.cou`: Output of all stress components in cross section.
 
-* `<inputdata>-Cross_section.dat`:
+* `<inputdata>-Cross_section.dat`: Cross section parameters.
 
-* `<inputdata>-Focal_mech_stress_output.csv`:
+* `<inputdata>-Focal_mech_stress_output.csv`: 
 
 _Strain output files:_
 
-* `<inputdata>-Strain.cou`:
+* `<inputdata>-Strain.cou`: Data matrix of starin components.
 
 _Earthquakes, GPS, custom text files:_
+
+* Earthquakes distribution: Earthquakes catalogue files. Structure is
+
+> line1: Header
+> line2: Header
+> line*:    YEAR MONTH DAY    HH MM SS    LAT.   LONG.  DEPTH    MAGNITUDE  (10 fields)
+
+* Centroid Moment Tensors file: Structure of file is the old GMT format for CMT. Use \# to comment lines.
+
+> lon  lat   d  str dip slip str dip slip magnt exp plon  plat  name (14 fields)
+
+* Custom text files: Use new gmt format for `pstext`. (GMT ver > 5.1 )
+
+> lon lat font\_size,font\_type,font\_color angle potision text
+
+* `<inputdata>-gps.dist`: GPS displacements.
 
 
 
 ### Default parameters
+
 Many parameters configured at `default-param` file.
 1. Paths to general files (DEM, logo, faults)
 2. Paths to input file directories (.inp, .dat, .cou, .disp)
@@ -200,6 +217,8 @@ _Stress change files_
 * `/output_files/dcff.cou` ->  `/output_files/<inputdata>-dcff.cou`
 
 * `/output_files/dcff_section.cou` -> `/output_files/<inputdata>-dcff_section.cou`
+
+* `/output_files/dilatation_section.cou` -> `/output_files/<inputdata>-dilatation_section.cou`
 
 * `/output_files/Focal_mech_stress_output.csv` -> `/output_files/<inputdata>-Focal_mech_stress_output.csv`
 
