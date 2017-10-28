@@ -173,8 +173,7 @@ OUTPDF=0
 
 # //////////////////////////////////////////////////////////////////////////////
 #check default param file 
-if [ ! -f "default-param" ]
-then
+if [ ! -f "default-param" ]; then
   echo "default-param file does not exist"
   exit 1
 else
@@ -185,16 +184,12 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # GET COMMAND LINE ARGUMENTS
 echo "...get command line arguments..."
-if [ "$#" -eq 0 ];
-then
+if [ "$#" -eq 0 ]; then
   help
-elif [ "$#" -eq 1 ];
-then
-  if [ "$1" == "-h" ];
-  then
+elif [ "$#" -eq 1 ]; then
+  if [ "$1" == "-h" ]; then
     help
-  elif [ "$1" == "-v" ];
-  then
+  elif [ "$1" == "-v" ]; then
     echo "version: "$VERSION
     exit 1
   else
@@ -202,20 +197,17 @@ then
     echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
     exit 1
   fi
-elif [ "$#" -eq 2 ];
-then
+elif [ "$#" -eq 2 ]; then
   echo "[ERROR] Not enough input arguments."
   echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
   exit 1
-elif [ -f ${pth2inpdir}/${1}.inp ];
-then
+elif [ -f ${pth2inpdir}/${1}.inp ]; then
   inputfile=${1}.inp
   pth2inpfile=${pth2inpdir}/${1}.inp
   inputdata=${2}
   echo "[STATUS] input file exist"
   echo "[STATUS] input coulomb file:" $inputfile " input data files code:" $inputdata
-  while [ $# -gt 2 ]
-  do
+  while [ $# -gt 2 ]; do
     case "$3" in
     -debug)
 	_DEBUG="on"
@@ -282,18 +274,15 @@ then
 	;;
     -o)
 	DEBUG echo "[DEBUG:${LINENO}] -o: next argument:" ${4}
-	if [ $# -gt 3 ] && [ ${4:0:1} != \- ];
-	then
+	if [ $# -gt 3 ] && [ ${4:0:1} != \- ]; then
 	  OUTFILES=1
 	  outfile=${4}.ps
 	  shift
 	  shift
-	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ];
-	then
+	elif [ $# -gt 3 ] && [ ${4:0:1} == \- ]; then
 	  echo "[WARNING] No output file name set. Default name used."
 	  shift
-	elif [ $# -eq 3 ];
-	then
+	elif [ $# -eq 3 ]; then
 	  echo "[WARNING] No output file name set. Default name used."
 	  shift
 	fi
@@ -308,17 +297,14 @@ then
 	;;
     -cmt)
 	DEBUG echo "[DEBUG:${LINENO}] cmt: next argument:" ${4}
-	if  [ $# -ge 4 ] && [ ${4:0:1} != \- ];
-	then
+	if  [ $# -ge 4 ] && [ ${4:0:1} != \- ];	then
 	  CMT=1
 	  inpcmt=${pth2eqdir}/${4}
 	  DEBUG echo "cmt file is: $inpcmt"
 	  shift
-	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ];
-	then
+	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ]; then
 	  echo "[WARNING] CMT file does not set! CMT will not be plotted"
-	elif [ $# -eq 3 ];
-	then
+	elif [ $# -eq 3 ]; then
 	  echo "[WARNING] CMT file does not exist! CMT will not be plotted"
 	fi
 	shift #shift for arg -cmt
@@ -329,53 +315,43 @@ then
 	;;	
     -mt)
 	DEBUG echo "[DEBUG:${LINENO}] maptitle: next argument:" ${4}
-	if [ $# -ge 4 ] && [ ${4:0:1} != \- ];
-	then
+	if [ $# -ge 4 ] && [ ${4:0:1} != \- ]; then
 	  MTITLE=1
 	  mtitle=$4
 	  shift
-	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ];
-	then
+	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ]; then
 	  echo "[WARNING] No map title defined. Default title will be printed"
-	elif [ $# -eq 3 ];
-	then
+	elif [ $# -eq 3 ]; then
 	  echo "[WARNING] No map title defined. Default title will be printed"
 	fi
 	shift #shift for the argument -mt
 	;;
     -ctext)
 	DEBUG echo "[DEBUG:${LINENO}] ctext: next argument:" ${4}
-	if  [ $# -ge 4 ] && [ -f ${4} ];
-	then
+	if  [ $# -ge 4 ] && [ -f ${4} ]; then
 	  CTEXT=1
 	  pth2ctextfile=${4}
 	  DEBUG echo "custom text file is: $pth2ctextfile"
 	  shift
-	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ];
-	then
+	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ]; then
 	  echo "[WARNING] Custom text file does not set! Custom text will not be plotted"
-	elif  [ $# -ge 4 ] && [ ! -f ${4} ];
-	then
+	elif  [ $# -ge 4 ] && [ ! -f ${4} ]; then
 	  echo "[WARNING] Custom text file does not exist! Custom text will not be plotted"
 	  shift
-	elif [ $# -eq 3 ];
-	then
+	elif [ $# -eq 3 ]; then
 	  echo "[WARNING] Custom text file does not set! Custom text will not be plotted"
 	fi
 	shift # shift for the arg -ctext
 	;;
     -eqdist)
 	DEBUG echo "[DEBUG:${LINENO}] eqdist next argument: "${4}
-	if [ $# -ge 4 ] && [ ${4:0:1} != \- ];
-	then
+	if [ $# -ge 4 ] && [ ${4:0:1} != \- ]; then
 	  EQDIST=1
 	  pth2eqdistfile=${pth2eqdir}/$4
 	  shift
-	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ];
-	then
+	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ]; then
 	  echo "[WARNING] No earthquake data file defined."
-	elif [ $# -eq 3 ];
-	then
+	elif [ $# -eq 3 ]; then
 	  echo "[WARNING] No earthquake data file defined."
 	fi
 	shift #shift for the argument -eqdist
@@ -498,20 +474,28 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # Check confilcts for input arguments
 # Only one of stress or strain components will plot.
-inpconflict=$(echo print $CSTRESS + $SSTRESS + $NSTRESS + $STREXX + $STREYY + $STREZZ + $STREYZ + $STREXZ + $STREXY | python)
+inpconflict=$(echo print $CSTRESS + $SSTRESS + $NSTRESS + $STREXX + $STREYY \
+  + $STREZZ + $STREYZ + $STREXZ + $STREXY | python)
 DEBUG echo "[DEBUG:${LINENO}] input conflict=" $inpconflict
 
-if [ "$inpconflict" -ne 1 ] && [ "$inpconflict" -ne 0 ]
-then
-  echo "[ERROR] Chose only one stress or strain componet to plot"
-  exit 1
+if [ "$inpconflict" -ne 1 ] && [ "$inpconflict" -ne 0 ]; then
+  echo "[ERROR] Chose only one stress or strain component to plot"
+  exit 1  
 fi
 
+### check fcross plot only with stress change
+if  [ "$STREXX" -eq 1 ] || [ "$STREYY" -eq 1 ] || [ "$STREZZ" -eq 1 ] \
+|| [ "$STREYZ" -eq 1 ] || [ "$STREXZ" -eq 1 ] || [ "$STREXY" -eq 1 ] \
+|| [ "$STRDIL" -eq 1 ] && [ "$FCROSS" -eq 1 ]; then
+  echo "[WARNING] Cross section is in conflict with strain options"
+  echo "          Only strain component will plotted in map"
+  DEBUG echo "[DEBUG:${LINENO}] fcross set it )"
+  FCROSS=0
+fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # Output file name definition
-if [ "$OUTFILES" -eq 0 ]
-then
+if [ "$OUTFILES" -eq 0 ]; then
   outfile=${inputdata}.ps
 fi
 
@@ -533,79 +517,66 @@ pth2crossdcf=${pth2coudir}/${inputdata}-dcff_section.cou
 # Check if all input file exist
 echo "...check all input files and paths"
 ### check fault map projection file
-if [ "$FPROJ" -eq 1 ] && [ ! -f "${pth2fprojfile}" ]
-then
+if [ "$FPROJ" -eq 1 ] && [ ! -f "${pth2fprojfile}" ]; then
   echo "[WARNING] fault map projection file: "${pth2fprojfile}" does not exist"
   FPROJ=0
 fi
 
 ### check fault surface file
-if [ "$FSURF" -eq 1 ] && [ ! -f "${pth2fsurffile}" ]
-then
+if [ "$FSURF" -eq 1 ] && [ ! -f "${pth2fsurffile}" ]; then
   echo "[WARNING] fault surface file: "${pth2fsurffile}" does not exist"
   FSURF=0
 fi
 
 ### check fault surface file
-if [ "$FDEP" -eq 1 ] && [ ! -f "${pth2fdepfile}" ]
-then
+if [ "$FDEP" -eq 1 ] && [ ! -f "${pth2fdepfile}" ]; then
   echo "[WARNING] fault Depth file: "${pth2fdepfile}" does not exist"
   FDEP=0
 fi
 
-
 ### check dems
-if [ "$TOPOGRAPHY" -eq 1 ]
-then
-  if [ ! -f $inputTopoB ]
-  then
+if [ "$TOPOGRAPHY" -eq 1 ]; then
+  if [ ! -f $inputTopoB ]; then
     echo "[WARNING] grd file for topography toes not exist, var turn to coastline"
     TOPOGRAPHY=0
   fi
 fi
 
 ### check NOA FAULT catalogue
-if [ "$FAULTS" -eq 1 ] && [ ! -f $pth2faults ]
-then
+if [ "$FAULTS" -eq 1 ] && [ ! -f $pth2faults ]; then
   echo "[WARNING] NOA Faults database does not exist"
   echo "[WARNING] please download it and then use this switch"
   FAULTS=0
 fi
 
 ### check cmt file
-if [ "$CMT" -eq 1 ] && [ ! -f $inpcmt ]
-then
+if [ "$CMT" -eq 1 ] && [ ! -f $inpcmt ]; then
   echo "[WARNING] CMT file does not exist, moment tensors will not plot"
   CMT=0
 fi
 
 ### check eqarthquake data file
-if [ "$EQDIST" -eq 1 ] && [ ! -f $pth2eqdistfile ]
-then
+if [ "$EQDIST" -eq 1 ] && [ ! -f $pth2eqdistfile ]; then
   echo "[WARNING] earthquake data file  does not exist, earthquakes will not plot"
   EQDIST=0
 fi
 
 ### set logogmt position
-if [ "$LOGOGMT" -eq 0 ]
-then
+if [ "$LOGOGMT" -eq 0 ]; then
   logogmt_pos=""
 else
   DEBUG echo "[DEBUG:${LINENO}] logo gmt position set: $logogmt_pos"
 fi
 
 ### check LOGO file
-if [ ! -f "$pth2logo" ]
-then
+if [ ! -f "$pth2logo" ]; then
 	echo "[WARNING] Logo file does not exist"
 	LOGO=0
 fi
 
 ### check pth2coutfile
-if [ "$CSTRESS" -eq 1 ] || [ "$SSTRESS" -eq 1 ] || [ "$NSTRESS" -eq 1 ];
-then
-  if [ ! -f "$pth2coutfile" ] || [ ! -f "$pth2dcfffile" ];
-  then
+if [ "$CSTRESS" -eq 1 ] || [ "$SSTRESS" -eq 1 ] || [ "$NSTRESS" -eq 1 ]; then
+  if [ ! -f "$pth2coutfile" ] || [ ! -f "$pth2dcfffile" ]; then
     echo "[WARNING] "$pth2coutfile" or  "$pth2dcfffile" does not exist!"
     echo "[WARNING] Stress output will not plot"
     CSTRESS=0; SSTRESS=0; NSTRESS=0; FCROSS=0;
@@ -618,11 +589,10 @@ then
   fi
 fi
 
-if [ "$STREXX" -eq 1 ] || [ "$STREYY" -eq 1 ] || [ "$STREZZ" -eq 1 ] || \
-[ "$STREYZ" -eq 1 ] || [ "$STREXZ" -eq 1 ] || [ "$STREXY" -eq 1 ] || [ "$STRDIL" -eq 1 ];
-then
-  if [ ! -f "$pth2coutfile" ] || [ ! -f "$pth2strnfile" ];
-  then
+if [ "$STREXX" -eq 1 ] || [ "$STREYY" -eq 1 ] || [ "$STREZZ" -eq 1 ] \
+|| [ "$STREYZ" -eq 1 ] || [ "$STREXZ" -eq 1 ] || [ "$STREXY" -eq 1 ] \
+|| [ "$STRDIL" -eq 1 ]; then
+  if [ ! -f "$pth2coutfile" ] || [ ! -f "$pth2strnfile" ]; then
     echo "[WARNING] "$pth2coutfile" or  "$pth2strnfile" does not exist!"
     echo "[WARNING] Stress or Strain output will not plot"
     STREXX=0; STREYY=0;	STREZZ=0; STREYZ=0; STREXZ=0; STREXY=0; STRDIL=0;
@@ -630,20 +600,19 @@ then
 fi
 
 ## check for displacements file
-if [ "$DGPSHO" -eq 1 ] || [ "$DGPSHM" -eq 1 ] || [ "$DGPSVO" -eq 1 ] || [ "$DGPSVM" -eq 1 ];
-then
-  if [ ! -f "$pth2gpsdfile" ];
-  then
+if [ "$DGPSHO" -eq 1 ] || [ "$DGPSHM" -eq 1 ] || [ "$DGPSVO" -eq 1 ] \
+|| [ "$DGPSVM" -eq 1 ]; then
+  if [ ! -f "$pth2gpsdfile" ]; then
     echo "[WARNING] "$pth2gpsdfile" does no exist. Velocities will not plotted."
     DGPSHO=0; DGPSHM=0; DGPSVO=0; DGPSVM=0;
   fi
 fi
 
+
 # //////////////////////////////////////////////////////////////////////////////
 # Configure Map Range
 
-if [ "$RANGE" -eq 0 ]
-then
+if [ "$RANGE" -eq 0 ]; then
   minlon=$(grep "min. lon" ${pth2inpfile} | awk '{print $6}')
   maxlon=$(grep "max. lon" ${pth2inpfile} | awk '{print $6}')
   minlat=$(grep "min. lat" ${pth2inpfile} | awk '{print $6}')
@@ -657,13 +626,12 @@ scale=-Lf${sclon}/${sclat}/36:24/20+l+jr
 range=-R$minlon/$maxlon/$minlat/$maxlat
 proj=-Jm$minlon/$minlat/1:$prjscale
 
-DEBUG echo "[DEBUG:${LINENO}] scale set: $scale" >&2
-DEBUG echo "[DEBUG:${LINENO}] range set: $range" >&2
-DEBUG echo "[DEBUG:${LINENO}] projection set: $proj" >&2
+DEBUG echo "[DEBUG:${LINENO}] scale set: $scale" 
+DEBUG echo "[DEBUG:${LINENO}] range set: $range" 
+DEBUG echo "[DEBUG:${LINENO}] projection set: $proj"
 
 # Set calculation depth
-if [ -z ${CALC_DEPTH+x} ];
-then
+if [ -z ${CALC_DEPTH+x} ]; then
   echo "[WARNING] CALC_DEPTH variable is not set. Input file will used."
   CALC_DEPTH=$(grep "DEPTH=" ${pth2inpfile} | awk '{print $6}')
   echo "[STATUS] Calculation depth set to: "$CALC_DEPTH" km"
@@ -674,44 +642,31 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # Configure Map title
 
-if [ "$MTITLE" -eq 1 ]
-then
+if [ "$MTITLE" -eq 1 ]; then
   echo "...set custom Map title..."
-elif [ "$CSTRESS" -eq 1 ]
-then
+elif [ "$CSTRESS" -eq 1 ]; then
   mtitle="Coulomb Stress Change"
-elif [ "$SSTRESS" -eq 1 ]
-then
+elif [ "$SSTRESS" -eq 1 ]; then
   mtitle="Shear Stress Change"
-elif [ "$NSTRESS" -eq 1 ]
-then
+elif [ "$NSTRESS" -eq 1 ]; then
   mtitle="Normal Stress Change"
-elif [ "$STREXX" -eq 1 ]
-then 
+elif [ "$STREXX" -eq 1 ]; then 
   mtitle="Strain Component Exx"
-elif [ "$STREYY" -eq 1 ]
-then
+elif [ "$STREYY" -eq 1 ]; then
   mtitle="Strain Component Eyy"
-elif [ "$STREZZ" -eq 1 ]
-then
+elif [ "$STREZZ" -eq 1 ]; then
   mtitle="Strain Component Ezz"
-elif [ "$STREYZ" -eq 1 ]
-then
+elif [ "$STREYZ" -eq 1 ]; then
   mtitle="Strain Component Eyz"
-elif [ "$STREXZ" -eq 1 ]
-then
+elif [ "$STREXZ" -eq 1 ]; then
   mtitle="Strain Component Exz"
-elif [ "$STREXY" -eq 1 ]
-then
+elif [ "$STREXY" -eq 1 ]; then
   mtitle="Strain Component Exy"
-elif [ "$STRDIL" -eq 1 ]
-then
+elif [ "$STRDIL" -eq 1 ]; then
   mtitle="Dilatation (Exx + Eyy + Ezz)"
-elif [ "$DGPSHO" -eq 1 ] || [ "$DGPSHM" -eq 1 ]
-then
+elif [ "$DGPSHO" -eq 1 ] || [ "$DGPSHM" -eq 1 ]; then
   mtitle="Horizontal Displacements"
-elif [ "$DGPSVO" -eq 1 ] || [ "$DGPSVM" -eq 1 ]
-then
+elif [ "$DGPSVO" -eq 1 ] || [ "$DGPSVM" -eq 1 ]; then
   mtitle="Vertical Displacements"
 else
   mtitle="Plots of Coulomb outputs"
@@ -721,22 +676,27 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # Define to plot coastlines or topography
 
-if [ "$CSTRESS" -eq 0 ] || [ "$SSTRESS" -eq 0 ] || [ "$NSTRESS" -eq 0 ] || [ "$DILSTRAIN" -eq 0 ]
-then
+if [ "$CSTRESS" -eq 0 ] && [ "$SSTRESS" -eq 0 ] && [ "$NSTRESS" -eq 0 ] \
+&& [ "$STREXX" -eq 0 ] && [ "$STREYY" -eq 0 ] && [ "$STREZZ" -eq 0 ] \
+&& [ "$STREXZ" -eq 0 ] && [ "$STREYZ" -eq 0 ] && [ "$STREXY" -eq 0 ] \
+&& [ "$STRDIL" -eq 0 ] && [ "$TOPOGRAPHY" -eq 0 ]; then
   ################## Plot coastlines only ######################
-  gmt pscoast $range $proj  -Df -W0.25p,black -G240   -K  -Y4.5c -V${VRBLEVM} > $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
+  gmt pscoast $range $proj  -Df -W0.25p,black -G240 -Y4.5c \
+    -K -V${VRBLEVM} > $outfile 
+  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
+    -O -K -V${VRBLEVM} >> $outfile
   
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]
-  then
+  if [ "$FAULTS" -eq 1 ]; then
     echo "...plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
   fi
 fi
 
-if [ "$TOPOGRAPHY" -eq 1 ]
-then
+if [ "$CSTRESS" -eq 0 ] && [ "$SSTRESS" -eq 0 ] && [ "$NSTRESS" -eq 0 ] \
+&& [ "$STREXX" -eq 0 ] && [ "$STREYY" -eq 0 ] && [ "$STREZZ" -eq 0 ] \
+&& [ "$STREXZ" -eq 0 ] && [ "$STREYZ" -eq 0 ] && [ "$STREXY" -eq 0 ] \
+&& [ "$STRDIL" -eq 0 ] && [ "$TOPOGRAPHY" -eq 1 ]; then
   # ####################### TOPOGRAPHY ###########################
   # bathymetry
   gmt makecpt -Cgebco.cpt -T-7000/0/50 -Z -V${VRBLEVM} > $bathcpt
@@ -749,6 +709,13 @@ then
   #------- coastline -------------------------------------------
   gmt psbasemap -R -J -O -K -B$frame:."$maptitle":  $scale -V${VRBLEVM} >> $outfile
   gmt pscoast -J -R -Df -W0.25p,black -K  -O -$logogmt_pos -V${VRBLEVM} >> $outfile
+  
+    
+  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  if [ "$FAULTS" -eq 1 ]; then
+    echo "...plot fault database catalogue..."
+    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
+  fi
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -761,19 +728,21 @@ then
   gmt xyz2grd ${pth2coutfile} -Gtmpgrd $range -I0.05 -V${VRBLEVM}
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y8c -V${VRBLEVM} > $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y8c \
+    -Q -K -V${VRBLEVM} > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
+  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
+    -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]
-  then
+  if [ "$FAULTS" -eq 1 ]; then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
+    gmt	psxy $pth2faults -R -J -W.5,204/102/0  -O -K -V${VRBLEVM} >> $outfile
   fi
   ########### Plot scale Bar ####################
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
-  rm tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt -B$bartick/:bar: \
+    -O -K -V${VRBLEVM} >> $outfile
+  rm tmp* ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -791,19 +760,21 @@ then
   gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05 -V${VRBLEVM}
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y8c -V${VRBLEVM} > $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y8c \
+    -Q -K -V${VRBLEVM} > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
+  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
+    -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]
-  then
+  if [ "$FAULTS" -eq 1 ]; then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM}  >> $outfile
+    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM}  >> $outfile
   fi
   ########### Plot scale Bar ####################
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
-  rm tmpcou1 tmpcou2 tmpcouall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
+    -O -K -V${VRBLEVM} >> $outfile
+  rm tmp* ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -821,19 +792,21 @@ then
   gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05 -V${VRBLEVM}
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y8c -V${VRBLEVM} > $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y8c \
+    -Q -K -V${VRBLEVM} > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
+  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
+    -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]
-  then
+  if [ "$FAULTS" -eq 1 ]; then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
+    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
   fi
   ########### Plot scale Bar ####################
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
-  rm tmpcou1 tmpcou2 tmpcouall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
+    -O -K -V${VRBLEVM} >> $outfile
+  rm tmp* ## clear temporary files
 fi
 
 
@@ -852,19 +825,21 @@ then
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
+    -Q -K -V${VRBLEVM} > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
+  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
+    -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]
-  then
+  if [ "$FAULTS" -eq 1 ]; then
     echo "...plot fault database catalogue..."
     gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
-  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
+    -O -K -V${VRBLEVM} >> $outfile
+  rm tmp* ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -882,19 +857,21 @@ then
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
+    -Q -K -V${VRBLEVM} > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
+  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
+    -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]
-  then
+  if [ "$FAULTS" -eq 1 ]; then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
+    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
-  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
+    -O -K -V${VRBLEVM} >> $outfile
+  rm tmp* ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -912,19 +889,21 @@ then
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
+    -Q -K -V${VRBLEVM} > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
+  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
+    -O -K-V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]
-  then
+  if [ "$FAULTS" -eq 1 ]; then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
+    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
-  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
+    -O -K -V${VRBLEVM} >> $outfile
+  rm tmp* ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -972,19 +951,21 @@ then
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
+    -Q -K -V${VRBLEVM} > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
+  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
+    -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]
-  then
+  if [ "$FAULTS" -eq 1 ]; then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0  -V${VRBLEVM} >> $outfile
+    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
-  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
+    -O -K -V${VRBLEVM} >> $outfile
+  rm tmp* ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -1002,19 +983,21 @@ then
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
+    -Q -K -V${VRBLEVM} > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
+  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
+    -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]
-  then
+  if [ "$FAULTS" -eq 1 ]; then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
+    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
-  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
+    -O -K -V${VRBLEVM} >> $outfile
+  rm tmp* ## clear temporary files
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -1032,49 +1015,47 @@ then
   gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
+    -Q -K -V${VRBLEVM} > $outfile
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
+  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
+    -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]
-  then
+  if [ "$FAULTS" -eq 1 ]; then
     echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
+    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
   fi
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
-  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt -B$bartick/:bar: \
+    -O -K -V${VRBLEVM} >> $outfile
+  rm tmp* ## clear temporary files
 fi
 
 
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT gmt_fault_map_proj.dat 
 
-if [ "$FPROJ" -eq 1 ]
-then
+if [ "$FPROJ" -eq 1 ]; then
   echo "...plot fault projection..."
-  gmt psxy ${pth2fprojfile} -Jm -O -R  -W1,red  -K -V${VRBLEVM} >> $outfile
+  gmt psxy ${pth2fprojfile} -Jm -R -W1,red -O -K -V${VRBLEVM} >> $outfile
 fi
-if [ "$FSURF" -eq 1 ]
-then
+if [ "$FSURF" -eq 1 ]; then
   echo "...plot fault surface..."
-  gmt psxy ${pth2fsurffile} -Jm -O -R  -W0.5,green  -K -V${VRBLEVM} >> $outfile
+  gmt psxy ${pth2fsurffile} -Jm -R -W0.5,green -O -K -V${VRBLEVM} >> $outfile
 fi
-if [ "$FDEP" -eq 1 ]
-then
+if [ "$FDEP" -eq 1 ]; then
   echo "...plot depth calculation..."
-  gmt psxy ${pth2fdepfile} -Jm -O -R -W0.5,black -K -V${VRBLEVM} >> $outfile
+  gmt psxy ${pth2fdepfile} -Jm -R -W0.5,black -O -K -V${VRBLEVM} >> $outfile
 fi
-
 
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT earthquakes distributions 
 
-if [ "$EQDIST" -eq 1 ]
-then
+if [ "$EQDIST" -eq 1 ]; then
   echo "...plot earthquakes distribution..."
-  awk 'NR>2 {print $8, $7}' $pth2eqdistfile | gmt psxy -Jm -O -R -Sc0.1c -Gblack -K -V${VRBLEVM} >> $outfile
+  awk 'NR>2 {print $8, $7}' $pth2eqdistfile \
+  | gmt psxy -Jm -R -Sc0.1c -Gblack -O -K -V${VRBLEVM} >> $outfile
 fi 
 
 
@@ -1100,38 +1081,48 @@ scdhmlonl=$sclon
 if [ "$DGPSHM" -eq 1 ]
 then
   echo "...plot Horizontal Modeled Displacements..."
-  awk -F, 'NR>2 {print $1,$2,$6,$7,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V >> $outfile 
+  awk -F, 'NR>2 {print $1,$2,$6,$7,0,0,0}' $pth2gpsdfile \
+  | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue \
+    -O -K -L -V >> $outfile 
 
   scdhmlat=$(echo print $sclat + .05 | python)
   scdhmlon=$sclon
   DEBUG echo "[DEBUG:${LINENO}] scdhmlat = ${scdhmlat}  , scdhmlon = ${scdhmlon}"
   scdhmlatl=$(echo print $scdhmlat + .1 | python)
   scdhmlonl=$scdhmlon
-  DEBUG echo "[DEBUG:${LINENO}] scdhmlatl = ${scdhmlatl}  , scdhmlonl = ${scdhmlonl}"
+  DEBUG echo "[DEBUG:${LINENO}] scdhmlatl = ${scdhmlatl}, scdhmlonl = ${scdhmlonl}"
 
   tmpmagn=$(echo print $dhscmagn/1000.  | python )
   DEBUG echo "[DEBUG:${LINENO}]" $tmpmagn
 
-  echo "$scdhmlon $scdhmlat $tmpmagn 0 0 0 0 $dhscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,blue -A10p+e -Gblue -O -L -V${VRBLEVM} -K >> $outfile
-  echo "$scdhmlonl $scdhmlatl  9 0 1 CT Modeled" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V${VRBLEVM} >> $outfile
+  echo "$scdhmlon $scdhmlat $tmpmagn 0 0 0 0 $dhscmagn mm" \
+  | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,blue -A10p+e -Gblue \
+    -L -O -K -V${VRBLEVM} >> $outfile
+  echo "$scdhmlonl $scdhmlatl  9 0 1 CT Modeled" \
+  | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V${VRBLEVM} >> $outfile
 fi
 
 if [ "$DGPSHO" -eq 1 ]
 then
   echo "...plot Horizontal Observed Displacements..."
-  awk -F, 'NR>2 {print $1,$2,$3,$4,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V${VRBLEVM} >> $outfile
+  awk -F, 'NR>2 {print $1,$2,$3,$4,0,0,0}' $pth2gpsdfile \
+  | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred \
+    -L -O -K -V${VRBLEVM} >> $outfile
 
   scdholat=$(echo print $scdhmlatl + .05 | python)
   scdholon=$scdhmlonl
-  DEBUG echo "[DEBUG:${LINENO}] scdholat = ${scdholat}  , scdholon = ${scdholon}"
+  DEBUG echo "[DEBUG:${LINENO}] scdholat = ${scdholat}, scdholon = ${scdholon}"
   scdholatl=$(echo print $scdholat + .1 | python)
   scdholonl=$scdholon
-  DEBUG echo "[DEBUG:${LINENO}] scvholatl = ${scvholatl}  , scvholonl = ${scvholonl}"
+  DEBUG echo "[DEBUG:${LINENO}] scvholatl = ${scvholatl}, scvholonl = ${scvholonl}"
 
   tmpmagn=$(echo print $dhscmagn/1000.  | python )
   DEBUG echo "[DEBUG:${LINENO}]" $tmpmagn
-  echo "$scdholon $scdholat $tmpmagn 0 0 0 0 $dhscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,red -A10p+e -Gred -O -L -V${VRBLEVM} -K >> $outfile
-  echo "$scdholonl $scdholatl  9 0 1 CT Observed" | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V${VRBLEVM} >> $outfile
+  echo "$scdholon $scdholat $tmpmagn 0 0 0 0 $dhscmagn mm" \
+  | gmt psvelo -R -Jm -Se${dhscale}/0.95/10 -W2p,red -A10p+e -Gred \
+    -L -O -K -V${VRBLEVM} >> $outfile
+  echo "$scdholonl $scdholatl  9 0 1 CT Observed" \
+  | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V${VRBLEVM} >> $outfile
 fi
 
 scdvmlat=$(echo print $sclat + .25 | python)
@@ -1141,21 +1132,29 @@ scdvmlonl=$sclon
 if [ "$DGPSVM" -eq 1 ]
 then
   echo "...plot Vertical Modeled Displacements..."
-  awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -K -L -V${VRBLEVM} >> $outfile
-  awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,red -A10p+e -Gred -O -K -L -V${VRBLEVM} >> $outfile
+  awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile \
+  | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,blue -A10p+e -Gblue \
+    -L -O -K -V${VRBLEVM} >> $outfile
+  awk -F, 'NR>2 {if ($8>=0) print $1,$2,0,$8,0,0,0}' $pth2gpsdfile \
+  | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,red -A10p+e -Gred \
+    -L -O -K -V${VRBLEVM} >> $outfile
   
   scdvmlon=$(echo print $sclon - 0.04 | python)
-  DEBUG echo "[DEBUG:${LINENO}] scdvmlat = ${scdvmlat}  , scdvmlon = ${scdvmlon}"
+  DEBUG echo "[DEBUG:${LINENO}] scdvmlat = ${scdvmlat}, scdvmlon = ${scdvmlon}"
   scdvmlatl=$scdvmlat
   scdvmlonl=$(echo print $scdvmlon - 0.06 | python)
-  DEBUG echo "[DEBUG:${LINENO}] scdvmlatl = ${scdvmlatl}  , scdvmlonl = ${scdvmlonl}"
+  DEBUG echo "[DEBUG:${LINENO}] scdvmlatl = ${scdvmlatl}, scdvmlonl = ${scdvmlonl}"
 
   tmpmagn=$(echo print $dvscmagn/1000.  | python )
   DEBUG echo "[DEBUG:${LINENO}]"  $tmpmagn
-  echo "$scdvmlon $scdvmlat 0 -$tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue -O -L -V${VRBLEVM}  -K >> $outfile
-  echo "$scdvmlon $scdvmlat 0 $tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred -O -L -V${VRBLEVM} -K >> $outfile
-  echo "$scdvmlonl $scdvmlatl 9,1,black 181 CM Modeled" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
-
+  echo "$scdvmlon $scdvmlat 0 -$tmpmagn 0 0 0 $dvscmagn mm" \
+  | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue \
+    -L -O -K -V${VRBLEVM} >> $outfile
+  echo "$scdvmlon $scdvmlat 0 $tmpmagn 0 0 0 $dvscmagn mm" \
+  | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred \
+  -L -O -K -V${VRBLEVM} >> $outfile
+  echo "$scdvmlonl $scdvmlatl 9,1,black 181 CM Modeled" \
+  | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
 fi
 
 
@@ -1163,38 +1162,47 @@ if [ "$DGPSVO" -eq 1 ]
 then
   echo "...plot Vertical Observed Displacements..."
   DEBUG echo "[DEBUG:${LINENO}] -X.08c add in mext line"
-  awk -F, 'NR>2 {if ($5<0) print $1,$2,0,$5,0,0,0}'  $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,0/255/0 -G0/255/0 -O -K -L -V${VRBLEVM} -X.08c >> $outfile
-  awk -F, 'NR>2 {if ($5>=0) print $1,$2,0,$5,0,0,0}' $pth2gpsdfile | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 -O -K -L -V${VRBLEVM} >> $outfile
+  awk -F, 'NR>2 {if ($5<0) print $1,$2,0,$5,0,0,0}'  $pth2gpsdfile \
+  | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,0/255/0 -G0/255/0 -X.08c \
+    -L -O -K -V${VRBLEVM} >> $outfile
+  awk -F, 'NR>2 {if ($5>=0) print $1,$2,0,$5,0,0,0}' $pth2gpsdfile \
+  | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 \
+    -L -O -K -V${VRBLEVM} >> $outfile
 
   scdvolat=$scdvmlat
   scdvolon=$(echo print $sclon + 0.1 | python)
-  DEBUG echo "[DEBUG:${LINENO}] scdvolat = ${scdvolat}  , scdvmlon = ${scdvolon}"
+  DEBUG echo "[DEBUG:${LINENO}] scdvolat = ${scdvolat}, scdvmlon = ${scdvolon}"
   scdvolatl=$scdvolat
   scdvolonl=$(echo print $scdvolon - 0.06 | python)
-  DEBUG echo "[DEBUG:${LINENO}] scdvolatl = ${scdvolatl}  , scdvolonl = ${scdvolonl}"
+  DEBUG echo "[DEBUG:${LINENO}] scdvolatl = ${scdvolatl}, scdvolonl = ${scdvolonl}"
 
   tmpmagn=$(echo print $dvscmagn/1000.  | python )
   DEBUG echo "[DEBUG:${LINENO}]" $tmpmagn
-  echo "$scdvolon $scdvolat 0 -$tmpmagn 0 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,0/255/0 -A10p+e -G0/255/0 -O -L -V${VRBLEVM} -K >> $outfile
-  echo "$scdvolon $scdvolat 0 $tmpmagn 0 0 $dvscmagn mm" | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 -O -L -V${VRBLEVM} -K >> $outfile
-  echo "$scdvolonl $scdvolatl 9,1,black 181 CM Observed" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
+  echo "$scdvolon $scdvolat 0 -$tmpmagn 0 0 0 $dvscmagn mm" \
+  | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,0/255/0 -A10p+e -G0/255/0 \
+    -L -O -K -V${VRBLEVM} >> $outfile
+  echo "$scdvolon $scdvolat 0 $tmpmagn 0 0 $dvscmagn mm" \
+  | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,255/215/0 -A10p+e -G255/215/0 \
+    -L -O -K -V${VRBLEVM} >> $outfile
+  echo "$scdvolonl $scdvolatl 9,1,black 181 CM Observed" \
+  | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
 
 fi
 
-if [ "$DGPSVM" -eq 1 ] || [ "$DGPSVO" -eq 1 ]
-then
+if [ "$DGPSVM" -eq 1 ] || [ "$DGPSVO" -eq 1 ]; then
   scdvmolat=$(echo print $sclat + .07 | python)
   DEBUG echo "[DEBUG:${LINENO}] -X-.08 added next line"
-  echo "$sclon $scdvmolat 9,1,black 0 CM \261 $dvscmagn mm" | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V${VRBLEVM}  -X-.08c >> $outfile
+  echo "$sclon $scdvmolat 9,1,black 0 CM \261 $dvscmagn mm" \
+  | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -X-.08c -O -K -V${VRBLEVM} >> $outfile
 fi
 
 
 # //////////////////////////////////////////////////////////////////////////////
 # Plot custom text configured at custom_text file
-if [ "$CTEXT" -eq 1 ]
-then
+if [ "$CTEXT" -eq 1 ]; then
   echo "...plot custom text file..."
-  grep -v "#" $pth2ctextfile | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V${VRBLEVM} >> $outfile
+  grep -v "#" $pth2ctextfile \
+  | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j  -O -K -V${VRBLEVM} >> $outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
