@@ -748,8 +748,7 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT SHEAR STRESS CHANGE
 
-if [ "$SSTRESS" -eq 1 ]
-then
+if [ "$SSTRESS" -eq 1 ]; then
   echo "...plot Shear Stress Change map..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpcou1
@@ -780,8 +779,7 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT NORMAL STRESS CHANGE
 
-if [ "$NSTRESS" -eq 1 ]
-then
+if [ "$NSTRESS" -eq 1 ]; then
   echo "...plot Normal Stress Change map..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpcou1
@@ -813,8 +811,7 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT STRAIN COMPONENT Exx
 
-if [ "$STREXX" -eq 1 ]
-then
+if [ "$STREXX" -eq 1 ]; then
   echo "...plot Strain Component Exx..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
@@ -845,8 +842,7 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT STRAIN COMPONENT Eyy
 
-if [ "$STREYY" -eq 1 ]
-then
+if [ "$STREYY" -eq 1 ]; then
   echo "...plot Strain Component Eyy..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
@@ -877,8 +873,7 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT STRAIN COMPONENT Ezz
 
-if [ "$STREZZ" -eq 1 ]
-then
+if [ "$STREZZ" -eq 1 ]; then
   echo "...plot Strain Component Ezz..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
@@ -909,8 +904,7 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT STRAIN COMPONENT Eyz
 
-if [ "$STREYZ" -eq 1 ]
-then
+if [ "$STREYZ" -eq 1 ]; then
   echo "...plot Strain Component Eyz..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
@@ -939,8 +933,7 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT STRAIN COMPONENT Exz
 
-if [ "$STREXZ" -eq 1 ]
-then
+if [ "$STREXZ" -eq 1 ]; then
   echo "...plot Strain Component Exz..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
@@ -971,8 +964,7 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT STRAIN COMPONENT Exy
 
-if [ "$STREXY" -eq 1 ]
-then
+if [ "$STREXY" -eq 1 ]; then
   echo "...plot Strain Component Exy..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
@@ -1003,8 +995,7 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT DILATATION STRAIN
 
-if [ "$STRDIL" -eq 1 ]
-then
+if [ "$STRDIL" -eq 1 ]; then
   echo "...plot Dilatation (Exx + Eyy + Ezz)..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
@@ -1063,12 +1054,13 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT CMT of earthquakes  
 
-if [ "$CMT" -eq 1 ]
-then
+if [ "$CMT" -eq 1 ]; then
   echo "...plot Centroid Moment Tensor file..."
-  awk '{print $1,$2}' $inpcmt | gmt psxy -Jm -O -R -Sa0.3c -Gred -K -V${VRBLEVM} >> $outfile
+  awk '{print $1,$2}' $inpcmt \
+  | gmt psxy -Jm -R -Sa0.3c -Gred -O -K -V${VRBLEVM} >> $outfile
 # gmt psmeca $inpcmt $range -Jm -Sc0.7/0 -CP0.05  -O -P -K>> $outfile
-  awk '{print $1,$2,$3,$4,$5,$6,$7,$8,$9}' $inpcmt | gmt psmeca -R -Jm -Sa0.4 -CP0.05 -K -O -P -V${VRBLEVM} >> $outfile
+  awk '{print $1,$2,$3,$4,$5,$6,$7,$8,$9}' $inpcmt \
+  | gmt psmeca -R -Jm -Sa0.4 -CP0.05 -K -O -V${VRBLEVM} >> $outfile
 fi
 
 
@@ -1078,8 +1070,7 @@ fi
 scdhmlatl=$sclat
 scdhmlonl=$sclon
 
-if [ "$DGPSHM" -eq 1 ]
-then
+if [ "$DGPSHM" -eq 1 ]; then
   echo "...plot Horizontal Modeled Displacements..."
   awk -F, 'NR>2 {print $1,$2,$6,$7,0,0,0}' $pth2gpsdfile \
   | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,blue -A10p+e -Gblue \
@@ -1102,8 +1093,7 @@ then
   | gmt pstext -Jm -R -Dj0.2c/0.2c -Gwhite -O -K -V${VRBLEVM} >> $outfile
 fi
 
-if [ "$DGPSHO" -eq 1 ]
-then
+if [ "$DGPSHO" -eq 1 ]; then
   echo "...plot Horizontal Observed Displacements..."
   awk -F, 'NR>2 {print $1,$2,$3,$4,0,0,0}' $pth2gpsdfile \
   | gmt psvelo -R -Jm -Se${dhscale}/0.95/0 -W2p,red -A10p+e -Gred \
@@ -1129,8 +1119,7 @@ scdvmlat=$(echo print $sclat + .25 | python)
 scdvmlonl=$sclon
 
 
-if [ "$DGPSVM" -eq 1 ]
-then
+if [ "$DGPSVM" -eq 1 ]; then
   echo "...plot Vertical Modeled Displacements..."
   awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  $pth2gpsdfile \
   | gmt psvelo -R -Jm -Se${dvscale}/0.95/0 -W2p,blue -A10p+e -Gblue \
@@ -1158,8 +1147,7 @@ then
 fi
 
 
-if [ "$DGPSVO" -eq 1 ]
-then
+if [ "$DGPSVO" -eq 1 ]; then
   echo "...plot Vertical Observed Displacements..."
   DEBUG echo "[DEBUG:${LINENO}] -X.08c add in mext line"
   awk -F, 'NR>2 {if ($5<0) print $1,$2,0,$5,0,0,0}'  $pth2gpsdfile \
@@ -1222,7 +1210,8 @@ if [ "$FCROSS" -eq 1 ]; then
     # plot line
     echo "$start_lon $start_lat" > tmpcrossline
     echo "$finish_lon $finish_lat" >> tmpcrossline
-    gmt psxy tmpcrossline -Jm -O -R -W1,black -S~D50k:+sc.2 -K -V${VRBLEVM} >> $outfile
+    gmt psxy tmpcrossline -Jm -R -W1,black -S~D50k:+sc.2 \
+      -O -K -V${VRBLEVM} >> $outfile
     echo "$start_lon $start_lat 9,1,black 90 RM A" \
     | gmt pstext -R -Jm -Dj.1c/0.1c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
     echo "$finish_lon $finish_lat 9,1,black 90 LM B" \
@@ -1333,16 +1322,15 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # Plot custom logo configured at default-param
 
-if [ "$LOGOCUS" -eq 1 ]
-then
+if [ "$LOGOCUS" -eq 1 ]; then
   echo "...add custom logo..."
-  gmt psimage $pth2logo -O $logocus_pos  -F0.4  -K -V${VRBLEVM} >>$outfile
+  gmt psimage $pth2logo $logocus_pos -F0.4 -O -K -V${VRBLEVM} >>$outfile
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # FINAL SECTION
 #################--- Close ps output file ----##################################
-echo "909 909" | gmt psxy -Sc.1 -Jm -O -R  -W1,red -V${VRBLEVM} >> $outfile
+echo "909 909" | gmt psxy -Sc.1 -Jm -R  -W1,red -O -V${VRBLEVM} >> $outfile
 
 #################--- Convert to other format ----###############################
 if [ "$OUTJPG" -eq 1 ]
