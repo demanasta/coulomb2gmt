@@ -1,4 +1,4 @@
-coulomb2gmt -- pre-released v1.0-beta5.1
+coulomb2gmt -- pre-released v1.0-beta6.0
 ==================
 
 > Bash scripts to plot coulomb results on gmt
@@ -22,13 +22,15 @@ coulomb2gmt -- pre-released v1.0-beta5.1
 
 * Plot Stress changes (Coulomb, Normal, Shear)
 
+* Plot cross section for stress changes and dilatation.
+
 * Plot all strain components (E**, Dilatation)
 
 * Plot Fault geometry (Projection, Surface, Depth)
 
 * Plot GPS displacement observed and modeled
 
-* Plot Fault and CMT databases
+* Plot Fault and CMT databases and earhtquake distribution
 
 * Add GMT timestamp logo and custom logo of your organization.
 
@@ -52,16 +54,53 @@ run: `$ ./coulomb2gmt.sh <inputfile> <inputdata> | options`
 * `<inputfile>`: name of input file used from Coulomb. Extention `.inp` not needed. Path to the directory of input files  configured at `default-param`.
 
 * `<inputdata>`:  Name of input files include results of coulmb calculations. Input data files are:
- 
-    * `<inputdata>-gmt_fault_surface.dat`:
-    * `<inputdata>-gmt_fault_map_proj.dat`:
-    * `<inputdata>-gmt_fault_calc_dep.dat`:
-    * `<inputdata>-coulomb_out.dat`:
-    * `<inputdata>-dcff.cou`:
+
+_Fault geometry files:_
+
+*  `<inputdata>-gmt_fault_surface.dat`: Source and receiver faults’ trace at surface.
+
+* `<inputdata>-gmt_fault_map_proj.dat`: Surface of source and receiver faults.
+
+* `<inputdata>-gmt_fault_calc_dep.dat`: Intersection of target depth with fault plane.
+
+_Stress change output files:_
+
+* `<inputdata>-coulomb_out.dat`:  Coulomb matrix data output.
+
+* `<inputdata>-dcff.cou`:  Output of all stress components.
+
+* `<inputdata>-dcff_section.cou`: Output of all stress components in cross section.
+
+* `<inputdata>-Cross_section.dat`: Cross section parameters.
+
+* `<inputdata>-Focal_mech_stress_output.csv`: 
+
+_Strain output files:_
+
+* `<inputdata>-Strain.cou`: Data matrix of starin components.
+
+_Earthquakes, GPS, custom text files:_
+
+* Earthquakes distribution: Earthquakes catalogue files. Structure is
+
+> line1: Header
+> line2: Header
+> line*:    YEAR MONTH DAY    HH MM SS    LAT.   LONG.  DEPTH    MAGNITUDE  (10 fields)
+
+* Centroid Moment Tensors file: Structure of file is the old GMT format for CMT. Use \# to comment lines.
+
+> lon  lat   d  str dip slip str dip slip magnt exp plon  plat  name (14 fields)
+
+* Custom text files: Use new gmt format for `pstext`. (GMT ver > 5.1 )
+
+> lon lat font\_size,font\_type,font\_color angle potision text
+
+* `<inputdata>-gps.dist`: GPS displacements.
 
 
 
 ### Default parameters
+
 Many parameters configured at `default-param` file.
 1. Paths to general files (DEM, logo, faults)
 2. Paths to input file directories (.inp, .dat, .cou, .disp)
@@ -76,19 +115,27 @@ Many parameters configured at `default-param` file.
 
 * `-o <filename>`:  set custom name of output file. Default is `<inputadata>`.
 
-* `-cmt <path to file>` :  Plot Centroid Moment Tensors of earthquakes. 
+* `-cmt <file>` :  Plot Centroid Moment Tensors of earthquakes. 
+
+* `-eqdist <file>` : Plot earthquakes distribution. No classification. 
 
 *  `-faults`: Plot custom fault database catalogue.
 
 * `-mt "map title"`: Custom map title.
 
-* `-h`: Help menu
-
-* `-debug`:Enable Debug option 
+* `-ctext  <path to file>` :  Plot Custom text. Config custom text file.
 
 * `-logogmt`: Plot GMT logo and time stamp.
 
 * `-logocus`: Plot custom logo of your organization.
+
+* `-h`: Help menu
+
+* `-v`: Plot version
+
+* `-debug`:Enable Debug option 
+
+
 
 ### Plot fault parameters
 
@@ -104,6 +151,8 @@ Many parameters configured at `default-param` file.
 * `-sstress`: Plot Shear Stress change.
 
 * `-nstress`: Plot Normal Stress change.
+
+* `-fcross`: Plot cross section of stress change.
 
 ### Plot Strain components
 
@@ -135,6 +184,48 @@ Default format is `*.ps` file. You can use  the options bellow to convert  to ot
 
 * `-outpdf` : Adjust and convert to PDF
 
+## `mvclsbfiles.sh` script
+
+An assistant script `mvclbfiles.sh` developed to move` and rename all output files in specific directories on coulomb home directory.
+
+You must first set `CLB34_HOME` variable the path to coulomb home directory,
+etc. `$ export CLB34_HOME=${HOME}/coulomb34`
+
+__Usage__: `$ ./mvclsbfiles.sh <inputdata>`
+`<inputdata>` is the code as me ntioned in the main script above.
+
+__Files, Rename and move:__
+
+* `coulomb_out.dat` -> `/gmt_files/<inputdata>-coulomb_out.dat`
+
+_Fault geometry files_
+
+* `gmt_fault_calc_dep.dat` -> `/gmt_files/<inputdata>-gmt_fault_calc_dep.dat`
+
+* `gmt_fault_map_proj.dat` ->  `/gmt_files/<inputdata>-gmt_fault_map_proj.dat`
+
+* `gmt_fault_surface.dat` -> `/gmt_files/<inputdata>-gmt_fault_surface.dat`
+
+_GPS displacements_
+
+* `/output_files/GPS_output.csv` -> ` /gps_data/<inputdata>-gps.disp`
+
+_Stress change files_
+
+* `/output_files/Cross_section.dat` ->  `/output_files/<inputdata>-Cross_section.dat`
+
+* `/output_files/dcff.cou` ->  `/output_files/<inputdata>-dcff.cou`
+
+* `/output_files/dcff_section.cou` -> `/output_files/<inputdata>-dcff_section.cou`
+
+* `/output_files/dilatation_section.cou` -> `/output_files/<inputdata>-dilatation_section.cou`
+
+* `/output_files/Focal_mech_stress_output.csv` -> `/output_files/<inputdata>-Focal_mech_stress_output.csv`
+
+_Strain output files_
+
+* `/output_files/Strain.cou` -> `/output_files/<inputdata>-Strain.cou`
+
 ## Contributing
 
 1. Create an issue and describe your idea
@@ -157,3 +248,6 @@ The history of releases can be viewed at [ChangeLog](docs/ChangeLog.md)
 * Toda, Shinji, Stein, R.S., Sevilgen, Volkan, and Lin, Jian, 2011, Coulomb 3.3 Graphic-rich deformation and stress-change software for earthquake, tectonic, and volcano research and teaching—user guide: U.S. Geological Survey Open-File Report 2011-1060, 63 p., available at http://pubs.usgs.gov/of/2011/1060/.
 
 * [The Generic Mappting Tools - GMT](http://gmt.soest.hawaii.edu/)
+
+* Python Software Foundation. Python Language Reference, version 2.7. Available at http://www.python.org
+
