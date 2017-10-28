@@ -1208,12 +1208,10 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT CROSS SECTION PROJECTION
 
-if [ "$FCROSS" -eq 1 ]
-then
+if [ "$FCROSS" -eq 1 ]; then
   echo "...plot cross sections..."
   # plot in the main map the cross section line
-  if [ $(awk 'NR==1 {print $7}' $pth2crossdat) -eq 2 ];
-  then
+  if [ $(awk 'NR==1 {print $7}' $pth2crossdat) -eq 2 ]; then
     DEBUG echo "[DEBUG:${LINENO}] cross test coords true"
     # read coordinates
     start_lon=$(awk 'NR==2 {print $5}' $pth2crossdat)
@@ -1225,8 +1223,10 @@ then
     echo "$start_lon $start_lat" > tmpcrossline
     echo "$finish_lon $finish_lat" >> tmpcrossline
     gmt psxy tmpcrossline -Jm -O -R -W1,black -S~D50k:+sc.2 -K -V${VRBLEVM} >> $outfile
-    echo "$start_lon $start_lat 9,1,black 90 RM A" | gmt pstext -R -Jm -Dj.1c/0.1c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
-    echo "$finish_lon $finish_lat 9,1,black 90 LM B" | gmt pstext -R -Jm -Dj.1c/0.1c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
+    echo "$start_lon $start_lat 9,1,black 90 RM A" \
+    | gmt pstext -R -Jm -Dj.1c/0.1c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
+    echo "$finish_lon $finish_lat 9,1,black 90 LM B" \
+    | gmt pstext -R -Jm -Dj.1c/0.1c -F+f+a+j -A -O -K -V${VRBLEVM} >> $outfile
   else
     echo "[ERROR] Cross coordinates must be latlon at dat file."
     echo "        Cross line will not plotted"
@@ -1241,15 +1241,15 @@ then
   tmpstarty=$(awk 'NR==4 {print $2}' tmpcrossdcf)
   DEBUG echo "[DEBUG:${LINENO}] start y " $tmpstarty
   # make proj file
-  if [ "$CSTRESS" -eq 1 ];
-  then
-    awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $4}' $pth2crossdcf > tmpcrossdcf2
-  elif [ "$SSTRESS" -eq 1 ];
-  then
-    awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $5}' $pth2crossdcf > tmpcrossdcf2
-  elif [ "$NSTRESS" -eq 1 ];
-  then
-    awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $6}' $pth2crossdcf > tmpcrossdcf2
+  if [ "$CSTRESS" -eq 1 ];  then
+    awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $4}' \
+      $pth2crossdcf > tmpcrossdcf2
+  elif [ "$SSTRESS" -eq 1 ]; then
+    awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $5}' \
+      $pth2crossdcf > tmpcrossdcf2
+  elif [ "$NSTRESS" -eq 1 ]; then
+    awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $6}' \
+      $pth2crossdcf > tmpcrossdcf2
   fi
   
   # Fault top-bottom parameters
@@ -1260,19 +1260,19 @@ then
 
   # fault across line
   fault_west=$(gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie \
-    | awk 'NR==1 {print $1, $2}' \
-    | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
-    | awk 'NR==1 {print $3}')
+  | awk 'NR==1 {print $1, $2}' \
+  | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
+  | awk 'NR==1 {print $3}')
   DEBUG echo "[DEBUG:${LINENO}] fault west= "$fault_west
   fault_east=$(gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie \
-    | awk 'NR==2 {print $1, $2}' \
-    | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
-    | awk 'NR==1 {print $3}')
+  | awk 'NR==2 {print $1, $2}' \
+  | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
+  | awk 'NR==1 {print $3}')
   DEBUG echo "[DEBUG:${LINENO}] fault_east= "$fault_east
   fault_surf=$(gmt spatial tmpcrossline $pth2fsurffile -Fl -Ie \
-    | awk 'NR==2 {print $1, $2}' \
-    | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
-    | awk 'NR==1 {print $3}')
+  | awk 'NR==2 {print $1, $2}' \
+  | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
+  | awk 'NR==1 {print $3}')
   DEBUG echo "[DEBUG:${LINENO}] fault_surf= "$fault_surf
   
   # create range for projection
@@ -1291,16 +1291,18 @@ then
   gmt xyz2grd tmpcrossdcf2 -Gtmpgrd $rangep -I2 -V${VRBLEVM} 
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I.05 -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt -J -K -Ei -Q -V${VRBLEVM} -O -Ya-6.5c >> $outfile
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt -J -Ya-6.5c -Ei \
+    -Q -O -K -V${VRBLEVM} >> $outfile
   
   # Plot A-B in projection
-  echo "$west $zmin  9,1,black 0 LT A" | gmt pstext -R -J -Dj0.1c/0.1c -F+f+a+j  -O -K -V${VRBLEVM} -Ya-6.5c >> $outfile
-  echo "$east $zmin  9,1,black 0 RT B" | gmt pstext -R -J -Dj0.1c/0.1c -F+f+a+j  -O -K -V${VRBLEVM} -Ya-6.5c >> $outfile
+  echo "$west $zmin  9,1,black 0 LT A" \
+  | gmt pstext -R -J -Dj0.1c/0.1c -F+f+a+j -Ya-6.5c -O -K -V${VRBLEVM} >> $outfile
+  echo "$east $zmin  9,1,black 0 RT B" \
+  | gmt pstext -R -J -Dj0.1c/0.1c -F+f+a+j -Ya-6.5c -O -K -V${VRBLEVM} >> $outfile
 
   # make pject cordinates for the source fault
   tmp_fault=($fault_surf $fault_west $fault_east)
-  if [[ $(echo "if (${fault_surf} > ${fault_east}) 1 else 0" | bc) -eq 1 ]];
-  then
+  if [[ $(echo "if (${fault_surf} > ${fault_east}) 1 else 0" | bc) -eq 1 ]]; then
     IFS=$'\n' tmp_faultsort=($(sort <<<"${tmp_fault[*]}"))
     DEBUG echo "[DEBUG:${LINENO}] sort1 "${tmp_faultsort[*]}
   else
@@ -1311,15 +1313,15 @@ then
   # Plot fault in cross section part
   echo "${tmp_faultsort[1]} $fault_top" > tmpasd
   echo "${tmp_faultsort[0]} $fault_bot" >> tmpasd
-  gmt psxy tmpasd -J -O -R -W1,black -K -V${VRBLEVM} -Ya-6.5c >> $outfile
+  gmt psxy tmpasd -J -R -W1,black -Ya-6.5c -O -K -V${VRBLEVM} >> $outfile
   echo "${tmp_faultsort[2]} 0" > tmpasd
   echo "${tmp_faultsort[1]} $fault_top" >> tmpasd
-  gmt psxy tmpasd -J -O -R -W.2,black,- -K -V${VRBLEVM} -Ya-6.5c >> $outfile
+  gmt psxy tmpasd -J -R -W.2,black,- -Ya-6.5c -O -K -V${VRBLEVM} >> $outfile
 
   # Plot calculation depth dashed line
   echo "$west $CALC_DEPTH" >tmpdep
   echo "$east $CALC_DEPTH" >>tmpdep
-  gmt psxy tmpdep -R -J -O -W.15,black,- -K -V${VRBLEVM} -Ya-6.5c >>$outfile
+  gmt psxy tmpdep -R -J -W.15,black,- -Ya-6.5c -O -K -V${VRBLEVM} >>$outfile
 
   # remove templorary files
   rm tmp*
