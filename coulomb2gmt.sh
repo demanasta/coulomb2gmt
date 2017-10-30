@@ -38,7 +38,7 @@ VERSION="v.1.0-beta5.6"
 
 # verbosity level for GMT, see http://gmt.soest.hawaii.edu/doc/latest/gmt.html#v-full
 # 
-VRBLEVM=c
+export VRBLEVM=c
 
 # //////////////////////////////////////////////////////////////////////////////
 # HELP FUNCTION
@@ -104,16 +104,13 @@ function help {
   echo "/******************************************************************************/"
   exit 1
 }
-# //////////////////////////////////////////////////////////////////////////////
-# Debug function
-function DEBUG()
-{
- [ "$_DEBUG" == "on" ] &&  $@
-}
 
 # //////////////////////////////////////////////////////////////////////////////
 # Source function files
-source .checknum.sh  # check number functions
+source functions/checknum.sh  # check number functions
+source functions/messages.sh
+source functions/gen_func.sh
+source functions/clbplots.sh
 
 # //////////////////////////////////////////////////////////////////////////////
 # GMT parameters
@@ -128,7 +125,7 @@ TOPOGRAPHY=0
 # LABELS=0
 OUTFILES=0
 # LEGEND=0
-FAULTS=0
+export FAULTS=0
 LOGOGMT=0
 LOGOCUS=0
 MTITLE=0
@@ -180,6 +177,7 @@ else
   source default-param
   echo "Default parameters file: default-param"
 fi
+
 
 # //////////////////////////////////////////////////////////////////////////////
 # GET COMMAND LINE ARGUMENTS
@@ -496,7 +494,7 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # Output file name definition
 if [ "$OUTFILES" -eq 0 ]; then
-  outfile=${inputdata}.ps
+  export outfile=${inputdata}.ps
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -696,10 +694,7 @@ if [ "$CSTRESS" -eq 0 ] && [ "$SSTRESS" -eq 0 ] && [ "$NSTRESS" -eq 0 ] \
     -O -K -V${VRBLEVM} >> $outfile
   
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]; then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
-  fi
+  plot_faults
 fi
 
 if [ "$CSTRESS" -eq 0 ] && [ "$SSTRESS" -eq 0 ] && [ "$NSTRESS" -eq 0 ] \
@@ -721,32 +716,47 @@ if [ "$CSTRESS" -eq 0 ] && [ "$SSTRESS" -eq 0 ] && [ "$NSTRESS" -eq 0 ] \
   
     
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]; then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
-  fi
+  plot_faults
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT COULOMB STRESS CHANGE
+function topo_over()
+{
+  gmt makecpt -Cgray.cpt -T-10000/0/100 -Z -V${VRBLEVM} > $bathcpt
+  gmt grdimage $inputTopoB $range $proj -C$bathcpt -K -V${VRBLEVM} -Y8c > $outfile
+  gmt pscoast $proj -P $range -Df -Gc -K -O -V${VRBLEVM} >> $outfile
+
+  gmt makecpt -Cgray.cpt -T-6000/1800/50 -Z -V${VRBLEVM} > $landcpt
+  gmt grdimage $inputTopoL $range $proj -C$landcpt  -K -O -V${VRBLEVM} >> $outfile
+  gmt pscoast -R -J -O -K -Q -V${VRBLEVM} >> $outfile
+}
 
 if [ "$CSTRESS" -eq 1 ]
 then
+#   gmt makecpt -Cgray.cpt -T-10000/0/100 -Z -V${VRBLEVM} > $bathcpt
+#   gmt grdimage $inputTopoB $range $proj -C$bathcpt -K -V${VRBLEVM} -Y8c > $outfile
+#   gmt pscoast $proj -P $range -Df -Gc -K -O -V${VRBLEVM} >> $outfile
+# 
+#   gmt makecpt -Cgray.cpt -T-6000/1800/50 -Z -V${VRBLEVM} > $landcpt
+#   gmt grdimage $inputTopoL $range $proj -C$landcpt  -K -O -V${VRBLEVM} >> $outfile
+#   gmt pscoast -R -J -O -K -Q -V${VRBLEVM} >> $outfile
+topo_over
+
   echo "...plot Coulomb Stress Change map... "
   ################# Plot Coulomb source AnD coastlines only ######################
   gmt xyz2grd ${pth2coutfile} -Gtmpgrd $range -I0.05 -V${VRBLEVM}
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y8c \
-    -Q -K -V${VRBLEVM} > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
+  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt -t40 $range $proj -Ei \
+    -Q -O -K -V${VRBLEVM} >> $outfile
+  gmt pscoast $range $proj -Df -W0.3,140 -O -K -V${VRBLEVM} >> $outfile 
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
     -O -K -V${VRBLEVM} >> $outfile
+    
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]; then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -W.5,204/102/0  -O -K -V${VRBLEVM} >> $outfile
-  fi
+  plot_faults
+  
   ########### Plot scale Bar ####################
   bartick=$(echo $barrange | awk '{print $1/5}')
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt -B$bartick/:bar: \
@@ -774,10 +784,8 @@ if [ "$SSTRESS" -eq 1 ]; then
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
     -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]; then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM}  >> $outfile
-  fi
+  plot_faults
+
   ########### Plot scale Bar ####################
   bartick=$(echo $barrange | awk '{print $1/5}')
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
@@ -805,10 +813,8 @@ if [ "$NSTRESS" -eq 1 ]; then
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
     -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]; then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
-  fi
+  plot_faults
+
   ########### Plot scale Bar ####################
   bartick=$(echo $barrange | awk '{print $1/5}')
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
@@ -837,10 +843,8 @@ if [ "$STREXX" -eq 1 ]; then
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
     -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]; then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
-  fi
+  plot_faults
+
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
@@ -868,10 +872,8 @@ if [ "$STREYY" -eq 1 ]; then
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
     -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]; then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
-  fi
+  plot_faults
+
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
@@ -899,10 +901,8 @@ if [ "$STREZZ" -eq 1 ]; then
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
     -O -K-V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]; then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
-  fi
+  plot_faults
+
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
@@ -928,11 +928,8 @@ if [ "$STREYZ" -eq 1 ]; then
   gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
   gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]
-  then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -O -K  -W.5,204/102/0 -V${VRBLEVM} >> $outfile
-  fi
+  plot_faults
+
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
@@ -959,10 +956,8 @@ if [ "$STREXZ" -eq 1 ]; then
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
     -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]; then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
-  fi
+  plot_faults
+
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
@@ -990,10 +985,8 @@ if [ "$STREXY" -eq 1 ]; then
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
     -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]; then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
-  fi
+  plot_faults
+
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
@@ -1021,10 +1014,8 @@ if [ "$STRDIL" -eq 1 ]; then
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
     -O -K -V${VRBLEVM} >> $outfile
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
-  if [ "$FAULTS" -eq 1 ]; then
-    echo "...plot fault database catalogue..."
-    gmt	psxy $pth2faults -R -J -W.5,204/102/0 -O -K -V${VRBLEVM} >> $outfile
-  fi
+  plot_faults
+
   #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
   bartick=$(echo $barrange | awk '{print $1/5}')
   gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt -B$bartick/:bar: \
@@ -1378,5 +1369,7 @@ then
   gmt psconvert $outfile -A0.2c -Tf -V${VRBLEVM} 
 fi
 
+# clear all teporary files
+# rm tmp*
 # Print exit status
 echo "[STATUS] Finished. Exit status: $?"

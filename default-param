@@ -3,34 +3,34 @@
 
 # //////////////////////////////////////////////////////////////////////////////
 # Set path for general files
-pth2dems=${HOME}/Map_project/dems
+export pth2dems=${HOME}/Map_project/dems
 
-inputTopoL=${pth2dems}/ETOPO1_gr_resample01m.grd   #ETOPO1_Bed_g_gmt4.grd
-inputTopoB=${pth2dems}/ETOPO1_gr_resample01m.grd    #ETOPO1_Bed_g_gmt4.grd
+export inputTopoL=${pth2dems}/ETOPO1_gr_resample01m.grd   #ETOPO1_Bed_g_gmt4.grd #ETOPO1_grcut.grd
+export inputTopoB=${pth2dems}/ETOPO1_gr_resample01m.grd    #ETOPO1_Bed_g_gmt4.grd #ETOPO1_grcut.grd
 
 # Path to logo file
-pth2logo=$HOME/Map_project/logos/DSOlogo2.eps
+export pth2logo=$HOME/Map_project/logos/DSOlogo2.eps
 
 # Path to faults database file
-pth2faults=$HOME/Map_project/faults/NOAFaults_v1.0.gmt
+export pth2faults=$HOME/Map_project/faults/NOAFaults_v1.0.gmt
 
 # //////////////////////////////////////////////////////////////////////////////
 # Path to input file directories
 
 # Path to directory of input files *.inp
-pth2inpdir=../inp_historic/
+export pth2inpdir=../inp_historic/
 
 # Path to directory of *.dat files
-pth2datdir=../gmt_files_hokada01/
+export pth2datdir=../gmt_files_hokada01/
 
 # Path to directory of *.cou files
-pth2coudir=../output_files/
+export pth2coudir=../output_files/
 
 # Path to directory of *.disp files. GPS displacements
-pth2gpsdir=../gps_data/
+export pth2gpsdir=../gps_data/
 
 # Path to earthquakes database
-pth2eqdir=../earthquake_data/
+export pth2eqdir=../earthquake_data/
 
 # pth2gpsfile=${inputdata}.disp
 #pth2inpdata=../input_zakynthos/${inputfile}.inp
@@ -38,9 +38,9 @@ pth2eqdir=../earthquake_data/
 
 # //////////////////////////////////////////////////////////////////////////////
 # Colormap Palettes
-landcpt=land_man.cpt
-bathcpt=bath_man.cpt
-coulombcpt=Coulomb_anatolia.cpt
+export landcpt=tmp_land.cpt
+export bathcpt=tmp_bath.cpt
+export coulombcpt=Coulomb_anatolia.cpt
 
 # //////////////////////////////////////////////////////////////////////////////
 # Only frame nust set in this section
@@ -49,23 +49,23 @@ coulombcpt=Coulomb_anatolia.cpt
 # minlat=37.9
 # maxlat=38.5
 # prjscale=500000
-frame=0.5		## Default 0.5
+export frame=0.5		## Default 0.5
 
 # //////////////////////////////////////////////////////////////////////////////
 # scale variables
 
-barrange=1		## Default 1
+export barrange=1		## Default 1
 
-dhscale=100		## Default 100
-dvscale=100		## Default 100
+export dhscale=100		## Default 100
+export dvscale=100		## Default 100
 
-dhscmagn=10 #use mm
-dvscmagn=12 #use mm
+export dhscmagn=10 #use mm
+export dvscmagn=12 #use mm
 
-# CALC_DEPTH=8 #use km
+# export CALC_DEPTH=8 #use km
 
 # //////////////////////////////////////////////////////////////////////////////
-logogmt_pos="-UBL/0.05c/0.05c/DemAnast"
-logocus_pos="-Dx13.57c/10.05c+w1.1c"
+export logogmt_pos="-UBL/0.05c/0.05c/DemAnast"
+export logocus_pos="-Dx13.57c/10.05c+w1.1c"
 # legendc="-Jx1i -R0/8/0/8 -Dx18.5c/12.6c/3.6c/3.5c/BL"	
 # 
