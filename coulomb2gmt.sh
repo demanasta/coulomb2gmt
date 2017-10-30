@@ -23,6 +23,7 @@
 #    uses                  : 
 #    notes                 :
 #    detailed update list  : LAST_UPDATE=OCT-2017
+#                 OCT-2017 : Re-format script with functions. Cross plots
 #                 OCT-2016 : Add logos, default parameters etc, 'didimoteixo v.' 
 #                 NOV-2015 : Strain plots, gps velocities, add topography
 #                 SEP-2015 : First release, stress plots, help, conversions
@@ -34,76 +35,12 @@
 # pre define parameters
 
 # program version
-VERSION="v.1.0-beta5.6"
-
+VERSION="v.1.0-beta6.1"
 # verbosity level for GMT, see http://gmt.soest.hawaii.edu/doc/latest/gmt.html#v-full
 # 
 export VRBLEVM=c
 
-# //////////////////////////////////////////////////////////////////////////////
-# HELP FUNCTION
-function help {
-  echo "/******************************************************************************/"
-  echo " Program Name : coulomb2gmt.sh"
-  echo " Version : $VERSION"
-  echo " Purpose : Plot Coulomb Stress change results"
-  echo " Usage   : coulomb2gmt.sh  <inputfile> <inputdata> | options | "
-  echo " Switches: "
-  echo "/*** GENERAL OPTIONS **********************************************************/"
-  echo "           -r [:=region] set different region minlon maxlon minlat maxlat prjscale"
-  echo "           -topo [:=topography] plot topography using dem file if exist "
-  echo "           -o <name> [:= output] name of output files"
-#   echo "           -l [:=labels] plot labels"
-#   echo "           -leg [:=legend] insert legends"
-  echo "           -cmt <file> [:=Plot central moment tensors] insert file "
-  echo "           -faults [:= faults] plot fault database catalogue"
-  echo "           -mt <title> [:= map title] title map default none use quotes"
-  echo "           -ctext <file>[:=cusotm text] Plot custom text in map"
-  echo "           -eqdist <file> [] Plot earthquake distribution"
-  echo "           -h [:= help] help menu"
-  echo "           -logogmt [:=gmt logo] Plot gmt logo and time stamp"
-  echo "           -logocus [:=custom logo] Plot custom logo of your organization"
-  echo "           -v [:version] Plots script release"
-  echo "           -debug [:=DEBUG] enable debug option"
-  echo ""
-  echo "/*** PLOT FAULT PARAMETERS ****************************************************/"
-  echo "           -fproj [:=Fault projection] "
-  echo "           -fsurf [:=Fault surface] "
-  echo "           -fdep [:=Fault calculation depth] "
-  echo ""
-  echo "/*** PLOT STRESS CHANGE OUTPUTS ***********************************************/"
-  echo "           -cstress [:=Coulomb Stress] "
-  echo "           -sstress [:=Shear Stress] "
-  echo "           -nstress [:=Normal strain] "
-  echo "           -fcross [:=plot cross section projections] "
-  echo ""
-  echo "/*** PLOT COMPONENTS OF STRAIN FIELD ******************************************/"
-  echo "           -strexx [:= Exx component] "
-  echo "           -streyy [:= Eyy component] "
-  echo "           -strezz [:= Ezz component] "
-  echo "           -streyz [:= Eyz component] "
-  echo "           -strexz [:= Exz component] "
-  echo "           -strexy [:= Exy component] "
-  echo "           -strdil [:= Dilatation strain] "
-  echo ""
-  echo "/*** PLOT OKADA85 *************************************************************/"
-  echo "           -dgpsho : observed GPS horizontal displacements"
-  echo "           -dgpshm : modeled horizontal displacements on gps site"
-  echo "           -dgpsvo : observed GPS vertical displacements"
-  echo "           -dgpsvm : modeled vertical displacements on gps sites"
-  echo ""
-  echo "/*** OUTPUT FORMATS ***********************************************************/"
-  echo "           -outjpg : Adjust and convert to JPEG"
-  echo "           -outpng : Adjust and convert to PNG (transparent where nothing is plotted)"
-  echo "           -outeps : Adjust and convert to EPS"
-  echo "           -outpdf : Adjust and convert to PDF"
-  echo ""
-  echo " Exit Status:    1 -> help message or error"
-  echo " Exit Status:  = 0 -> sucesseful exit"
-  echo ""
-  echo "/******************************************************************************/"
-  exit 1
-}
+
 
 # //////////////////////////////////////////////////////////////////////////////
 # Source function files
@@ -133,6 +70,7 @@ CTEXT=0
 EQDIST=0
 
 RANGE=0
+OVERTOPO=0
 CSTRESS=0
 SSTRESS=0
 NSTRESS=0
@@ -175,13 +113,12 @@ if [ ! -f "default-param" ]; then
   exit 1
 else
   source default-param
-  echo "Default parameters file: default-param"
+#   echo "Default parameters file: default-param"
 fi
 
 
 # //////////////////////////////////////////////////////////////////////////////
 # GET COMMAND LINE ARGUMENTS
-echo "...get command line arguments..."
 if [ "$#" -eq 0 ]; then
   help
 elif [ "$#" -eq 1 ]; then
@@ -200,6 +137,7 @@ elif [ "$#" -eq 2 ]; then
   echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
   exit 1
 elif [ -f ${pth2inpdir}/${1}.inp ]; then
+  echo "...get command line arguments..."
   inputfile=${1}.inp
   pth2inpfile=${pth2inpdir}/${1}.inp
   inputdata=${2}
@@ -354,44 +292,54 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	fi
 	shift #shift for the argument -eqdist
 	;;
-    -cstress)
+    -cstress*)
 	CSTRESS=1
+	check_arg_ot ${3:8:10}
 	shift
 	;;
-    -sstress)
+    -sstress*)
 	SSTRESS=1
+	check_arg_ot ${3:8:10}
 	shift
 	;;
-    -nstress)
+    -nstress*)
 	NSTRESS=1
+	check_arg_ot ${3:8:10}
 	shift
 	;;
-    -strexx)
+    -strexx*)
 	STREXX=1
+	check_arg_ot ${3:7:9}
 	shift
 	;;
-    -streyy)
+    -streyy*)
 	STREYY=1
+	check_arg_ot ${3:7:9}
 	shift
 	;;
-    -strezz)
+    -strezz*)
 	STREZZ=1
+	check_arg_ot ${3:7:9}
 	shift
 	;;
-    -streyz)
+    -streyz*)
 	STREYZ=1
+	check_arg_ot ${3:7:9}
 	shift
 	;;
-    -strexz)
+    -strexz*)
 	STREXZ=1
+	check_arg_ot ${3:7:9}
 	shift
 	;;
-    -strexy)
+    -strexy*)
 	STREXY=1
+	check_arg_ot ${3:7:9}
 	shift
 	;;
-    -strdil)
+    -strdil*)
 	STRDIL=1
+	check_arg_ot ${3:7:9}
 	shift
 	;;
     -fproj)
@@ -482,9 +430,9 @@ if [ "$inpconflict" -ne 1 ] && [ "$inpconflict" -ne 0 ]; then
 fi
 
 ### check fcross plot only with stress change
-if  [ "$STREXX" -eq 1 ] || [ "$STREYY" -eq 1 ] || [ "$STREZZ" -eq 1 ] \
+if [ "$STREXX" -eq 1 ] || [ "$STREYY" -eq 1 ] || [ "$STREZZ" -eq 1 ] \
 || [ "$STREYZ" -eq 1 ] || [ "$STREXZ" -eq 1 ] || [ "$STREXY" -eq 1 ] \
- && [ "$FCROSS" -eq 1 ]; then
+&& [ "$FCROSS" -eq 1 ]; then
   echo "[WARNING] Cross section is in conflict with strain options"
   echo "          Only strain component will plotted in map"
   DEBUG echo "[DEBUG:${LINENO}] fcross set it )"
@@ -534,10 +482,10 @@ if [ "$FDEP" -eq 1 ] && [ ! -f "${pth2fdepfile}" ]; then
 fi
 
 ### check dems
-if [ "$TOPOGRAPHY" -eq 1 ]; then
-  if [ ! -f $inputTopoB ]; then
+if [ "$TOPOGRAPHY" -eq 1 ] || [ "$OVERTOPO" -eq 1 ]; then
+  if [ ! -f $inputTopoB ] || [ ! -f $inputTopoL ]; then
     echo "[WARNING] grd file for topography toes not exist, var turn to coastline"
-    TOPOGRAPHY=0
+    TOPOGRAPHY=0; OVERTOPO=0;
   fi
 fi
 
@@ -629,9 +577,9 @@ fi
 
 sclat=$(echo print $minlat + 0.10 | python)
 sclon=$(echo print $maxlon - 0.22 | python)
-scale=-Lf${sclon}/${sclat}/36:24/20+l+jr
-range=-R$minlon/$maxlon/$minlat/$maxlat
-proj=-Jm$minlon/$minlat/1:$prjscale
+export scale=-Lf${sclon}/${sclat}/36:24/20+l+jr
+export range=-R$minlon/$maxlon/$minlat/$maxlat
+export proj=-Jm$minlon/$minlat/1:$prjscale
 
 DEBUG echo "[DEBUG:${LINENO}] scale set: $scale" 
 DEBUG echo "[DEBUG:${LINENO}] range set: $range" 
@@ -640,7 +588,7 @@ DEBUG echo "[DEBUG:${LINENO}] projection set: $proj"
 # Set calculation depth
 if [ -z ${CALC_DEPTH+x} ]; then
   echo "[WARNING] CALC_DEPTH variable is not set. Input file will used."
-  CALC_DEPTH=$(grep "DEPTH=" ${pth2inpfile} | awk '{print $6}')
+  export CALC_DEPTH=$(grep "DEPTH=" ${pth2inpfile} | awk '{print $6}')
   echo "[STATUS] Calculation depth set to: "$CALC_DEPTH" km"
 else
   echo "[STATUS] Calculation depth set to: "$CALC_DEPTH" km"
@@ -711,7 +659,7 @@ if [ "$CSTRESS" -eq 0 ] && [ "$SSTRESS" -eq 0 ] && [ "$NSTRESS" -eq 0 ] \
   gmt grdimage $inputTopoL $range $proj -C$landcpt  -K -O -V${VRBLEVM} >> $outfile
   gmt pscoast -R -J -O -K -Q -V${VRBLEVM} >> $outfile
   #------- coastline -------------------------------------------
-  gmt psbasemap -R -J -O -K -B$frame:."$maptitle":  $scale -V${VRBLEVM} >> $outfile
+  gmt psbasemap -R -J -O -K -B$frame:."$mtitle":  $scale -V${VRBLEVM} >> $outfile
   gmt pscoast -J -R -Df -W0.25p,black -K  -O -$logogmt_pos -V${VRBLEVM} >> $outfile
   
     
@@ -721,39 +669,15 @@ fi
 
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT COULOMB STRESS CHANGE
-function topo_over()
-{
-  gmt makecpt -Cgray.cpt -T-10000/0/100 -Z -V${VRBLEVM} > $bathcpt
-  gmt grdimage $inputTopoB $range $proj -C$bathcpt -K -V${VRBLEVM} -Y8c > $outfile
-  gmt pscoast $proj -P $range -Df -Gc -K -O -V${VRBLEVM} >> $outfile
 
-  gmt makecpt -Cgray.cpt -T-6000/1800/50 -Z -V${VRBLEVM} > $landcpt
-  gmt grdimage $inputTopoL $range $proj -C$landcpt  -K -O -V${VRBLEVM} >> $outfile
-  gmt pscoast -R -J -O -K -Q -V${VRBLEVM} >> $outfile
-}
-
-if [ "$CSTRESS" -eq 1 ]
-then
-#   gmt makecpt -Cgray.cpt -T-10000/0/100 -Z -V${VRBLEVM} > $bathcpt
-#   gmt grdimage $inputTopoB $range $proj -C$bathcpt -K -V${VRBLEVM} -Y8c > $outfile
-#   gmt pscoast $proj -P $range -Df -Gc -K -O -V${VRBLEVM} >> $outfile
-# 
-#   gmt makecpt -Cgray.cpt -T-6000/1800/50 -Z -V${VRBLEVM} > $landcpt
-#   gmt grdimage $inputTopoL $range $proj -C$landcpt  -K -O -V${VRBLEVM} >> $outfile
-#   gmt pscoast -R -J -O -K -Q -V${VRBLEVM} >> $outfile
-topo_over
-
+if [ "$CSTRESS" -eq 1 ]; then
   echo "...plot Coulomb Stress Change map... "
   ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd ${pth2coutfile} -Gtmpgrd $range -I0.05 -V${VRBLEVM}
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt -t40 $range $proj -Ei \
-    -Q -O -K -V${VRBLEVM} >> $outfile
-  gmt pscoast $range $proj -Df -W0.3,140 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
-    -O -K -V${VRBLEVM} >> $outfile
-    
+  if [ "$OVERTOPO" -eq 1 ]; then
+    plotstr_overtopo ${pth2coutfile}
+  else
+    plotstr ${pth2coutfile}
+  fi
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   plot_faults
   
@@ -774,15 +698,12 @@ if [ "$SSTRESS" -eq 1 ]; then
   awk 'NR>3{print $5}' ${pth2dcfffile} > tmpcou2
   paste -d" " tmpcou1 tmpcou2 >tmpcouall
  
- ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05 -V${VRBLEVM}
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y8c \
-    -Q -K -V${VRBLEVM} > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
-    -O -K -V${VRBLEVM} >> $outfile
+  if [ "$OVERTOPO" -eq 1 ]; then
+    plotstr_overtopo tmpcouall
+  else
+    plotstr tmpcouall
+  fi
+ 
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   plot_faults
 
@@ -803,15 +724,12 @@ if [ "$NSTRESS" -eq 1 ]; then
   awk 'NR>3 {print $6}' ${pth2dcfffile} > tmpcou2
   paste -d" " tmpcou1 tmpcou2 > tmpcouall
  
-  ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpcouall -Gtmpgrd $range -I0.05 -V${VRBLEVM}
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y8c \
-    -Q -K -V${VRBLEVM} > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
-    -O -K -V${VRBLEVM} >> $outfile
+  if [ "$OVERTOPO" -eq 1 ]; then
+    plotstr_overtopo tmpcouall
+  else
+    plotstr tmpcouall
+  fi
+ 
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   plot_faults
 
@@ -833,15 +751,12 @@ if [ "$STREXX" -eq 1 ]; then
   awk 'NR>3 {print $4*1000000}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
-  ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
-    -Q -K -V${VRBLEVM} > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
-    -O -K -V${VRBLEVM} >> $outfile
+  if [ "$OVERTOPO" -eq 1 ]; then
+    plotstr_overtopo tmpstrall
+  else
+    plotstr tmpstrall
+  fi
+  
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   plot_faults
 
@@ -862,15 +777,12 @@ if [ "$STREYY" -eq 1 ]; then
   awk 'NR>3 {print $5*1000000}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
-  ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
-    -Q -K -V${VRBLEVM} > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
-    -O -K -V${VRBLEVM} >> $outfile
+  if [ "$OVERTOPO" -eq 1 ]; then
+    plotstr_overtopo tmpstrall
+  else
+    plotstr tmpstrall
+  fi
+  
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   plot_faults
 
@@ -891,15 +803,12 @@ if [ "$STREZZ" -eq 1 ]; then
   awk 'NR>3 {print $6*1000000}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
-  ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
-    -Q -K -V${VRBLEVM} > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
-    -O -K-V${VRBLEVM} >> $outfile
+  if [ "$OVERTOPO" -eq 1 ]; then
+    plotstr_overtopo tmpstrall
+  else
+    plotstr tmpstrall
+  fi
+  
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   plot_faults
 
@@ -920,13 +829,12 @@ if [ "$STREYZ" -eq 1 ]; then
   awk 'NR>3 {print $7*1000000}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
-  ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj  -K -Ei -Q -Y4.5c -V${VRBLEVM} > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -O -K -B$frame:."$mtitle": --FONT_ANNOT_PRIMARY=10p $scale --FONT_LABEL=10p $logogmt_pos -V${VRBLEVM} >> $outfile
+  if [ "$OVERTOPO" -eq 1 ]; then
+    plotstr_overtopo tmpstrall
+  else
+    plotstr tmpstrall
+  fi
+  
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   plot_faults
 
@@ -946,15 +854,12 @@ if [ "$STREXZ" -eq 1 ]; then
   awk 'NR>3 {print $8*1000000}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
-  ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
-    -Q -K -V${VRBLEVM} > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
-    -O -K -V${VRBLEVM} >> $outfile
+  if [ "$OVERTOPO" -eq 1 ]; then
+    plotstr_overtopo tmpstrall
+  else
+    plotstr tmpstrall
+  fi
+  
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   plot_faults
 
@@ -975,15 +880,12 @@ if [ "$STREXY" -eq 1 ]; then
   awk 'NR>3 {print $9*1000000}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
-  ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y4.5c \
-    -Q -K -V${VRBLEVM} > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
-    -O -K -V${VRBLEVM} >> $outfile
+  if [ "$OVERTOPO" -eq 1 ]; then
+    plotstr_overtopo tmpstrall
+  else
+    plotstr tmpstrall
+  fi
+  
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   plot_faults
 
@@ -1004,15 +906,12 @@ if [ "$STRDIL" -eq 1 ]; then
   awk 'NR>3 {print $10*1000000}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
-  ################# Plot Coulomb source AnD coastlines only ######################
-  gmt xyz2grd tmpstrall -Gtmpgrd $range -I0.05 -V${VRBLEVM} 
-  gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
-  gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM} 
-  gmt grdimage tmpgrd_sample.grd -Ctmpcpt.cpt $proj -Ei -Y8c \
-    -Q -K -V${VRBLEVM} > $outfile
-  gmt pscoast $range $proj -Df -W0.5,120 -O -K -V${VRBLEVM} >> $outfile 
-  gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
-    -O -K -V${VRBLEVM} >> $outfile
+  if [ "$OVERTOPO" -eq 1 ]; then
+    plotstr_overtopo tmpstrall
+  else
+    plotstr tmpstrall
+  fi
+  
   #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
   plot_faults
 

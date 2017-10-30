@@ -64,6 +64,8 @@ export dvscmagn=12 #use mm
 
 # export CALC_DEPTH=8 #use km
 
+export RTRANS=30
+
 # //////////////////////////////////////////////////////////////////////////////
 export logogmt_pos="-UBL/0.05c/0.05c/DemAnast"
 export logocus_pos="-Dx13.57c/10.05c+w1.1c"
