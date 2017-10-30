@@ -36,11 +36,10 @@
 
 # program version
 VERSION="v.1.0-beta6.1"
+
 # verbosity level for GMT, see http://gmt.soest.hawaii.edu/doc/latest/gmt.html#v-full
 # 
 export VRBLEVM=c
-
-
 
 # //////////////////////////////////////////////////////////////////////////////
 # Source function files
@@ -52,12 +51,14 @@ source functions/clbplots.sh
 # //////////////////////////////////////////////////////////////////////////////
 # GMT parameters
 #gmtset MAP_FRAME_TYPE fancy
+
 gmt gmtset PS_PAGE_ORIENTATION portrait
 gmt gmtset FONT_ANNOT_PRIMARY 8 FONT_LABEL 8 MAP_FRAME_WIDTH 0.10c FONT_TITLE 15p
 gmt gmtset PS_MEDIA 19cx22c
 
 # //////////////////////////////////////////////////////////////////////////////
 # Pre-defined parameters for bash script switches
+
 TOPOGRAPHY=0
 # LABELS=0
 OUTFILES=0
@@ -122,9 +123,9 @@ fi
 if [ "$#" -eq 0 ]; then
   help
 elif [ "$#" -eq 1 ]; then
-  if [ "$1" == "-h" ]; then
+  if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
     help
-  elif [ "$1" == "-v" ]; then
+  elif [ "$1" == "-v" ] || [ "$1" == "--version" ]; then
     echo "version: "$VERSION
     exit 1
   else
@@ -145,13 +146,13 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
   echo "[STATUS] input coulomb file:" $inputfile " input data files code:" $inputdata
   while [ $# -gt 2 ]; do
     case "$3" in
-    -debug)
+    -d | --debug)
 	_DEBUG="on"
 # 	set -x
 	PS4='L ${LINENO}: '
 	shift
 	;;
-    -r)
+    -r | --region)
 	DEBUG echo "[DEBUG:${LINENO}] -r next arguments:" ${4} ${5} ${6} ${7} ${8}
 	if [ $# -ge 8 ];
 	then
@@ -204,11 +205,11 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	fi
 	shift # for -r
 	;;
-    -topo)
+    -t | --topography)
 	TOPOGRAPHY=1
 	shift
 	;;
-    -o)
+    -o | --output)
 	DEBUG echo "[DEBUG:${LINENO}] -o: next argument:" ${4}
 	if [ $# -gt 3 ] && [ ${4:0:1} != \- ]; then
 	  OUTFILES=1
@@ -223,15 +224,15 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	  shift
 	fi
 	;;
-    -logogmt)
+    -lg | --logo_gmt)
 	LOGOGMT=1
 	shift
 	;;
-    -logocus)
+    -lc | --logo_custom)
 	LOGOCUS=1
 	shift
 	;;
-    -cmt)
+    -cmt | --moment_tensor)
 	DEBUG echo "[DEBUG:${LINENO}] cmt: next argument:" ${4}
 	if  [ $# -ge 4 ] && [ ${4:0:1} != \- ];	then
 	  CMT=1
@@ -245,11 +246,11 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	fi
 	shift #shift for arg -cmt
 	;;
-    -faults)
+    -fl | --faults_db)
 	FAULTS=1
 	shift
 	;;	
-    -mt)
+    -mt| --map_title)
 	DEBUG echo "[DEBUG:${LINENO}] maptitle: next argument:" ${4}
 	if [ $# -ge 4 ] && [ ${4:0:1} != \- ]; then
 	  MTITLE=1
@@ -262,7 +263,7 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	fi
 	shift #shift for the argument -mt
 	;;
-    -ctext)
+    -ct | --custom_text)
 	DEBUG echo "[DEBUG:${LINENO}] ctext: next argument:" ${4}
 	if  [ $# -ge 4 ] && [ -f ${4} ]; then
 	  CTEXT=1
@@ -279,7 +280,7 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	fi
 	shift # shift for the arg -ctext
 	;;
-    -eqdist)
+    -ed | --eq_distribution)
 	DEBUG echo "[DEBUG:${LINENO}] eqdist next argument: "${4}
 	if [ $# -ge 4 ] && [ ${4:0:1} != \- ]; then
 	  EQDIST=1
@@ -398,10 +399,10 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	OUTPDF=1
 	shift
 	;;
-    -h)
+    -h | --help )
 	help
 	;;
-    -v)
+    -v | --version)
 	echo "version: "$VERSION
 	exit 1
 	shift
@@ -536,6 +537,7 @@ if [ "$CSTRESS" -eq 1 ] || [ "$SSTRESS" -eq 1 ] || [ "$NSTRESS" -eq 1 ]; then
   fi
 fi
 
+### check pth2strnfile
 if [ "$STREXX" -eq 1 ] || [ "$STREYY" -eq 1 ] || [ "$STREZZ" -eq 1 ] \
 || [ "$STREYZ" -eq 1 ] || [ "$STREXZ" -eq 1 ] || [ "$STREXY" -eq 1 ] \
 || [ "$STRDIL" -eq 1 ]; then
@@ -546,6 +548,7 @@ if [ "$STREXX" -eq 1 ] || [ "$STREYY" -eq 1 ] || [ "$STREZZ" -eq 1 ] \
   fi
 fi
 
+### check pth2crossdat pth2crossdil
 if [ "$STRDIL" -eq 1 ] && [ "$FCROSS" -eq 1 ]; then
   if [ ! -f "$pth2crossdat" ] && [ ! -f "$pth2crossdil" ]; then
     echo "[WARNING] "$pth2crossdat" or "$pth2crossdil" does not exist!"
@@ -554,7 +557,7 @@ if [ "$STRDIL" -eq 1 ] && [ "$FCROSS" -eq 1 ]; then
   fi
 fi
 
-## check for displacements file
+### check for displacements file
 if [ "$DGPSHO" -eq 1 ] || [ "$DGPSHM" -eq 1 ] || [ "$DGPSVO" -eq 1 ] \
 || [ "$DGPSVM" -eq 1 ]; then
   if [ ! -f "$pth2gpsdfile" ]; then
@@ -585,7 +588,7 @@ DEBUG echo "[DEBUG:${LINENO}] scale set: $scale"
 DEBUG echo "[DEBUG:${LINENO}] range set: $range" 
 DEBUG echo "[DEBUG:${LINENO}] projection set: $proj"
 
-# Set calculation depth
+### Set calculation depth
 if [ -z ${CALC_DEPTH+x} ]; then
   echo "[WARNING] CALC_DEPTH variable is not set. Input file will used."
   export CALC_DEPTH=$(grep "DEPTH=" ${pth2inpfile} | awk '{print $6}')
@@ -635,14 +638,16 @@ if [ "$CSTRESS" -eq 0 ] && [ "$SSTRESS" -eq 0 ] && [ "$NSTRESS" -eq 0 ] \
 && [ "$STREXX" -eq 0 ] && [ "$STREYY" -eq 0 ] && [ "$STREZZ" -eq 0 ] \
 && [ "$STREXZ" -eq 0 ] && [ "$STREYZ" -eq 0 ] && [ "$STREXY" -eq 0 ] \
 && [ "$STRDIL" -eq 0 ] && [ "$TOPOGRAPHY" -eq 0 ]; then
-  ################## Plot coastlines only ######################
+  
+  # Plot Coastlines
   gmt pscoast $range $proj  -Df -W0.25p,black -G240 -Y4.5c \
     -K -V${VRBLEVM} > $outfile 
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
     -O -K -V${VRBLEVM} >> $outfile
   
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  # Plot faults database
   plot_faults
+  
 fi
 
 if [ "$CSTRESS" -eq 0 ] && [ "$SSTRESS" -eq 0 ] && [ "$NSTRESS" -eq 0 ] \
@@ -661,10 +666,10 @@ if [ "$CSTRESS" -eq 0 ] && [ "$SSTRESS" -eq 0 ] && [ "$NSTRESS" -eq 0 ] \
   #------- coastline -------------------------------------------
   gmt psbasemap -R -J -O -K -B$frame:."$mtitle":  $scale -V${VRBLEVM} >> $outfile
   gmt pscoast -J -R -Df -W0.25p,black -K  -O -$logogmt_pos -V${VRBLEVM} >> $outfile
-  
-    
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+
+  # Plot faults database
   plot_faults
+
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -672,19 +677,18 @@ fi
 
 if [ "$CSTRESS" -eq 1 ]; then
   echo "...plot Coulomb Stress Change map... "
-  ################# Plot Coulomb source AnD coastlines only ######################
+  # Plot stress/strain raster
   if [ "$OVERTOPO" -eq 1 ]; then
     plotstr_overtopo ${pth2coutfile}
   else
     plotstr ${pth2coutfile}
   fi
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  # Plot faults database
   plot_faults
   
-  ########### Plot scale Bar ####################
-  bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt -B$bartick/:bar: \
-    -O -K -V${VRBLEVM} >> $outfile
+  # Plot scale bar
+  plot_barscale
+
   rm tmp* ## clear temporary files
 fi
 
@@ -704,14 +708,14 @@ if [ "$SSTRESS" -eq 1 ]; then
     plotstr tmpcouall
   fi
  
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  # Plot faults database
   plot_faults
 
-  ########### Plot scale Bar ####################
-  bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
-    -O -K -V${VRBLEVM} >> $outfile
-  rm tmp* ## clear temporary files
+  # Plot scale bar
+  plot_barscale
+
+  # clear temporary files
+  rm tmp* 
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -730,14 +734,15 @@ if [ "$NSTRESS" -eq 1 ]; then
     plotstr tmpcouall
   fi
  
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  # Plot faults database
   plot_faults
 
-  ########### Plot scale Bar ####################
-  bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
-    -O -K -V${VRBLEVM} >> $outfile
-  rm tmp* ## clear temporary files
+  # Plot scale bar
+  plot_barscale
+
+  # clear temporary files
+  rm tmp*
+  
 fi
 
 
@@ -757,14 +762,15 @@ if [ "$STREXX" -eq 1 ]; then
     plotstr tmpstrall
   fi
   
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  # Plot faults database
   plot_faults
 
-  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
-    -O -K -V${VRBLEVM} >> $outfile
-  rm tmp* ## clear temporary files
+  # Plot scale bar
+  plot_barscale
+
+  # clear temporary files
+  rm tmp*
+  
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -783,14 +789,15 @@ if [ "$STREYY" -eq 1 ]; then
     plotstr tmpstrall
   fi
   
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  # Plot faults database
   plot_faults
 
-  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
-    -O -K -V${VRBLEVM} >> $outfile
-  rm tmp* ## clear temporary files
+  # Plot scale bar
+  plot_barscale
+
+  # clear temporary files
+  rm tmp*
+  
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -809,14 +816,15 @@ if [ "$STREZZ" -eq 1 ]; then
     plotstr tmpstrall
   fi
   
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  # Plot faults database
   plot_faults
 
-  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
-    -O -K -V${VRBLEVM} >> $outfile
-  rm tmp* ## clear temporary files
+  # Plot scale bar
+  plot_barscale
+  
+  # clear temporary files
+  rm tmp*
+  
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -835,13 +843,15 @@ if [ "$STREYZ" -eq 1 ]; then
     plotstr tmpstrall
   fi
   
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  # Plot faults database
   plot_faults
 
-  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: -O -K -V${VRBLEVM} >> $outfile
-  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt ## clear temporary files
+  # Plot scale bar
+  plot_barscale
+  
+  # clear temporary files
+  rm tmpstr1 tmpstr2 tmpstrall tmpgrd tmpgrd_sample.grd tmpcpt.cpt
+  
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -860,13 +870,13 @@ if [ "$STREXZ" -eq 1 ]; then
     plotstr tmpstrall
   fi
   
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  # Plot faults database
   plot_faults
 
-  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
-    -O -K -V${VRBLEVM} >> $outfile
+  # Plot scale bar
+  plot_barscale
+
+  # clear temporary files
   rm tmp* ## clear temporary files
 fi
 
@@ -886,14 +896,15 @@ if [ "$STREXY" -eq 1 ]; then
     plotstr tmpstrall
   fi
   
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  # Plot faults database
   plot_faults
 
-  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
-    -O -K -V${VRBLEVM} >> $outfile
-  rm tmp* ## clear temporary files
+  # Plot scale bar
+  plot_barscale
+  
+  # clear temporary files
+  rm tmp*
+  
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -912,14 +923,15 @@ if [ "$STRDIL" -eq 1 ]; then
     plotstr tmpstrall
   fi
   
-  #  PLOT NOA CATALOGUE FAULTS Ganas et.al, 2013
+  # Plot faults database
   plot_faults
 
-  #////////// Plot scale Bar \\\\\\\\\\\\\\\\\\\\
-  bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt -B$bartick/:bar: \
-    -O -K -V${VRBLEVM} >> $outfile
-  rm tmp* ## clear temporary files
+  # Plot scale bar
+  plot_barscale
+
+  # clear temporary files
+  rm tmp*
+  
 fi
 
 
@@ -1151,9 +1163,6 @@ if [ "$FCROSS" -eq 1 ]; then
     fi
   fi
   
-  
-  
-  
   # Fault top-bottom parameters
   fault_top=$(awk 'NR==14 {print $10}' $pth2inpfile)
   DEBUG echo "[DEBUG:${LINENO}] fault top= "$fault_top
@@ -1225,12 +1234,10 @@ if [ "$FCROSS" -eq 1 ]; then
   echo "$east $CALC_DEPTH" >>tmpdep
   gmt psxy tmpdep -R -J -W.15,black,- -Ya-6.5c -O -K -V${VRBLEVM} >>$outfile
 
-  # remove templorary files
+  # clear temporary files
   rm tmp*
+  
 fi
-
-
-
 
 # //////////////////////////////////////////////////////////////////////////////
 # Plot custom logo configured at default-param

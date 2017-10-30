@@ -52,7 +52,7 @@ export coulombcpt=Coulomb_anatolia.cpt
 export frame=0.5		## Default 0.5
 
 # //////////////////////////////////////////////////////////////////////////////
-# scale variables
+# general variables
 
 export barrange=1		## Default 1
 

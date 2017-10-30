@@ -1,7 +1,7 @@
-coulomb2gmt -- pre-released v1.0-beta6.0
+coulomb2gmt -- pre-released v1.0-beta6.1
 ==================
 
-> Bash scripts to plot coulomb results on gmt
+> Bash scripts to plot coulomb output on GMT
 
 
 [![License MIT](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/demanasta/coulomb2gmt/blob/master/LICENSE)
@@ -18,7 +18,7 @@ coulomb2gmt -- pre-released v1.0-beta6.0
 
 ## Features
 
-* auto-configure map lat-long from input files (.inp)
+* Αuto-configure map lat-long from input files (.inp)
 
 * Plot Stress changes (Coulomb, Normal, Shear)
 
@@ -26,15 +26,17 @@ coulomb2gmt -- pre-released v1.0-beta6.0
 
 * Plot all strain components (E**, Dilatation)
 
-* Plot Fault geometry (Projection, Surface, Depth)
+* Overlay stress/strain on the top of topographic DEM.
 
-* Plot GPS displacement observed and modeled
+* Plot Fault geometry (Projection, Surface, Depth).
 
-* Plot Fault and CMT databases and earhtquake distribution
+* Plot GPS displacement observed and modeled.
+
+* Plot Fault and CMT databases and earhtquake distribution.
 
 * Add GMT timestamp logo and custom logo of your organization.
 
-* Adjust paper size to map and convert in different output formats (.jpg, .png, .eps, .pdf)
+* Adjust paper size to map and convert in different output formats (.jpg, .png, .eps, .pdf).
 
 
 ## Requirements
@@ -49,8 +51,10 @@ coulomb2gmt -- pre-released v1.0-beta6.0
 ## Usage details
 The main script is: `coulomb2gmt.sh`
 
-run: `$ ./coulomb2gmt.sh <inputfile> <inputdata> | options`
-
+run: 
+```
+ ./coulomb2gmt.sh  <inputfile> <inputdata> | options
+```
 * `<inputfile>`: name of input file used from Coulomb. Extention `.inp` not needed. Path to the directory of input files  configured at `default-param`.
 
 * `<inputdata>`:  Name of input files include results of coulmb calculations. Input data files are:
@@ -82,19 +86,19 @@ _Strain output files:_
 _Earthquakes, GPS, custom text files:_
 
 * Earthquakes distribution: Earthquakes catalogue files. Structure is
-
-> line1: Header
-> line2: Header
-> line*:    YEAR MONTH DAY    HH MM SS    LAT.   LONG.  DEPTH    MAGNITUDE  (10 fields)
-
+```
+line1: Header line
+line2: Header line
+line*: YEAR MONTH DAY    HH MM SS    LAT.   LONG.  DEPTH    MAGNITUDE  (10 fields)
+```
 * Centroid Moment Tensors file: Structure of file is the old GMT format for CMT. Use \# to comment lines.
-
-> lon  lat   d  str dip slip str dip slip magnt exp plon  plat  name (14 fields)
-
+```
+line* :  lon  lat   d  str dip slip str dip slip magnt exp plon  plat  name (14 fields)
+```
 * Custom text files: Use new gmt format for `pstext`. (GMT ver > 5.1 )
-
-> lon lat font\_size,font\_type,font\_color angle potision text
-
+```
+line* :lon lat font\_size,font\_type,font\_color angle potision text
+```
 * `<inputdata>-gps.dist`: GPS displacements.
 
 
@@ -105,35 +109,35 @@ Many parameters configured at `default-param` file.
 1. Paths to general files (DEM, logo, faults)
 2. Paths to input file directories (.inp, .dat, .cou, .disp)
 3. ColorMaps Palette, frame variable.
-4. Scale parameters.
+4. General variables.
 
 ### General options
 
-* `-r`: set custom region parameters. _Structure_ `-r minlon maxlon minlat maxlat prjscale`
+* `-r   | --region`: set custom region parameters. _Structure_ `-r minlon maxlon minlat maxlat prjscale`
 
-* `-topo`:  plot topography using dem file
+* `-t   | --topography`:  plot topography using dem file
 
-* `-o <filename>`:  set custom name of output file. Default is `<inputadata>`.
+* `-o  | --output <filename>`:  set custom name of output file. Default is `<inputadata>`.
 
-* `-cmt <file>` :  Plot Centroid Moment Tensors of earthquakes. 
+* `-cmt | --moment_tensor <file>` :  Plot Centroid Moment Tensors of earthquakes. 
 
-* `-eqdist <file>` : Plot earthquakes distribution. No classification. 
+* `-ed | --eq_distribution <file>` : Plot earthquakes distribution. No classification. 
 
-*  `-faults`: Plot custom fault database catalogue.
+*  `-fl | --faults_db`: Plot custom fault database catalogue.
 
-* `-mt "map title"`: Custom map title.
+* `-mt | --map_title  "map title"`: Custom map title.
 
-* `-ctext  <path to file>` :  Plot Custom text. Config custom text file.
+* `-ct | --custom_text  <path to file>` :  Plot Custom text. Config custom text file.
 
-* `-logogmt`: Plot GMT logo and time stamp.
+* `-lg | --logo_gmt`: Plot GMT logo and time stamp.
 
-* `-logocus`: Plot custom logo of your organization.
+* `-lc | --logo_custom`: Plot custom logo of your organization.
 
-* `-h`: Help menu
+* `-h | --help`: Help menu
 
-* `-v`: Plot version
+* `-v | --version`: Plot version
 
-* `-debug`:Enable Debug option 
+* `-d | --debug`:Enable Debug option 
 
 
 
@@ -152,13 +156,18 @@ Many parameters configured at `default-param` file.
 
 * `-nstress`: Plot Normal Stress change.
 
-* `-fcross`: Plot cross section of stress change.
+* `-fcross`: Plot cross section of stress change or dilatation.
 
 ### Plot Strain components
 
 * `-stre**`: Where `**` you can fill all strain components `xx`,`yy`,`zz`, `yz`, `xz`, `xy`.
 
 * `-strdil`: Plot dilatation (Exx + Eyy + Ezz )
+
+>**Overlay Stress/strain on the top of DEM**
+>
+>* `-****+ot`: use `+ot`  after the main argument to overlay the raster output on the top of DEM.
+>                  configure transparency in `default-param` file. __Be careful__ transparency can printed only in JPEG, PNG and PDF outputs.
 
 ### Plot gps velocities, observed and modeled
 
@@ -235,6 +244,19 @@ _Strain output files_
 5. Publish the branch (`git push origin my-new-idea`)
 6. Create a new Pull Request
 7. Profit! :white_check_mark:
+
+## For contributors
+
+### git structure
+
+* __brunch__ master/develop: stucture of main branch
+  	* bash scripts
+  	* functions: bash functions called from main script
+  	* docs: MarkDown files for licence, contribution etc.
+  	
+* __brunch__ documents :
+	* tutorial: reference and user guide, tex files.
+	* examples: presentation of examples, tex/beamer files.
 
 ## ChangeLog
 

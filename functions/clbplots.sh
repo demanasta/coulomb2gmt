@@ -70,3 +70,43 @@ function plotstr()
     -O -K -V${VRBLEVM} >> $outfile
   
 }
+
+function plot_barscale()
+{
+  bartick=$(echo $barrange | awk '{print $1/5}')
+  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
+    -O -K -V${VRBLEVM} >> $outfile
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
