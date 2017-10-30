@@ -64,7 +64,7 @@ export dvscmagn=12 #use mm
 
 # export CALC_DEPTH=8 #use km
 
-export RTRANS=30
+export RTRANS=30 # set transparency for overlay topography
 
 # //////////////////////////////////////////////////////////////////////////////
 export logogmt_pos="-UBL/0.05c/0.05c/DemAnast"
