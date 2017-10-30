@@ -1,4 +1,4 @@
-coulomb2gmt -- pre-released v1.0-beta6.1
+coulomb2gmt -- pre-released v1.0-beta6.2
 ==================
 
 > Bash scripts to plot coulomb output on GMT
@@ -252,6 +252,10 @@ _Strain output files_
 * __brunch__ master/develop: stucture of main branch
   	* bash scripts
   	* functions: bash functions called from main script
+  		* messages.sh: help function and ptint messages.
+  		* gen_func.sh: general functions.
+  		* clbplots.sh: functions for gmt plots
+  		* checknum.sh: check number function.
   	* docs: MarkDown files for licence, contribution etc.
   	
 * __brunch__ documents :

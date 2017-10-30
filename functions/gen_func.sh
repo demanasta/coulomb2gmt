@@ -32,12 +32,12 @@
 # Debug function
 function DEBUG()
 {
- [ "$_DEBUG" == "on" ] &&  $@
+ [ "${_DEBUG}" == "on" ] &&  $@
 }
 
 # //////////////////////////////////////////////////////////////////////////////
 # plot fault database
-function plot_faults ()
+function plot_faults()
 {
   if [ "${FAULTS}" -eq 1 ]; then
     echo "...plot fault database catalogue..."

@@ -32,6 +32,13 @@
 # ==============================================================================
 
 # //////////////////////////////////////////////////////////////////////////////
+# #BASH settings
+# set -o errexit
+# set -o pipefail
+# set -o nounset
+# set -o xtrace
+
+# //////////////////////////////////////////////////////////////////////////////
 # pre define parameters
 
 # program version
@@ -39,7 +46,7 @@ VERSION="v.1.0-beta6.1"
 
 # verbosity level for GMT, see http://gmt.soest.hawaii.edu/doc/latest/gmt.html#v-full
 # 
-export VRBLEVM=q
+export VRBLEVM=n
 
 # //////////////////////////////////////////////////////////////////////////////
 # Source function files
@@ -979,6 +986,7 @@ fi
 scdhlatl=${sclat}
 scdhlonl=${sclon}
 
+# Plot horizontal modeled displacements
 if [ "${DGPSHM}" -eq 1 ]; then
   echo "...plot Horizontal Modeled Displacements..."
   awk -F, 'NR>2 {print $1,$2,$6,$7,0,0,0}' ${pth2gpsdfile} \
@@ -989,6 +997,7 @@ if [ "${DGPSHM}" -eq 1 ]; then
   plot_hdisp_scale ${sclon} ${sclat} blue Modeled
 fi
 
+# Plot horizontal observed displacements
 if [ "${DGPSHO}" -eq 1 ]; then
   echo "...plot Horizontal Observed Displacements..."
   awk -F, 'NR>2 {print $1,$2,$3,$4,0,0,0}' ${pth2gpsdfile} \
@@ -1002,7 +1011,7 @@ fi
 scdvlat=$(echo print ${sclat} + .25 | python)
 scdvlonl=$(echo print ${sclon} + 0.16 | python)
 
-
+# Plot vertical modeled displacements
 if [ "${DGPSVM}" -eq 1 ]; then
   echo "...plot Vertical Modeled Displacements..."
   awk -F, 'NR>2 {if ($8<0) print $1,$2,0,$8,0,0,0}'  ${pth2gpsdfile} \
@@ -1016,7 +1025,7 @@ if [ "${DGPSVM}" -eq 1 ]; then
   plot_vdisp_scale ${scdvlonl} ${scdvlat} red blue Modeled
 fi
 
-
+# Plot vertical observed displacements
 if [ "${DGPSVO}" -eq 1 ]; then
   echo "...plot Vertical Observed Displacements..."
   DEBUG echo "[DEBUG:${LINENO}] -X.08c add in mext line"
@@ -1032,6 +1041,7 @@ if [ "${DGPSVO}" -eq 1 ]; then
 
 fi
 
+# Plot vertical scale legend
 if [ "${DGPSVM}" -eq 1 ] || [ "${DGPSVO}" -eq 1 ]; then
   scdvmolat=$(echo print ${sclat} + .05 | python)
   DEBUG echo "[DEBUG:${LINENO}] -X-.08 added next line"
