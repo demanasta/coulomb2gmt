@@ -1,0 +1,15 @@
+# Simple Makefile for latexmk build presentation
+
+PROJECT=phd_pres
+
+${PROJECT}.pdf: ${PROJECT}.bbl
+	latexmk -xelatex ${PROJECT}
+
+${PROJECT}.bbl: ${PROJECT}.bcf
+	biber ${PROJECT}
+
+${PROJECT}.bcf: ${PROJECT}.tex
+	latexmk -xelatex -g ${PROJECT}
+
+clean: 
+	rm *.aux *.blg *.out *.bbl *.log

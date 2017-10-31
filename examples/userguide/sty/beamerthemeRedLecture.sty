@@ -1,0 +1,210 @@
+% Copyright 2015 by Facundo Muñoz
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%
+% Copyright 2017 by Demitris G. Anastasiou
+% 2017-09-26: Updated to RedLecture style
+
+\DeclareOptionBeamer{compress}{\beamer@compresstrue}
+\ProcessOptionsBeamer
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes,trees,positioning,fadings}
+
+\input xkeyval
+
+\newcommand<>{\includeoverlaygraphics}[2][]{%
+  \begin{tikzpicture}
+    \alt#3{\node[opacity=1] {\includegraphics[#1]{#2}};}
+          {\node[opacity=.15] {\includegraphics[#1]{#2}};}
+  \end{tikzpicture}
+}
+
+% These define macros \KV@setwatermark@hoffset that take one argument
+% which is processed by the last piece of codes into braces
+\def\@hos{}
+\def\@vos{}
+\def\@alpha{} % This one does not work. Why?
+\define@key{setwatermark}{hoffset}[\def\@hos{.}]{\def\@hos{\hspace*{#1}}} 
+\define@key{setwatermark}{voffset}[\def\@vos{.}]{\def\@vos{\vspace*{#1}}} 
+\define@key{setwatermark}{alpha}[\def\@alpha{0.7}]{\def\@alpha{#1}} 
+
+\def\setwatermark{\@ifnextchar[\@setwatermark{\@setwatermark[]}}
+\def\@setwatermark[#1]#2{%
+  \setkeys{setwatermark}{#1}%
+  \def\@watermark{#2}
+}
+% \newcommand{\setwatermark}[1]{\def\@watermark{#1}}
+\setwatermark{}   % Empty initialization
+
+\mode<presentation>
+
+%\definecolor{pb@yellow}      {rgb} {0.95,0.95,0.85}
+%\definecolor{pb@gray}        {rgb} {0.90,0.90,0.90}
+\definecolor{pb@blue}        {rgb} {0.20,0.30,0.50}
+\definecolor{pb@red}         {rgb} {0.78,0.03,0.08}
+\definecolor{pb@lightblue}   {rgb} {0.92,0.93,0.95}
+\definecolor{pb@darkblueone} {rgb} {0.01,0.05,0.15}
+%\definecolor{pb@darkbluetwo} {rgb} {0.25,0.45,0.5}
+
+%\setbeamercolor{structure}            {fg=pb@red, bg=white}
+%\setbeamercolor{background canvas}{parent=palette primary}
+
+\setbeamercolor{palette primary}    {fg=pb@blue, bg=pb@lightblue}
+\setbeamercolor{palette secondary}  {fg=white!90!pb@red, bg=pb@red}
+\setbeamercolor{palette tertiary}   {fg=pb@blue, bg=pb@lightblue}
+\setbeamercolor{palette quaternary} {fg=pb@blue, bg=pb@lightblue}
+
+\setbeamercolor{structure}            {fg=pb@red, bg=}
+\setbeamercolor{title}                {parent=structure}
+\setbeamercolor{subtitle}             {parent=title}
+%\setbeamercolor{frametitle}           {fg=pb@lightblue!90!pb@blue, bg=pb@blue}
+%\setbeamercolor{section in head/foot} {parent=palette secondary}
+
+\setbeamercolor{headstructure}            {fg=pb@darkblueone, bg=}
+
+
+\definecolor{links}{rgb}{0.78,0.03,0.08}
+
+\setbeamercolor{section in head/foot}{use=headstructure,bg=headstructure.fg!30!bg}
+
+\useoutertheme[subsection=false]{miniframes}
+
+%\setbeamertemplate{frametitle}[default][center]
+\setbeamertemplate{frametitle}{\vskip-1pt\centering\insertframetitle\par}
+
+\AtBeginDocument{%
+  {
+    \usebeamercolor{section in head/foot}
+  }
+  
+  \pgfdeclareverticalshading{beamer@headfade}{\paperwidth}
+  {%
+    color(0cm)=(bg);
+    color(1.25cm)=(section in head/foot.bg)%
+  }
+
+  \setbeamercolor{section in head/foot}{bg=}
+}
+
+\addtoheadtemplate{\pgfuseshading{beamer@headfade}\vskip-1.25cm}{}
+
+% overlays semitransparentes
+\setbeamercovered{transparent}
+\setbeamertemplate{navigation symbols}{}%remove navigation symbols
+
+% SET footline options
+\setbeamertemplate{footline}[frame number]
+
+% % SET fooline \w coolorox options
+% \setbeamercolor{footlinecolor}{bg=blue!30,fg=white}
+% \setbeamercolor{footlinecolor2}{bg=blue!10,fg=white}
+% \setbeamercolor{sngp1}{use=structure,bg=structure.fg!30!bg}
+% \setbeamercolor{sngp2}{use=structure,bg=structure.fg!10!bg}
+% \setbeamertemplate{footline}
+% {%
+% %   \noindent\makebox[\linewidth]{\rule{1.5\paperwidth}{0.4pt}}
+%   \leavevmode%
+%
+%   \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2ex,dp=1.125ex,leftskip=1.0cm,rightskip=.3cm]{sngp1}%
+%   \@authorname
+%   \end{beamercolorbox}%
+%
+%   \begin{beamercolorbox}[wd=.5\paperwidth,ht=2ex,dp=1.125ex,leftskip=1cm,rightskip=1.0cm plus1fil]{sngp2}%
+%     %\usebeamerfont{author in head/foot}\insertshortauthor\hfill\insertpagenumber/\insertpresentationendpage
+%     \usebeamerfont{author in head/foot}\insertdate\hfill\insertpagenumber/\insertpresentationendpage
+%   \end{beamercolorbox}}%
+%
+%   \vskip0pt%
+% }
+
+  
+% %**************************************************************************
+% % set block parameters theme
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamercolor{block title}{fg=blue,bg=structure.fg!20!bg!50!bg}
+\setbeamercolor{block body}{use=block title,bg=block title.bg}
+  
+\usepackage{etoolbox}
+
+%\setbeamercolor{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+%\setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+
+\setbeamercolor{block title}{use=structure,fg=structure.fg,bg=blue!35!white}
+\setbeamercolor{block body}{parent=normal text,use=block title,bg=blue!18!white}
+
+\setbeamercolor{block title example}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+\setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!50!bg}
+
+\addtobeamertemplate{proof begin}{%
+    \setbeamercolor{block title}{fg=black,bg=red!50!white}
+    \setbeamercolor{block body}{fg=red, bg=red!30!white}
+}{}
+
+\BeforeBeginEnvironment{theorem}{
+    \setbeamercolor{block title}{fg=black,bg=orange!50!white}
+    \setbeamercolor{block body}{fg=orange, bg=orange!30!white}
+}
+\AfterEndEnvironment{theorem}{
+ \setbeamercolor{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+ \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg, fg=black}
+}
+
+\BeforeBeginEnvironment{definition}{%
+    \setbeamercolor{block title}{fg=black,bg=pink!50!white}
+    \setbeamercolor{block body}{fg=pink, bg=pink!30!white}
+}
+\AfterEndEnvironment{definition}{
+ \setbeamercolor{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+ \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg, fg=black}
+}
+
+\BeforeBeginEnvironment{blnotitle}{%
+    \setbeamercolor{block title}{fg=black,bg=pink!50!white}
+    \setbeamercolor{block body}{fg=pink, bg=pink!30!white}
+}
+\AfterEndEnvironment{blnotitle}{
+ \setbeamercolor{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
+ \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg, fg=black}
+}
+
+% change notepage background colors
+\setbeamercolor{note page}{bg=black!5}
+\setbeamercolor{note title}{bg=black!15}
+\setbeamercolor{note date}{fg=white}
+
+% % Block with variable length
+\newenvironment<>{varblock}[2][.9\textwidth]{%
+  \setlength{\textwidth}{#1}
+  \begin{actionenv}#3%
+    \def\insertblocktitle{#2}%
+    \par%
+    \usebeamertemplate{block begin}}
+  {\par%
+    \usebeamertemplate{block end}%
+  \end{actionenv}}
+
+
+\beamertemplatedotitem
+
+\setbeamertemplate{background}{
+  \parbox[c][\paperheight]{\paperwidth}{%
+    \vfill \hfill 
+    \begin{tikzpicture}
+      %\node[opacity=\@alpha]  % not working. why?
+      \node[opacity=.18]
+      {
+        \@watermark
+      };
+    \end{tikzpicture}
+    \@hos
+    
+    \@vos
+  }
+}
+
+\mode
+<all>

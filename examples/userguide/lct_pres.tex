@@ -1,0 +1,106 @@
+% ******************* PhD Thesis Presentation Template *************************
+% Please have a look at the README.md file for info on how to use the template
+\PassOptionsToPackage{table}{xcolor} % <-μονο εδω δουλεύει!!
+
+\documentclass{Classes/beamerLct}%%  
+% ******************************************************************************
+% ******************************* Class Options ********************************
+% *********************** See README for more details **************************
+% ******************************************************************************
+%
+% `aspectratio=169`: reduce ratio to 16:9
+%
+% `customfont`: Pre-defined font is "Biolinum O". This option enable custom fonts .
+% Config custom fonts at `preamble.tex`. Custom font include GFS package.
+%
+% `10pt` or `11pt`(default) : Recommended font size. Smaller (`8pt`,`9pt`)
+% or huge (`14pt`,`17pt`,`20pt`) font size are NOT recommended except special cases.
+%
+% `draft`: Special draft mode with line numbers, images, and water mark with 
+% timestamp and custom text. Position of the text can also be modified. To 
+% disable figures see on `preample.tex` the Draftmode section.
+%
+% `chapter`: This option enables only the specified chapter and it's references
+% Useful for review and corrections.
+%
+% `notes`: Prints frames and notes 
+%
+% `notes=only`: Prints only notes of each frame
+%
+% `printbib`: Include bibliography at the end of the presentation 
+%
+% `progrbar`: Enable progress bar in the frame. Chose this option after your 
+% first compilation. Disable on chapter mode.
+
+% ********************************** Preamble **********************************
+% Preamble: Contains packages and user-defined commands and settings
+\include{Preamble/preambleLct}
+
+% ************************ Thesis Information & Meta-data **********************
+% Thesis title and author information, refernce file for biblatex
+\input{pres-info}
+
+% ***************************** Chapter Mode ***********************************
+\ifdefineChapter
+% \includeonly{Chapter1/ch1presLct}
+\includeonly{Chapter2/ch2pres}
+% \includeonly{Chapter3/ch3pres}
+% \includeonly{Chapter4/ch4pres}
+% \includeonly{Chapter5/ch5pres}
+% \includeonly{Chapter6/ch6pres}
+% \includeonly{Appendix/ap_refs}
+% \includeonly{Appendix/ap_soft}
+% \includeonly{Appendix/cut01.tex}
+\fi
+
+% ***********************  Start the document  ***********************************
+\begin{document}
+
+% *****************************  Make title  *************************************
+\maketitle
+
+% *****************************  TOC  *************************************
+\begin{frame}
+  \frametitle{Δομή της διάλεξης}
+  \tableofcontents
+\end{frame}
+
+
+% ************************  Include Chapters  *************************************
+\include{Chapter1/ch1presLct}
+\include{Chapter2/ch2pres}
+\include{Chapter3/ch3pres}
+\include{Chapter4/ch4pres}
+\include{Chapter5/ch5pres}
+\include{Chapter6/ch6pres}
+% \include{Appendix/ap_refs}
+% \include{Appendix/ap_soft}
+
+%%-----------------------------------------------------------------------------
+%% END OF PRESENTATION ...
+%%-----------------------------------------------------------------------------
+
+% ************************  Q & A frame ***************************************
+% include Q&A frame at the end of presentation
+\makeqahour
+
+% ************************  Thank you frame  **********************************
+% include Thank U last frame
+% \makethanku % Ιncluded to class file
+
+% ************************  Bibliography  *************************************
+% % % Add 'printbib' option in Class file to Include Bibliography
+\ifdefinePrintbib
+  \begin{frame}[t,allowframebreaks]
+    \frametitle{Βιβλιογραφία}
+    \printbibliography
+  \end{frame}
+\fi
+
+% ************************  Cut Frames  **************************************
+% Add back up cut frames
+% \include{Appendix/cut01}
+
+
+% *********************** end of document ************************************
+\end{document}

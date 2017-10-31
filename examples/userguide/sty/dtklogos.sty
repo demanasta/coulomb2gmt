@@ -1,0 +1,130 @@
+%% Paket fuer Logos
+%%
+%% This is file `dtk-logos.sty',
+%%
+%% LaTeX Class for ``Die TeXnische Komoedie''.
+%%
+%% Copyright (C) 2017
+%% Herbert Voss
+%%
+%% It may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%
+% $Id: deLogos.sty 188 2015-10-08 20:06:29Z herbert $
+%
+% -------------------------------------
+\ProvidesPackage{dtk-logos}[2017/03/20 v. 1.00 Dante Edition: Logos (hv)]
+%
+\RequirePackage{hologo,dantelogo,fontspec}
+%
+\def\HoLogo@La#1{%
+  L%
+  \ifx\f@family\sfdefault\kern-.15em\else\kern-.23em\fi
+  \begingroup
+    \setbox\ltx@zero\hbox{T}%
+    \vbox to\ht\ltx@zero{%
+      \hbox{%
+        \ltx@ifundefined{check@mathfonts}{%
+          \csname sevenrm\endcsname
+        }{%
+          \check@mathfonts
+          \fontsize\sf@size{0pt}%
+          \math@fontsfalse\selectfont
+        }%
+        A%
+      }%
+      \vss
+    }%
+  \endgroup
+}
+\def\LaTeXTeX{\hologo{(La)TeX}}
+\def\AmSLaTeX{\hologo{AmSLaTeX}}
+\def\AmSTeX{\hologo{AmSTeX}}
+\def\biber{\hologo{biber}}
+\def\BibTeX{\hologo{BibTeX}}
+\def\BibTeXacht{\hologo{BibTeX8}}
+\def\ConTeXt{\hologo{ConTeXt}}
+\let\context\ConTeXt
+\def\emTeX{\hologo{emTeX}}
+\def\eTeX{\hologo{eTeX}}
+\def\ExTeX{\hologo{ExTeX}}
+\def\HanTheThanh{\hologo{HanTheThanh}}
+\def\iniTeX{\hologo{iniTeX}}
+\def\KOMAScript{\hologo{KOMAScript}}
+\def\LaTeX{\hologo{LaTeX}}
+\def\LaTeXe{\hologo{LaTeX2e}}
+\def\LaTeXIII{\hologo{LaTeX3}}
+\def\LaTeXML{\hologo{LaTeXML}}
+\def\LuaLaTeX{\hologo{LuaLaTeX}}
+\let\lualatex\LuaLaTeX
+\def\LuaTeX{\hologo{LuaTeX}}
+\let\luatex\LuaTeX
+\def\LyX{\hologo{LyX}}
+\def\METAFONT{\hologo{METAFONT}}
+\let\MF\METAFONT
+\def\MetaFun{\hologo{MetaFun}}
+\def\METAPOST{\hologo{METAPOST}}
+\def\MetaPost{\hologo{MetaPost}}
+\let\MP\METAPOST
+\def\MiKTeX{\hologo{MiKTeX}}
+\def\NTS{\hologo{NTS}}
+\def\OzMF{\hologo{OzMF}}
+\def\OzMP{\hologo{OzMP}}
+\def\OzTeX{\hologo{OzTeX}}
+\def\OzTtH{\hologo{OzTth}}
+\def\PCTeX{\hologo{PCTeX}}
+\def\pdfTeX{\hologo{pdfTeX}}
+\let\pdftex\pdfTeX
+\def\pdfLaTeX{\hologo{pdfLaTeX}}
+\let\pdflatex\pdfLaTeX
+\def\PiC{\hologo{PiC}}
+\def\PiCTeX{\hologo{PiCTeX}}
+\def\plainTeX{\hologo{plainTeX}}
+\def\PostScript{PostScript}
+\let\PS\PostScript
+\def\SageTeX{\hologo{SageTeX}}
+\def\SLiTeX{\hologo{SLiTeX}}
+\def\teTeX{\hologo{teTeX}}
+\def\TeXivht{\hologo{TeX4ht}}
+\def\TTH{\hologo{TTH}}
+\def\virTeX{\hologo{virTeX}}
+\def\VTeX{\hologo{VTeX}}
+\def\XeLaTeX{\hologo{XeLaTeX}}
+\def\XeTeX{\hologo{XeTeX}}
+%%
+\newcommand\BibTool{\textsc{Bib\hskip-.1em
+        T\hskip-.15emo\hskip-.05emo\hskip-.05eml}\xspace}
+\providecommand\tikz{\textsf{Ti\textit{k}Z}}
+\def\pgf/tikz{\textsf{pgf/Ti\textit{k}Z}}
+\def\ALEPH{\ensuremath{\aleph}}
+\let\TikZ\tikz
+
+\providecommand\eV{e.V\kern-0.18em\@ifnextchar.{}{.}\kern0.18em}
+\providecommand\dante{\mbox{DANTE~\eV}}
+\providecommand\Dante{DANTE,
+  Deutschsprachige Anwendervereinigung \TeX~\eV}
+\providecommand\DTK{Die \TeX\-ni\-sche Ko\-m{\"o}\-die}
+\providecommand\PS{Post\-Script}
+\providecommand\TUG{\TeX{} Users Group}
+\providecommand\TUGboat{\textsl{TUGboat}}
+\let\DANTE\dantelogo
+\def\pgf/tikz{\textsf{pgf/Ti\textit{k}Z}}
+\def\TeXLive{\TeX{}Live}
+
+\def\BibLaTeX{Bib\hologo{LaTeX}}
+\let\biblatex\BibLaTeX
+\def\CTAN{\texttt{CTAN}\xspace}
+
+\iffalse
+\newfontfamily\LinWikipedia{LinLibertine_R_G}[Extension=.ttf,
+  Path=/usr/local/texlive/texmf-local/fonts/opentype/libertine/]
+\def\WikipediA{{\LinWikipedia\char"E02F\textsc{ikipediA}}} % dezimal
+\let\wikipedia\WikipediA
+\fi
+
+\endinput
