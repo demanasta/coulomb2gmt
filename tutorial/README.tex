@@ -1,71 +1,118 @@
 \section{coulomb2gmt -- pre-released
-v1.0-beta5.1}\label{coulomb2gmt-pre-released-v1.0-beta5.1}
+v1.0-beta6.2}\label{coulomb2gmt-pre-released-v1.0-beta6.2}
 
 \begin{quote}
-Bash scripts to plot coulomb results on gmt
+Bash scripts to plot coulomb output on GMT
 \end{quote}
+% 
+% \href{https://github.com/demanasta/coulomb2gmt/blob/master/LICENSE}{\includegraphics{http://img.shields.io/badge/license-MIT-brightgreen.svg}}
+% \href{https://github.com/coulomb2gmt/pres-templates/releases/latest}{\includegraphics{https://img.shields.io/github/release/demanasta/doulomb2gmt.svg}}
+% \href{https://github.com/demanasta/coulomb2gmt/tags}{\includegraphics{https://img.shields.io/github/tag/demanasta/coulomb2gmt.svg}}
+% \href{https://github.com/demanasta/coulomb2gmt/stargazers}{\includegraphics{https://img.shields.io/github/stars/demanasta/coulomb2gmt.svg}}
+% \href{https://github.com/demanasta/coulomb2gmt/network}{\includegraphics{https://img.shields.io/github/forks/demanasta/coulomb2gmt.svg}}
+% \href{https://github.com/demanasta/coulomb2gmt/issues}{\includegraphics{https://img.shields.io/github/issues/demanasta/coulomb2gmt.svg}}
 
 \subsection{Author(s)}\label{authors}
 
+\textbf{Demitris G. Anastasiou}
+
+Rural \& Surveying Engineer, NTUA
+
+Dr.Eng in Geodesy, NTUA
+
+contact:
+
+-- mail: \texttt{\url{dganastasiou@gmail.com}}
+
+-- linkedin: \texttt{\url{https://www.linkedin.com/in/demitrisanastasiou/}}
+
+-- web: \texttt{\url{https://demanasta.github.io}}
+
+\textbf{Decleration}
+
+The present project was developed during my doctoral dissertation, at the Laboratory 
+of Higher Geodesy and Dionysos Sastellite Observatory, at the School of Rural \& Surveying
+Engineering of National Technical University of Athens.
+
+\subsection{MIT License}
+
+\textbf{Copyright (c) 2017 D. G. Anastasiou}
+
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+\\ \\
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+\\ \\
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+\section{Features}\label{features}
+
 \begin{itemize}
-
-\item
-  Demitris G. Anastasiou
-\end{itemize}
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-\subsection{Features}\label{features}
-
-\begin{itemize}
-\item
-  auto-configure map lat-long from input files (.inp)
+\item Auto-configure map lat-long from input files (.inp)
 \item
   Plot Stress changes (Coulomb, Normal, Shear)
 \item
+  Plot cross section for stress changes and dilatation.
+\item
   Plot all strain components (E**, Dilatation)
 \item
-  Plot Fault geometry (Projection, Surface, Depth)
+  Overlay stress/strain on the top of topographic DEM.
 \item
-  Plot GPS displacement observed and modeled
+  Plot Fault geometry (Projection, Surface, Depth).
 \item
-  Plot Fault and CMT databases
+  Plot GPS displacements observed and modeled.
+\item
+  Plot Fault and CMT databases and earhtquake distribution.
 \item
   Add GMT timestamp logo and custom logo of your organization.
 \item
   Adjust paper size to map and convert in different output formats
-  (.jpg, .png, .eps, .pdf)
+  (.jpg, .png, .eps, .pdf).
 \end{itemize}
 
-\subsection{Requirements}\label{requirements}
+\section{Requirements}\label{requirements}
 
 \begin{itemize}
 \item
   \textbf{GMT}: \href{http://gmt.soest.hawaii.edu/}{The Generic Mappting
-  Tools - GMT} version \textgreater{} 5.1.1 . Recommented installation
-  from source code.
+  Tools - GMT} version \textgreater{} 5.1.1 . It is recommented to
+  install it from source code.
 
   \begin{itemize}
-  
   \item
-    for \emph{Ubuntu/Debian} if you use default package installation you
-    have to install also \texttt{libgmt-dev} package
+    for \emph{Ubuntu/Debian}: if you use default package installation
+    you have to install also \texttt{libgmt-dev} package
   \end{itemize}
 \item
   \textbf{Coulomb 3}:
   \href{https://earthquake.usgs.gov/research/software/coulomb/}{Coulomb
   3, developed by USGS}
 \item
-  \textbf{python}: required for some calculations included in the main
-  script.
+  \textbf{python}: required for some math calculations included in the
+  main script.
 \end{itemize}
 
-\subsection{Usage details}\label{usage-details}
+\section{Usage details}\label{usage-details}
 
 The main script is: \texttt{coulomb2gmt.sh}
 
 run:
-\texttt{\$\ ./coulomb2gmt.sh\ \textless{}inputfile\textgreater{}\ \textless{}inputdata\textgreater{}\ \textbar{}\ options}
+
+\begin{verbatim}
+ ./coulomb2gmt.sh  <inputfile> <inputdata> | options
+\end{verbatim}
 
 \begin{itemize}
 \item
@@ -73,60 +120,139 @@ run:
   from Coulomb. Extention \texttt{.inp} not needed. Path to the
   directory of input files configured at \texttt{default-param}.
 \item
-  \texttt{\textless{}inputdata\textgreater{}}: Name of input files
+  \texttt{\textless{}inputdata\textgreater{}}: Code name of input files
   include results of coulmb calculations. Input data files are:
-
-  \begin{itemize}
-  
-  \item
-    \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_surface.dat}:
-  \item
-    \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_map\_proj.dat}:
-  \item
-    \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_calc\_dep.dat}:
-  \item
-    \texttt{\textless{}inputdata\textgreater{}-coulomb\_out.dat}:
-  \item
-    \texttt{\textless{}inputdata\textgreater{}-dcff.cou}:
-  \end{itemize}
 \end{itemize}
 
-\subsubsection{Default parameters}\label{default-parameters}
-
-Many parameters configured at \texttt{default-param} file. 1. Paths to
-general files (DEM, logo, faults) 2. Paths to input file directories
-(.inp, .dat, .cou, .disp) 3. ColorMaps Palette, frame variable. 4. Scale
-parameters.
-
-\subsubsection{General options}\label{general-options}
+\emph{Fault geometry files:}
 
 \begin{itemize}
 \item
-  \texttt{-r}: set custom region parameters. \emph{Structure}
-  \texttt{-r\ minlon\ maxlon\ minlat\ maxlat\ prjscale}
+  \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_surface.dat}:
+  Source and receiver faults' trace at surface.
 \item
-  \texttt{-topo}: plot topography using dem file
+  \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_map\_proj.dat}:
+  Surface of source and receiver faults.
 \item
-  \texttt{-o\ \textless{}filename\textgreater{}}: set custom name of
-  output file. Default is \texttt{\textless{}inputadata\textgreater{}}.
-\item
-  \texttt{-cmt\ \textless{}path\ to\ file\textgreater{}} : Plot Centroid
-  Moment Tensors of earthquakes.
-\item
-  \texttt{-faults}: Plot custom fault database catalogue.
-\item
-  \texttt{-mt\ "map\ title"}: Custom map title.
-\item
-  \texttt{-h}: Help menu
-\item
-  \texttt{-debug}:Enable Debug option
-\item
-  \texttt{-logogmt}: Plot GMT logo and time stamp.
-\item
-  \texttt{-logocus}: Plot custom logo of your organization.
+  \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_calc\_dep.dat}:
+  Intersection of target depth with fault plane.
 \end{itemize}
 
-\subsubsection{Plot fault parameters}\label{plot-fault-parameters}
+\emph{Stress change output files:}
+
+\begin{itemize}
+\item
+  \texttt{\textless{}inputdata\textgreater{}-coulomb\_out.dat}: Coulomb
+  matrix data output.
+\item
+  \texttt{\textless{}inputdata\textgreater{}-dcff.cou}: Output of all
+  stress components.
+\item
+  \texttt{\textless{}inputdata\textgreater{}-dcff\_section.cou}: Output
+  of all stress components in cross section.
+\item
+  \texttt{\textless{}inputdata\textgreater{}-Cross\_section.dat}: Cross
+  section parameters.
+\item
+  \texttt{\textless{}inputdata\textgreater{}-Focal\_mech\_stress\_output.csv}:
+\end{itemize}
+
+\emph{Strain output files:}
+
+\begin{itemize}
+
+\item
+  \texttt{\textless{}inputdata\textgreater{}-Strain.cou}: Data matrix of
+  starin components.
+\end{itemize}
+
+\emph{Earthquakes, GPS, custom text files:}
+
+\begin{itemize}
+\item
+  Earthquakes distribution: Earthquakes catalogue files. Structure is
+
+\begin{verbatim}
+line1: Header line
+line2: Header line
+line*: YEAR MONTH DAY    HH MM SS    LAT.   LONG.  DEPTH    MAGNITUDE  (10 fields)
+\end{verbatim}
+\item
+  Centroid Moment Tensors file: Structure of file is the old GMT format
+  for CMT. Use \# to comment lines.
+
+\begin{verbatim}
+line* :  lon  lat   d  str dip slip str dip slip magnt exp plon  plat  name (14 fields)
+\end{verbatim}
+\item
+  Custom text files: Use new gmt format for \texttt{pstext}. (GMT ver
+  \textgreater{} 5.1 )
+
+\begin{verbatim}
+line* :lon lat font\_size,font\_type,font\_color angle potision text
+\end{verbatim}
+\item
+  \texttt{\textless{}inputdata\textgreater{}-gps.dist}: GPS
+  displacements.
+\end{itemize}
+
+\begin{quote}
+All paths can be configured in the \texttt{deafault-param} file. Default
+the paths are where coulomb create by default each file.
+\end{quote}
+
+\subsection{Default parameters}\label{default-parameters}
+
+Many parameters configured at \texttt{default-param} file. 
+\begin{enumerate}
+\item  Paths togeneral files (DEM, logo, faults) 
+\item Paths to input file directories (.inp, .dat, .cou, .disp) 
+\item ColorMaps Palette, frame variable. 
+\item General variables.
+\end{enumerate}
+
+\subsection{General options}\label{general-options}
+
+\begin{itemize}
+\item
+  \texttt{-r\ \ \ \textbar{}\ -\/-region}: set custom region parameters.
+  \emph{Structure} \texttt{-r\ minlon\ maxlon\ minlat\ maxlat\ prjscale}
+\item
+  \texttt{-t\ \ \ \textbar{}\ -\/-topography}: plot topography using DEM
+  file
+\item
+  \texttt{-o\ \ \textbar{}\ -\/-output\ \textless{}filename\textgreater{}}:
+  set custom name of output file. Default is
+  \texttt{\textless{}inputdata\textgreater{}}.
+\item
+  \texttt{-cmt\ \textbar{}\ -\/-moment\_tensor\ \textless{}file\textgreater{}}
+  : Plot Centroid Moment Tensors list of earthquakes.
+\item
+  \texttt{-ed\ \textbar{}\ -\/-eq\_distribution\ \textless{}file\textgreater{}}
+  : Plot earthquakes distribution. No classification.
+\item
+  \texttt{-fl\ \textbar{}\ -\/-faults\_db}: Plot custom fault database
+  catalogue.
+\item
+  \texttt{-mt\ \textbar{}\ -\/-map\_title\ \ "map\ title"}: Custom map
+  title.
+\item
+  \texttt{-ct\ \textbar{}\ -\/-custom\_text\ \ \textless{}path\ to\ file\textgreater{}}
+  : Plot Custom text file.
+\item
+  \texttt{-lg\ \textbar{}\ -\/-logo\_gmt}: Plot GMT logo and time stamp.
+\item
+  \texttt{-lc\ \textbar{}\ -\/-logo\_custom}: Plot custom logo (image)
+  of your organization.
+\item
+  \texttt{-h\ \textbar{}\ -\/-help}: Help menu.
+\item
+  \texttt{-v\ \textbar{}\ -\/-version}: Plot version.
+\item
+  \texttt{-d\ \textbar{}\ -\/-debug}: Enable Debug option.
+\end{itemize}
+
+\subsection{Plot fault parameters}\label{plot-fault-parameters}
 
 \begin{itemize}
 \item
@@ -137,7 +263,7 @@ parameters.
   \texttt{-fdep}: Plot intersection of target depth with fault plane.
 \end{itemize}
 
-\subsubsection{Plot stress}\label{plot-stress}
+\subsection{Plot stress}\label{plot-stress}
 
 \begin{itemize}
 \item
@@ -146,9 +272,11 @@ parameters.
   \texttt{-sstress}: Plot Shear Stress change.
 \item
   \texttt{-nstress}: Plot Normal Stress change.
+\item
+  \texttt{-fcross}: Plot cross section of stress change or dilatation.
 \end{itemize}
 
-\subsubsection{Plot Strain components}\label{plot-strain-components}
+\subsection{Plot Strain components}\label{plot-strain-components}
 
 \begin{itemize}
 \item
@@ -159,7 +287,14 @@ parameters.
   \texttt{-strdil}: Plot dilatation (Exx + Eyy + Ezz )
 \end{itemize}
 
-\subsubsection{Plot gps velocities, observed and
+\subsection{Overlay Stress/strain on the top of DEM}
+
+\texttt{-****+ot}: use \texttt{+ot} after the main argument to overlay
+the raster output on the top of DEM. configure transparency in
+\texttt{default-param} file. \textbf{Be careful} transparency can
+printed only in JPEG, PNG and PDF outputs.
+
+\subsection{Plot gps velocities, observed and
 modeled}\label{plot-gps-velocities-observed-and-modeled}
 
 \begin{itemize}
@@ -179,7 +314,7 @@ modeled}\label{plot-gps-velocities-observed-and-modeled}
 Configure displacement scale in \texttt{default-param} file
 \end{quote}
 
-\subsubsection{Output formats}\label{output-formats}
+\subsection{Output formats}\label{output-formats}
 
 Default format is \texttt{*.ps} file. You can use the options bellow to
 convert to other format and adjust paper size to map size.
@@ -189,14 +324,84 @@ convert to other format and adjust paper size to map size.
   \texttt{-outjpg} : Adjust and convert to JPEG.
 \item
   \texttt{-outpng} : Adjust and convert to PNG (transparent where
-  nothing is plotted)
+  nothing is plotted).
 \item
-  \texttt{-outeps} : Adjust and convert to EPS"
+  \texttt{-outeps} : Adjust and convert to EPS.
 \item
-  \texttt{-outpdf} : Adjust and convert to PDF
+  \texttt{-outpdf} : Adjust and convert to PDF.
 \end{itemize}
 
-\subsection{Contributing}\label{contributing}
+\section{Move and rename coulomb output
+files}\label{move-and-rename-coulomb-output-files}
+
+An assistant script \texttt{mvclbfiles.sh} developed to move and rename
+all output files in specific directories on coulomb home directory.
+
+You must first set \texttt{CLB34\_HOME} variable the path to coulomb
+home directory, etc.
+
+\texttt{\$\ export\ CLB34\_HOME=\$\{HOME\}/coulomb34}
+
+\textbf{Usage}:
+\texttt{\$\ ./mvclsbfiles.sh\ \textless{}inputdata\textgreater{}}
+
+\texttt{\textless{}inputdata\textgreater{}} is the code as mentioned in
+the main script above.
+
+\textbf{Files, rename and move:}
+
+\begin{verbatim}
+1. `coulomb_out.dat`  
+    -> `/gmt_files/<inputdata>-coulomb_out.dat`
+\end{verbatim}
+
+\emph{Fault geometry files}
+
+\begin{verbatim}
+2. `gmt_fault_calc_dep.dat` 
+    -> `/gmt_files/<inputdata>-gmt_fault_calc_dep.dat`
+
+3. `gmt_fault_map_proj.dat` 
+    ->  `/gmt_files/<inputdata>-gmt_fault_map_proj.dat`
+
+4. `gmt_fault_surface.dat`  
+    -> `/gmt_files/<inputdata>-gmt_fault_surface.dat`
+\end{verbatim}
+
+\emph{GPS displacements}
+
+\begin{verbatim}
+5. `/output_files/GPS_output.csv` 
+    -> ` /gps_data/<inputdata>-gps.disp`
+\end{verbatim}
+
+\emph{Stress change files}
+
+\begin{verbatim}
+6. `/output_files/Cross_section.dat` .
+    ->  `/output_files/<inputdata>-Cross_section.dat`
+
+7. `/output_files/dcff.cou` 
+    ->  `/output_files/<inputdata>-dcff.cou`
+
+8. `/output_files/dcff_section.cou` 
+    -> `/output_files/<inputdata>-dcff_section.cou`
+
+9. `/output_files/dilatation_section.cou` 
+    -> `/output_files/<inputdata>-dilatation_section.cou`
+
+10. `/output_files/Focal_mech_stress_output.csv` 
+    -> `/output_files/<inputdata>-Focal_mech_stress_output.csv`
+\end{verbatim}
+
+\emph{Strain output files}
+
+\begin{verbatim}
+11. `/output_files/Strain.cou` 
+    -> `/output_files/<inputdata>-Strain.cou`
+\end{verbatim}
+
+\section{Contributing}\label{contributing}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -210,7 +415,7 @@ convert to other format and adjust paper size to map size.
   Create your feature branch (\texttt{git\ checkout\ -b\ my-new-idea})
 \item
   Commit your changes
-  (\texttt{git\ commit\ -am\ Add\ some\ feature})
+  (\texttt{git\ commit\ -am\  Add\ some\ feature})
 \item
   Publish the branch (\texttt{git\ push\ origin\ my-new-idea})
 \item
@@ -219,14 +424,104 @@ convert to other format and adjust paper size to map size.
   Profit! :white\_check\_mark:
 \end{enumerate}
 
-\subsection{ChangeLog}\label{changelog}
+\subsection{For contributors}\label{for-contributors}
+
+\subsubsection{git structure}\label{git-structure}
+
+\begin{itemize}
+
+\item
+  \textbf{branch} master/develop: stucture of main branch
+
+  \begin{itemize}
+  
+  \item
+    bash scripts
+
+    \begin{itemize}
+    
+    \item
+      coulomb2gmt.sh: main script
+    \item
+      mvclbfiles.sh: assistant script, move and rename files
+    \item
+      default-param: configure parameters
+    \end{itemize}
+  \item
+    functions: bash functions called from main script
+
+    \begin{itemize}
+    
+    \item
+      messages.sh: help function and ptint messages.
+    \item
+      gen\_func.sh: general functions.
+    \item
+      clbplots.sh: functions for gmt plots
+    \item
+      checknum.sh: check number function.
+    \end{itemize}
+  \item
+    docs: MarkDown templates for issues, pull requests, contributions
+    etc.
+  \end{itemize}
+\item
+  \textbf{branch} documents :
+
+  \begin{itemize}
+  
+  \item
+    tutorial: reference and user guide, tex files.
+  \item
+    examples: presentation of examples, tex/beamer files.
+  \end{itemize}
+\item
+  \textbf{branch} testcase: Include configured files for testing the
+  script.
+\end{itemize}
+
+\subsubsection{Simple guidlines for
+coding}\label{simple-guidances-for-coding}
+
+\begin{itemize}
+
+\item
+  \textbf{general}
+
+  \begin{itemize}
+  
+  \item
+    Use 80 characters long line.
+  \item
+    Surround variables with \texttt{\{\}} and use \texttt{"\$\{\}"} in
+    \texttt{if} case.
+  \item
+    Use comments in coding.
+  \end{itemize}
+\item
+  \textbf{gmt functions}
+
+  \begin{itemize}
+  
+  \item
+    Use \texttt{-K} \texttt{-O} \texttt{-V\$\{VRBLEVM\}} at the end of
+    each function.
+  \item
+    Create a function if a part of the script will be used more than two
+    times.
+  \item
+    Add printed comments and debug messages in the code.
+  \end{itemize}
+\end{itemize}
+
+\section{ChangeLog}\label{changelog}
 
 The history of releases can be viewed at
-\href{docs/ChangeLog.md}{ChangeLog}
+\href{docs/ChangeLog.md}{ChangeLog.md}
 
-\subsection{Acknowlegments}\label{acknowlegments}
+\section{Acknowlegments}\label{acknowlegments}
 
-\subsection{References}\label{references}
+\section{References}\label{references}
 
 \begin{itemize}
 \item
@@ -239,5 +534,8 @@ The history of releases can be viewed at
   U.S. Geological Survey Open-File Report 2011-1060, 63 p., available at
   http://pubs.usgs.gov/of/2011/1060/.
 \item
-  \href{http://gmt.soest.hawaii.edu/}{The Generic Mappting Tools - GMT}
+  \href{http://gmt.soest.hawaii.edu/}{The Generic Mapping Tools - GMT}
+\item
+  Python Software Foundation. Python Language Reference, version 2.7.
+  Available at http://www.python.org
 \end{itemize}

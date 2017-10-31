@@ -1,5 +1,6 @@
 % \PassOptionsToPackage{usenames,dvipsnames}{xcolor}
 \documentclass{article}
+\usepackage[a4paper, margin=1.3in]{geometry}
 \usepackage{tikz}
 \usetikzlibrary{shapes,shapes.geometric, arrows}
 \usepackage{hyperref}
@@ -20,7 +21,7 @@
 
 \setlength\parindent{0pt} % Removes all indentation from paragraphs
 
-\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
+% \renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
 
 % warning box
 \definecolor{warningbackground}{RGB}{252,226,158}
@@ -38,7 +39,7 @@
     }
 }
 
-\title{Plot coulomb outputs on GMT \texttt{coulomb2gmt} \\ \large{Reference \& User Guide} } % Title
+\title{\vskip 3cm Plot coulomb outputs on GMT \texttt{coulomb2gmt} \\ \large{Reference \& User Guide} } % Title
 \author{Demitris G. \textsc{Anastasiou} \\ \normalsize{Dr.Eng | Rural \& Surveying Engineer NTUA} } % Author name
 \date{\today} % Date for the report
 \makeindex
@@ -51,14 +52,23 @@
 \begin{tabular}{l r}
 First Release : & October 10, 2017 \\
 Repository:    & \url{http://github.com/demanasta/coulomb2gmt} \\
-Release:        & v1.0-beta6.0\\
-Develop:        & v1.0-beta8.3
+Release:        & v1.0-beta6.2\\
+Develop:        & v1.0-beta7.*\\
 \end{tabular}
+\end{center}
+\vfill
+\begin{center}
+\textcolor{red}{\huge DRAFT -- pre-released -- DRAFT}
 \end{center}
 \vfill
 \begin{abstract}
 {\small 
-This document describes all option of project \texttt{coulomb2gmt} that plot coulomb outputs on GMT enviroment.
+This document describes all options of project \texttt{coulomb2gmt} that plot 
+coulomb outputs on GMT enviroment. Τhe features of the program include the 
+automatic calculation of map frames, printing of all stress and strain parameters,
+overlay on the top of a DEM, plot fault geometry, cross sections, GPS and Okada 
+displacements, centroid moments tensors and earthquake distribution. Also, final 
+.ps file can be converted into different output formats.
 }
 \end{abstract}
 \clearpage
