@@ -2,6 +2,112 @@
  
 % \graphicspath{Figs/}
 
-\begin{frame}\frametitle{Intro...}\framesubtitle{}
+\begin{frame}\frametitle{\texttt{coulomb2gmt project}}\framesubtitle{}
+\begin{quote}
+Bash scripts to plot coulomb output on GMT
+\end{quote}
+\vskip -1cm
+\begin{columns}
+  \begin{column}{.5\textwidth}
+\textbf{Demitris G. Anastasiou}
 
-}
+\begin{footnotesize}
+Rural \& Surveying Engineer, NTUA
+
+Dr.Eng in Geodesy, NTUA
+\end{footnotesize}
+\vfill
+\textbf{Decleration}
+
+\begin{footnotesize}
+The present project was developed during my doctoral dissertation, at the Laboratory 
+of Higher Geodesy and Dionysos Sastellite Observatory, at the School of Rural \& Surveying
+Engineering of National Technical University of Athens.
+\end{footnotesize}
+  \end{column}
+  \begin{column}{.5\textwidth}
+\begin{tiny}
+
+\begin{flushright}
+\textbf{MIT License}
+
+\textbf{Copyright (c) 2017\\D. G. Anastasiou}
+\end{flushright}
+
+
+%Permission is hereby granted, free of charge, to any person obtaining a copy
+%of this software and associated documentation files (the "Software"), to deal
+%in the Software without restriction, including without limitation the rights
+%to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%copies of the Software, and to permit persons to whom the Software is
+%furnished to do so, subject to the following conditions:
+%\\
+%The above copyright notice and this permission notice shall be included in all
+%copies or substantial portions of the Software.
+%\\
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+\end{tiny}
+  \end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{\texttt{coulomb2gmt project:} Features}
+
+
+\begin{itemize}
+\item Auto-configure map lat-long from input files (.inp)
+\item
+  Plot Stress changes (Coulomb, Normal, Shear)
+\item
+  Plot cross section for stress changes and dilatation.
+\item
+  Plot all strain components (E**, Dilatation)
+\item
+  Overlay stress/strain on the top of topographic DEM.
+\item
+  Plot Fault geometry (Projection, Surface, Depth).
+\item
+  Plot GPS displacements observed and modeled.
+\item
+  Plot Fault and CMT databases and earhtquake distribution.
+\item
+  Add GMT timestamp logo and custom logo of your organization.
+\item
+  Adjust paper size to map and convert in different output formats
+  (.jpg, .png, .eps, .pdf).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{\texttt{coulomb2gmt project:} Requirements}
+
+\begin{itemize}
+\item
+  \textbf{GMT}: \href{http://gmt.soest.hawaii.edu/}{The Generic Mappting
+  Tools - GMT} version \textgreater{} 5.1.1 . It is recommented to
+  install it from source code.
+
+  \begin{itemize}
+  \item
+    for \emph{Ubuntu/Debian}: if you use default package installation
+    you have to install also \texttt{libgmt-dev} package
+  \end{itemize}
+\item
+  \textbf{Coulomb 3}:
+  \href{https://earthquake.usgs.gov/research/software/coulomb/}{Coulomb
+  3, developed by USGS}
+\item
+  \textbf{python}: required for some math calculations included in the
+  main script.
+\end{itemize}
+\end{frame}
+
