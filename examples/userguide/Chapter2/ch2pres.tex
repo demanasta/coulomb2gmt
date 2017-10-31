@@ -2,10 +2,139 @@
  
 \graphicspath{{Chapter2/Figs/Vector/}{Chapter2/Figs/Raster/}}
 
-\begin{frame}[t]
+\begin{frame}[t,fragile]
   \frametitle{Input files}
   \framesubtitle{}
   \label{fr2:satgeod3}
+The main script is: \texttt{coulomb2gmt.sh}
+
+run:
+
+\begin{verbatim}
+$ ./coulomb2gmt.sh <inputfile> <inputdata> | options
+\end{verbatim}
+
+\begin{itemize}
+\item
+  \texttt{\textless{}inputfile\textgreater{}}: name of input file used
+  from Coulomb. Extention \texttt{.inp} not needed. Path to the
+  directory of input files configured at \texttt{default-param}.
+\item
+  \texttt{\textless{}inputdata\textgreater{}}: Code name of input files
+  include results of coulmb calculations. Input data files are:
+\end{itemize}
+\end{frame}
+\note{} % Add notes for this slide
+
+\begin{frame}[t,fragile]
+  \frametitle{Input files}
+  \framesubtitle{}
+  \label{fr2:satgeod3}
+\emph{Fault geometry files:}
+
+\begin{itemize}
+\item
+  \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_surface.dat}:
+  Source and receiver faults' trace at surface.
+\item
+  \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_map\_proj.dat}:
+  Surface of source and receiver faults.
+\item
+  \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_calc\_dep.dat}:
+  Intersection of target depth with fault plane.
+\end{itemize}
+\end{frame}
+\note{} % Add notes for this slide
+
+
+
+\begin{frame}[t,fragile]
+  \frametitle{Input files}
+  \framesubtitle{}
+  \label{fr2:satgeod3}
+\emph{Stress change output files:}
+
+\begin{itemize}
+\item
+  \texttt{\textless{}inputdata\textgreater{}-coulomb\_out.dat}: Coulomb
+  matrix data output.
+\item
+  \texttt{\textless{}inputdata\textgreater{}-dcff.cou}: Output of all
+  stress components.
+\item
+  \texttt{\textless{}inputdata\textgreater{}-dcff\_section.cou}: Output
+  of all stress components in cross section.
+\item
+  \texttt{\textless{}inputdata\textgreater{}-Cross\_section.dat}: Cross
+  section parameters.
+\item
+  \texttt{\textless{}inputdata\textgreater{}-Focal\_mech\_stress\_output.csv}:
+\end{itemize}
+
+\emph{Strain output files:}
+
+\begin{itemize}
+
+\item
+  \texttt{\textless{}inputdata\textgreater{}-Strain.cou}: Data matrix of
+  starin components.
+\end{itemize}
+\end{frame}
+\note{} % Add notes for this slide
+
+
+\begin{frame}[t,fragile]
+  \frametitle{Input files}
+  \framesubtitle{}
+  \label{fr2:satgeod3}
+\emph{Earthquakes, GPS, custom text files:}
+
+\begin{itemize}
+\item
+  Earthquakes distribution: Earthquakes catalogue files. Structure is
+
+\begin{verbatim}
+line1: Header line
+line2: Header line
+line*: YEAR MONTH DAY    HH MM SS    LAT.   LONG.  DEPTH    MAGNITUDE  (10 fields)
+\end{verbatim}
+\item
+  Centroid Moment Tensors file: Structure of file is the old GMT format
+  for CMT. Use \# to comment lines.
+
+\begin{verbatim}
+line* :  lon  lat   d  str dip slip str dip slip magnt exp plon  plat  name (14 fields)
+\end{verbatim}
+\item
+  Custom text files: Use new gmt format for \texttt{pstext}. (GMT ver
+  \textgreater{} 5.1 )
+
+\begin{verbatim}
+line* :lon lat font\_size,font\_type,font\_color angle potision text
+\end{verbatim}
+\item
+  \texttt{\textless{}inputdata\textgreater{}-gps.dist}: GPS
+  displacements.
+\end{itemize}
+
+\begin{quote}
+All paths can be configured in the \texttt{deafault-param} file. Default
+the paths are where coulomb create by default each file.
+\end{quote}
 
 \end{frame}
 \note{} % Add notes for this slide
+
+
+
+
+
+
+
+
+
+
+
+
+
+
