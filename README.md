@@ -30,7 +30,7 @@ coulomb2gmt -- pre-released v1.0-beta6.2
 
 * Plot Fault geometry (Projection, Surface, Depth).
 
-* Plot GPS displacement observed and modeled.
+* Plot GPS displacements observed and modeled.
 
 * Plot Fault and CMT databases and earhtquake distribution.
 
@@ -41,12 +41,12 @@ coulomb2gmt -- pre-released v1.0-beta6.2
 
 ## Requirements
 
-* __GMT__:  [The Generic Mappting Tools - GMT](http://gmt.soest.hawaii.edu/) version > 5.1.1 . Recommented installation from source code.
-	*  for _Ubuntu/Debian_ if you use default package installation you have to install also `libgmt-dev` package
+* __GMT__:  [The Generic Mappting Tools - GMT](http://gmt.soest.hawaii.edu/) version > 5.1.1 . It is recommented to install it from source code.
+	*  for _Ubuntu/Debian_: if you use default package installation you have to install also `libgmt-dev` package
 
 * __Coulomb 3__: [Coulomb 3, developed by USGS](https://earthquake.usgs.gov/research/software/coulomb/) 
 
-* __python__: required for some calculations included in the main script.
+* __python__: required for some math calculations included in the main script.
 
 ## Usage details
 The main script is: `coulomb2gmt.sh`
@@ -57,7 +57,7 @@ run:
 ```
 * `<inputfile>`: name of input file used from Coulomb. Extention `.inp` not needed. Path to the directory of input files  configured at `default-param`.
 
-* `<inputdata>`:  Name of input files include results of coulmb calculations. Input data files are:
+* `<inputdata>`:  Code name of input files include results of coulmb calculations. Input data files are:
 
 _Fault geometry files:_
 
@@ -101,7 +101,8 @@ line* :lon lat font\_size,font\_type,font\_color angle potision text
 ```
 * `<inputdata>-gps.dist`: GPS displacements.
 
-
+> All paths can be configured in the `deafault-param` file. 
+> Default the paths are where coulomb create by default each file.
 
 ### Default parameters
 
@@ -115,11 +116,11 @@ Many parameters configured at `default-param` file.
 
 * `-r   | --region`: set custom region parameters. _Structure_ `-r minlon maxlon minlat maxlat prjscale`
 
-* `-t   | --topography`:  plot topography using dem file
+* `-t   | --topography`:  plot topography using DEM file
 
-* `-o  | --output <filename>`:  set custom name of output file. Default is `<inputadata>`.
+* `-o  | --output <filename>`:  set custom name of output file. Default is `<inputdata>`.
 
-* `-cmt | --moment_tensor <file>` :  Plot Centroid Moment Tensors of earthquakes. 
+* `-cmt | --moment_tensor <file>` :  Plot Centroid Moment Tensors list of earthquakes. 
 
 * `-ed | --eq_distribution <file>` : Plot earthquakes distribution. No classification. 
 
@@ -127,19 +128,17 @@ Many parameters configured at `default-param` file.
 
 * `-mt | --map_title  "map title"`: Custom map title.
 
-* `-ct | --custom_text  <path to file>` :  Plot Custom text. Config custom text file.
+* `-ct | --custom_text  <path to file>` :  Plot Custom text file.
 
 * `-lg | --logo_gmt`: Plot GMT logo and time stamp.
 
-* `-lc | --logo_custom`: Plot custom logo of your organization.
+* `-lc | --logo_custom`: Plot custom logo (image) of your organization.
 
-* `-h | --help`: Help menu
+* `-h | --help`: Help menu.
 
-* `-v | --version`: Plot version
+* `-v | --version`: Plot version.
 
-* `-d | --debug`:Enable Debug option 
-
-
+* `-d | --debug`: Enable Debug option.
 
 ### Plot fault parameters
 
@@ -150,6 +149,7 @@ Many parameters configured at `default-param` file.
 * `-fdep`: Plot intersection of target depth with fault plane.
 
 ### Plot stress 
+
 * `-cstress`: Plot Coulomb Stress change.
 
 * `-sstress`: Plot Shear Stress change.
@@ -166,8 +166,9 @@ Many parameters configured at `default-param` file.
 
 >**Overlay Stress/strain on the top of DEM**
 >
->* `-****+ot`: use `+ot`  after the main argument to overlay the raster output on the top of DEM.
->                  configure transparency in `default-param` file. __Be careful__ transparency can printed only in JPEG, PNG and PDF outputs.
+>`-****+ot`: use `+ot`  after the main argument to overlay the raster output on the top of DEM.
+>                  configure transparency in `default-param` file.
+>  __Be careful__ transparency can printed only in JPEG, PNG and PDF outputs.
 
 ### Plot gps velocities, observed and modeled
 
@@ -183,58 +184,59 @@ Many parameters configured at `default-param` file.
 
 
 ### Output formats
+
 Default format is `*.ps` file. You can use  the options bellow to convert  to other format and adjust paper size to map size.
 
 * `-outjpg` : Adjust and convert to JPEG.
 
-* `-outpng` : Adjust and convert to PNG (transparent where nothing is plotted)
+* `-outpng` : Adjust and convert to PNG (transparent where nothing is plotted).
 
-* `-outeps` : Adjust and convert to EPS"
+* `-outeps` : Adjust and convert to EPS.
 
-* `-outpdf` : Adjust and convert to PDF
+* `-outpdf` : Adjust and convert to PDF.
 
-## `mvclsbfiles.sh` script
+## Move and rename coulomb output files
 
-An assistant script `mvclbfiles.sh` developed to move` and rename all output files in specific directories on coulomb home directory.
+An assistant script `mvclbfiles.sh` developed to move and rename all output files in specific directories on coulomb home directory.
 
 You must first set `CLB34_HOME` variable the path to coulomb home directory,
 etc. `$ export CLB34_HOME=${HOME}/coulomb34`
 
 __Usage__: `$ ./mvclsbfiles.sh <inputdata>`
-`<inputdata>` is the code as me ntioned in the main script above.
+`<inputdata>` is the code as mentioned in the main script above.
 
-__Files, Rename and move:__
-
-* `coulomb_out.dat` -> `/gmt_files/<inputdata>-coulomb_out.dat`
-
+__Files, rename and move:__
+```
+1. `coulomb_out.dat`  -> `/gmt_files/<inputdata>-coulomb_out.dat`
+```
 _Fault geometry files_
+```
+2. `gmt_fault_calc_dep.dat` -> `/gmt_files/<inputdata>-gmt_fault_calc_dep.dat`
 
-* `gmt_fault_calc_dep.dat` -> `/gmt_files/<inputdata>-gmt_fault_calc_dep.dat`
+3. `gmt_fault_map_proj.dat` ->  `/gmt_files/<inputdata>-gmt_fault_map_proj.dat`
 
-* `gmt_fault_map_proj.dat` ->  `/gmt_files/<inputdata>-gmt_fault_map_proj.dat`
-
-* `gmt_fault_surface.dat` -> `/gmt_files/<inputdata>-gmt_fault_surface.dat`
-
+4. `gmt_fault_surface.dat`  -> `/gmt_files/<inputdata>-gmt_fault_surface.dat`
+```
 _GPS displacements_
-
-* `/output_files/GPS_output.csv` -> ` /gps_data/<inputdata>-gps.disp`
-
+```
+5. `/output_files/GPS_output.csv` -> ` /gps_data/<inputdata>-gps.disp`
+```
 _Stress change files_
+```
+6. `/output_files/Cross_section.dat` ->  `/output_files/<inputdata>-Cross_section.dat`
 
-* `/output_files/Cross_section.dat` ->  `/output_files/<inputdata>-Cross_section.dat`
+7. `/output_files/dcff.cou` ->  `/output_files/<inputdata>-dcff.cou`
 
-* `/output_files/dcff.cou` ->  `/output_files/<inputdata>-dcff.cou`
+8. `/output_files/dcff_section.cou` -> `/output_files/<inputdata>-dcff_section.cou`
 
-* `/output_files/dcff_section.cou` -> `/output_files/<inputdata>-dcff_section.cou`
+9. `/output_files/dilatation_section.cou` -> `/output_files/<inputdata>-dilatation_section.cou`
 
-* `/output_files/dilatation_section.cou` -> `/output_files/<inputdata>-dilatation_section.cou`
-
-* `/output_files/Focal_mech_stress_output.csv` -> `/output_files/<inputdata>-Focal_mech_stress_output.csv`
-
+10. `/output_files/Focal_mech_stress_output.csv` -> `/output_files/<inputdata>-Focal_mech_stress_output.csv`
+```
 _Strain output files_
-
-* `/output_files/Strain.cou` -> `/output_files/<inputdata>-Strain.cou`
-
+```
+11. `/output_files/Strain.cou` -> `/output_files/<inputdata>-Strain.cou`
+```
 ## Contributing
 
 1. Create an issue and describe your idea
@@ -249,18 +251,35 @@ _Strain output files_
 
 ### git structure
 
-* __brunch__ master/develop: stucture of main branch
+* __branch__ master/develop: stucture of main branch
   	* bash scripts
+  		* coulomb2gmt.sh: main script
+  		* mvclbfiles.sh: assistant script, move and rename files
+  		* default-param: configure parameters
   	* functions: bash functions called from main script
   		* messages.sh: help function and ptint messages.
   		* gen_func.sh: general functions.
   		* clbplots.sh: functions for gmt plots
   		* checknum.sh: check number function.
-  	* docs: MarkDown files for licence, contribution etc.
+  	* docs: MarkDown templates for issues, pull requests, contributions etc.
+  		
   	
-* __brunch__ documents :
+* __branch__ documents :
 	* tutorial: reference and user guide, tex files.
 	* examples: presentation of examples, tex/beamer files.
+	
+* __branch__ testcase: Include configured files for testing the script.
+
+### Simple guidances for coding
+
+* __general__
+	* Use 80 characters long line.
+	* Surround variables with `{}` and use `"${}"` in `if` case.
+	* Use comments in coding.
+* __gmt functions__
+	* Use `-K` `-O` `-V${VRBLEVM}` at the end of each function. 
+	* Create a function if a part of the script will be used more than two times.
+	* Add printed comments and debug messages in the code.
 
 ## ChangeLog
 

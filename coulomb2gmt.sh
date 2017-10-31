@@ -181,32 +181,32 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 		    shift
 		    shift
 		  else
-		    echo "[ERROR] \"-r\": projscale must be a number and greater than 0."
+		    echo "[ERROR] \"${3}\": projscale must be a number and greater than 0."
 		    echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
 		    exit 1
 		  fi
 		else
-		  echo "[ERROR] \"-r\": maxlat must be a number and greater than minlat."
+		  echo "[ERROR] \"${3}\": maxlat must be a number and greater than minlat."
 		  echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
 		  exit 1
 		fi
 	      else
-		echo "[ERROR] \"-r\": minlat must be a number."
+		echo "[ERROR] \"${3}\": minlat must be a number."
 		echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
 		exit 1
 	      fi
 	    else
-	      echo "[ERROR] \"-r\": maxlon must be number and greater than minlon."
+	      echo "[ERROR] \"${3}\": maxlon must be number and greater than minlon."
 	      echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
 	      exit 1
 	    fi
 	  else
-	    echo "[ERROR] \"-r\": minlon must be number."
+	    echo "[ERROR] \"${3}\": minlon must be number."
 	    echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
 	    exit 1
 	  fi
 	else
-	  echo "[ERROR] Not enough input arguments at \"-r\" option."
+	  echo "[ERROR] Not enough input arguments at \"${3}\" option."
 	  echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
 	  exit 1
 	fi
@@ -217,7 +217,7 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	shift
 	;;
     -o | --output)
-	DEBUG echo "[DEBUG:${LINENO}] -o: next argument:" ${4}
+	DEBUG echo "[DEBUG:${LINENO}] ${3}: next argument:" ${4}
 	if [ $# -gt 3 ] && [ ${4:0:1} != \- ]; then
 	  OUTFILES=1
 	  outfile=${4}.ps
@@ -240,7 +240,7 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	shift
 	;;
     -cmt | --moment_tensor)
-	DEBUG echo "[DEBUG:${LINENO}] cmt: next argument:" ${4}
+	DEBUG echo "[DEBUG:${LINENO}] ${3}: next argument:" ${4}
 	if  [ $# -ge 4 ] && [ ${4:0:1} != \- ];	then
 	  CMT=1
 	  inpcmt=${pth2eqdir}/${4}
@@ -258,7 +258,7 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	shift
 	;;	
     -mt| --map_title)
-	DEBUG echo "[DEBUG:${LINENO}] maptitle: next argument:" ${4}
+	DEBUG echo "[DEBUG:${LINENO}] ${3}: next argument:" ${4}
 	if [ $# -ge 4 ] && [ ${4:0:1} != \- ]; then
 	  MTITLE=1
 	  mtitle=${4}
@@ -271,7 +271,7 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	shift #shift for the argument -mt
 	;;
     -ct | --custom_text)
-	DEBUG echo "[DEBUG:${LINENO}] ctext: next argument:" ${4}
+	DEBUG echo "[DEBUG:${LINENO}] ${3}: next argument:" ${4}
 	if  [ $# -ge 4 ] && [ -f ${4} ]; then
 	  CTEXT=1
 	  pth2ctextfile=${4}
@@ -288,7 +288,7 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	shift # shift for the arg -ctext
 	;;
     -ed | --eq_distribution)
-	DEBUG echo "[DEBUG:${LINENO}] eqdist next argument: "${4}
+	DEBUG echo "[DEBUG:${LINENO}] ${3}: next argument: "${4}
 	if [ $# -ge 4 ] && [ ${4:0:1} != \- ]; then
 	  EQDIST=1
 	  pth2eqdistfile=${pth2eqdir}/${4}
@@ -942,7 +942,7 @@ fi
 
 
 # //////////////////////////////////////////////////////////////////////////////
-# PLOT gmt_fault_map_proj.dat 
+# PLOT gmt fault geometry
 
 if [ "${FPROJ}" -eq 1 ]; then
   echo "...plot fault projection..."
