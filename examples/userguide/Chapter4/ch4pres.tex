@@ -1,7 +1,7 @@
 \section[General arg]{General Options - source faults}
 
 \graphicspath{{Chapter4/Figs/Vector/}{Figs/}}
-
+% //////////////////////////////////////////////////////////////////////////////
 \begin{frame}
   \frametitle{General Options - source faults}
   \framesubtitle{}
@@ -49,6 +49,7 @@
 \end{frame}
 \note{}
 
+% //////////////////////////////////////////////////////////////////////////////
 \begin{frame}
   \frametitle{General Options - source faults}
   \framesubtitle{Plot fault parameters}
@@ -84,37 +85,189 @@
 \end{frame}
 \note{}
 
-
+% //////////////////////////////////////////////////////////////////////////////
 \begin{frame}[t,fragile]
   \frametitle{General Options - source faults}
   \framesubtitle{Plot fault parameters}
   \label{fr4:hist_pics}
 \begin{columns}[t]
-  \begin{column}{.4\textwidth}
+  \begin{column}{.5\textwidth}
 \begin{scriptsize}
 \begin{verbatim}
 $ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
-                    
-           
-
+                   -outjpg -o example401 \
 \end{verbatim}
 \end{scriptsize}
+\centering
+\includegraphics[width=.64\linewidth]{kef_1953_kef.png}
   \end{column}
-  \begin{column}{.6\textwidth}
-  \includegraphics[width=.84\linewidth]{kef_1953_kef.png}
+  \begin{column}{.5\textwidth}
+  \begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg -o example401 \
+                   -r 20.1 20.2 31.2 35.2 1000000
+\end{verbatim}
+\end{scriptsize}
+\centering
+  \includegraphics[width=.64\linewidth]{kef_1953_kef.png}
   \end{column}
 \end{columns}
 
 \end{frame}
 \note{}
 
-\begin{frame}
+% //////////////////////////////////////////////////////////////////////////////
+\begin{frame}[t,fragile]
   \frametitle{General Options - source faults}
   \framesubtitle{Plot fault parameters}
   \label{fr4:hist_pics}
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+\begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg -o example401 \
+\end{verbatim}
+\end{scriptsize}
+\centering
+\includegraphics[width=.64\linewidth]{kef_1953_kef.png}
+  \end{column}
+  \begin{column}{.5\textwidth}
+  \begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg -o example402 \
+                   -r 20.1 20.2 31.2 35.2 1000000
+\end{verbatim}
+\end{scriptsize}
+\centering
+  \includegraphics[width=.64\linewidth]{kef_1953_kef.png}
+  \end{column}
+\end{columns}
 
 \end{frame}
 \note{}
+
+% //////////////////////////////////////////////////////////////////////////////
+\begin{frame}[t,fragile]
+  \frametitle{General Options - source faults}
+  \framesubtitle{Plot fault parameters}
+  \label{fr4:hist_pics}
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+\begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg -o example403 \
+                   -t
+\end{verbatim}
+\end{scriptsize}
+\centering
+\includegraphics[width=.64\linewidth]{kef_1953_kef.png}
+  \end{column}
+  \begin{column}{.5\textwidth}
+  \begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg -o example404 \
+                   -t -lg -lc
+\end{verbatim}
+\end{scriptsize}
+\centering
+  \includegraphics[width=.64\linewidth]{kef_1953_kef.png}
+  \end{column}
+\end{columns}
+
+\end{frame}
+\note{}
+
+% //////////////////////////////////////////////////////////////////////////////
+\begin{frame}[t,fragile]
+  \frametitle{General Options - source faults}
+  \framesubtitle{Plot fault parameters}
+  \label{fr4:hist_pics}
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+\begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg -o example405 \
+                   -t -lg -lc \
+                   -fproj -fsurf -fdep
+\end{verbatim}
+\end{scriptsize}
+\centering
+\includegraphics[width=.64\linewidth]{kef_1953_kef.png}
+  \end{column}
+  \begin{column}{.5\textwidth}
+  \begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg -o example406 \
+                   -t -lg -lc \
+                   -fproj -fsurf -fdep \
+                   -cmt historic.cmt
+\end{verbatim}
+\end{scriptsize}
+\centering
+  \includegraphics[width=.64\linewidth]{kef_1953_kef.png}
+  \end{column}
+\end{columns}
+
+\end{frame}
+\note{}
+
+% //////////////////////////////////////////////////////////////////////////////
+\begin{frame}[t,fragile]
+  \frametitle{General Options - source faults}
+  \framesubtitle{Plot fault parameters}
+  \label{fr4:hist_pics}
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+\begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg \ 
+                   --output example407 \
+                   --topography \
+                   --logo_gmt \
+                   --logo_custom \
+                   --moment_tensor historic.cmt \
+                   --eq_distribution CAT2014.TXT \
+                   --map_title "Example 407" \
+                   -fproj \
+                   -fsurf \
+                   -fdep
+\end{verbatim}
+\end{scriptsize}
+
+  \end{column}
+  \begin{column}{.5\textwidth}
+
+\centering
+  \includegraphics[width=.64\linewidth]{kef_1953_kef.png}
+  \end{column}
+\end{columns}
+
+\end{frame}
+\note{}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
