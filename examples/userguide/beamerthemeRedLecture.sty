@@ -73,8 +73,10 @@
 
 \useoutertheme[subsection=false]{miniframes}
 
-%\setbeamertemplate{frametitle}[default][center]
-\setbeamertemplate{frametitle}{\vskip-1pt\centering\insertframetitle\par\insertframesubtitle}
+% \setbeamertemplate{frametitle}[default][center]
+\setbeamertemplate{frametitle}{\vskip-1pt\centering{\insertframetitle}\\\centerline{\usebeamerfont{framesubtitle}\insertframesubtitle}\vskip-.6cm}
+\setbeamerfont{frametitle}{size=\Large}
+\setbeamerfont{framesubtitle}{size=\normalsize}
 
 \AtBeginDocument{%
   {

@@ -43,15 +43,7 @@ $ ./coulomb2gmt.sh <inputfile> <inputdata> | options
   \texttt{\textless{}inputdata\textgreater{}-gmt\_fault\_calc\_dep.dat}:
   Intersection of target depth with fault plane.
 \end{itemize}
-\end{frame}
-\note{} % Add notes for this slide
 
-
-
-\begin{frame}[t,fragile]
-  \frametitle{Input files}
-  \framesubtitle{}
-  \label{fr2:satgeod3}
 \emph{Stress change output files:}
 
 \begin{itemize}
@@ -79,6 +71,8 @@ $ ./coulomb2gmt.sh <inputfile> <inputdata> | options
   \texttt{\textless{}inputdata\textgreater{}-Strain.cou}: Data matrix of
   starin components.
 \end{itemize}
+
+
 \end{frame}
 \note{} % Add notes for this slide
 
@@ -96,14 +90,14 @@ $ ./coulomb2gmt.sh <inputfile> <inputdata> | options
 \begin{verbatim}
 line1: Header line
 line2: Header line
-line*: YEAR MONTH DAY    HH MM SS    LAT.   LONG.  DEPTH    MAGNITUDE  (10 fields)
+line*: YEAR MONTH DAY HH MM SS LAT. LONG. DEPTH MAGNITUDE  (10f)
 \end{verbatim}
 \item
   Centroid Moment Tensors file: Structure of file is the old GMT format
   for CMT. Use \# to comment lines.
 
 \begin{verbatim}
-line* :  lon  lat   d  str dip slip str dip slip magnt exp plon  plat  name (14 fields)
+line* : lon lat d str dip slip str dip slip magnt exp plon  plat  name (14f)
 \end{verbatim}
 \item
   Custom text files: Use new gmt format for \texttt{pstext}. (GMT ver
@@ -118,7 +112,7 @@ line* :lon lat font\_size,font\_type,font\_color angle potision text
 \end{itemize}
 
 \begin{quote}
-All paths can be configured in the \texttt{deafault-param} file. Default
+All paths can be configured in the \texttt{default-param} file. Default
 the paths are where coulomb create by default each file.
 \end{quote}
 

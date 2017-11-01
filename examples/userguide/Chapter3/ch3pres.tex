@@ -3,8 +3,127 @@
 \graphicspath{{Chapter3/Figs/Vector/}}
 
 \begin{frame}
-  \frametitle{Default parametersν}
+  \frametitle{Default parameters}
   \framesubtitle{}
   \label{fr3:frank_tr}
+  
+Many parameters configured at \texttt{default-param} file. 
+\begin{enumerate}
+\item  Paths to general files (DEM, logo, faults) 
+\item Paths to input file directories (.inp, .dat, .cou, .disp) 
+\item ColorMaps Palette, frame variable. 
+\item General variables.
+\end{enumerate}
 \end{frame}
 \note{} % Add notes for this slide
+
+\begin{frame}[t,fragile]
+  \frametitle{Default parameters}
+  \framesubtitle{Paths to general files and input directories}
+  \label{fr3:frank_tr}
+\begin{columns}[t]
+  \begin{column}{.45\textwidth}
+	\begin{scriptsize}
+	  \begin{verbatim}
+# Set path for DEM files
+export pth2dems=
+export inputTopoL=${pth2dems}/
+export inputTopoB=${pth2dems}/
+
+# Path to logo file
+export pth2logo=
+
+# Path to faults database file
+export pth2faults=
+\end{verbatim}
+    \end{scriptsize}
+  \end{column}
+  \begin{column}{.54\textwidth}
+\begin{scriptsize}
+	\begin{verbatim}
+# Path to directory of input files *.inp
+export pth2inpdir=../input_files/
+
+# Path to directory of *.dat files
+export pth2datdir=../gmt_files/
+
+# Path to directory of *.cou files
+export pth2coudir=../output_files/
+
+# Path to directory of *.disp files.
+export pth2gpsdir=../gps_data/
+
+# Path to earthquakes database
+export pth2eqdir=../earthquake_data/
+\end{verbatim}	  
+	\end{scriptsize}
+  \end{column}
+\end{columns}
+\end{frame}
+\note{} % Add notes for this slide
+
+
+\begin{frame}[t,fragile]
+  \frametitle{Default parameters}
+  \framesubtitle{Variables and other parameters}
+  \label{fr3:frank_tr}
+\begin{columns}[t]
+  \begin{column}{.45\textwidth}
+\begin{scriptsize}
+	\begin{verbatim}
+# Colormap Palettes
+export landcpt=tmp_land.cpt
+export bathcpt=tmp_bath.cpt
+export coulombcpt=
+	Coulomb_anatolia.cpt
+
+export logogmt_pos=
+   "-UBL/0.05c/0.05c/DemAnast"
+export logocus_pos=
+   "-Dx13.57c/10.05c+w1.1c"
+
+export frame=0.5 ## Default 0.5
+\end{verbatim}
+	\end{scriptsize}
+  \end{column}
+  \begin{column}{.54\textwidth}
+\begin{scriptsize}
+	\begin{verbatim}
+# general variables
+export barrange=1 ## Default 1
+#
+export dhscale=100 ## Default 100
+export dvscale=100 ## Default 100
+#
+export dhscmagn=10 #use mm
+export dvscmagn=12 #use mm
+#
+# export CALC_DEPTH=8 #use km
+# set transparency for overlay topography
+export RTRANS=30
+\end{verbatim}	  
+	\end{scriptsize}
+  \end{column}
+\end{columns}
+\end{frame}
+\note{} % Add notes for this slide
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

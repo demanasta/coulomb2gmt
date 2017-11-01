@@ -6,6 +6,39 @@
   \frametitle{Stress/Strain plots}
   \framesubtitle{}
   \label{fr6:terr_sat_ext}
+\begin{scriptsize}
 
+
+\emph{Plot stress}
+
+\begin{itemize}
+\item
+  \texttt{-cstress}: Plot Coulomb Stress change.
+\item
+  \texttt{-sstress}: Plot Shear Stress change.
+\item
+  \texttt{-nstress}: Plot Normal Stress change.
+\item
+  \texttt{-fcross}: Plot cross section of stress change or dilatation.
+\end{itemize}
+
+\emph{Plot Strain components}
+
+\begin{itemize}
+\item
+  \texttt{-stre**}: Where \texttt{**} you can fill all strain components
+  \texttt{xx},\texttt{yy},\texttt{zz}, \texttt{yz}, \texttt{xz},
+  \texttt{xy}.
+\item
+  \texttt{-strdil}: Plot dilatation (Exx + Eyy + Ezz )
+\end{itemize}
+
+\emph{Overlay Stress/strain on the top of DEM}
+
+\texttt{-****+ot}: use \texttt{+ot} after the main argument to overlay
+the raster output on the top of DEM. configure transparency in
+\texttt{default-param} file. \textbf{Be careful} transparency can
+printed only in JPEG, PNG and PDF outputs.
+\end{scriptsize}
 \end{frame}
 \note{}
