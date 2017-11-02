@@ -461,7 +461,7 @@ pth2fdepfile=${pth2datdir}/${inputdata}-gmt_fault_calc_dep.dat
 
 pth2coutfile=${pth2datdir}/${inputdata}-coulomb_out.dat
 pth2dcfffile=${pth2coudir}/${inputdata}-dcff.cou
-pth2strnfile=${pth2coudir}/${inputdata}_Strain.cou
+pth2strnfile=${pth2coudir}/${inputdata}-Strain.cou
 
 pth2gpsdfile=${pth2gpsdir}/${inputdata}-gps.disp
 

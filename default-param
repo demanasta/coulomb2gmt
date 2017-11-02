@@ -21,7 +21,7 @@ export pth2faults=$HOME/Map_project/faults/NOAFaults_v1.0.gmt
 export pth2inpdir=../inp_historic/
 
 # Path to directory of *.dat files
-export pth2datdir=../gmt_files_hokada01/
+export pth2datdir=../gmt_files/
 
 # Path to directory of *.cou files
 export pth2coudir=../output_files/
