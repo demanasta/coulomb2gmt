@@ -1,11 +1,90 @@
 \section[Displacements]{Displacements}
 
-\graphicspath{{Chapter5/Figs/Vector/}{Chapter4/Figs/Vector/}}
+\graphicspath{Chapter6/Figs/}
 
 \begin{frame}
   \frametitle{Displacements}
   \framesubtitle{}
   \label{fr6:terr_sat_ext}
+
+\begin{itemize}
+\item
+  \texttt{-dgpsho}: Observed GPS horizontal displacements.
+\item
+  \texttt{-dgpshm}: Modeled horizontal displacements on GPS sites (Okada
+  1985).
+\item
+  \texttt{-dgpsvo}: Observed GPS vertical desplacements.
+\item
+  \texttt{-dgpsvm}: Modeled vertical displacements on GPS sites (Okada
+  1985).
+\end{itemize}
+
+\end{frame}
+\note{}
+
+% //////////////////////////////////////////////////////////////////////////////
+\begin{frame}[t,fragile]
+  \frametitle{Horizontal observe and modeledd displacements}
+  \framesubtitle{Example 601}
+  \label{ch5fr:ex601}
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+\begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg \ 
+                   --output example601 \
+                   --logo_gmt \
+                   --moment_tensor historic.cmt \
+                   -fproj \
+                   -fsurf \
+                   -fdep \
+                   -dgpsho \
+                   -dgpshm \ 
+\end{verbatim}
+\end{scriptsize}
+
+  \end{column}
+  \begin{column}{.5\textwidth}
+
+\centering
+%  \includegraphics[width=.64\linewidth]{example503.jpg}
+  \end{column}
+\end{columns}
+
+\end{frame}
+\note{}
+
+% //////////////////////////////////////////////////////////////////////////////
+\begin{frame}[t,fragile]
+  \frametitle{Vertical observe and modeledd displacements}
+  \framesubtitle{Example 602}
+  \label{ch5fr:ex602}
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+\begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg \ 
+                   --output example602 \
+                   --logo_gmt \
+                   --moment_tensor historic.cmt \
+                   -fproj \
+                   -fsurf \
+                   -fdep \
+                   -dgpsvo \
+                   -dgpsvm \ 
+\end{verbatim}
+\end{scriptsize}
+
+  \end{column}
+  \begin{column}{.5\textwidth}
+
+\centering
+%  \includegraphics[width=.64\linewidth]{example503.jpg}
+  \end{column}
+\end{columns}
 
 \end{frame}
 \note{}

@@ -1,6 +1,6 @@
 \section[Stress/Strain]{Stress/Strain plots}
 
-\graphicspath{{Chapter5/Figs/Vector/}{Chapter4/Figs/Vector/}}
+\graphicspath{Chapter5/Figs/}
 
 % //////////////////////////////////////////////////////////////////////////////
 \begin{frame}
@@ -43,3 +43,185 @@ printed only in JPEG, PNG and PDF outputs.
 \end{scriptsize}
 \end{frame}
 \note{}
+
+% //////////////////////////////////////////////////////////////////////////////
+\begin{frame}[t,fragile]
+  \frametitle{Coulomb Stress Change}
+  \framesubtitle{Example 501}
+  \label{ch5fr:ex501}
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+\begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg \ 
+                   --output example501 \
+                   --logo_gmt \
+                   --moment_tensor historic.cmt \
+                   -fproj \
+                   -fsurf \
+                   -fdep \
+                   -cstress
+\end{verbatim}
+\end{scriptsize}
+
+  \end{column}
+  \begin{column}{.5\textwidth}
+
+\centering
+%  \includegraphics[width=.64\linewidth]{example501.jpg}
+  \end{column}
+\end{columns}
+
+\end{frame}
+\note{}
+
+% //////////////////////////////////////////////////////////////////////////////
+\begin{frame}[t,fragile]
+  \frametitle{Coulomb Stress Change overlay topography}
+  \framesubtitle{Example 502}
+  \label{ch5fr:ex502}
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+\begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg \ 
+                   --output example502 \
+                   --logo_gmt \
+                   --moment_tensor historic.cmt \
+                   -fproj \
+                   -fsurf \
+                   -fdep \
+                   -cstress+ot
+\end{verbatim}
+\end{scriptsize}
+
+  \end{column}
+  \begin{column}{.5\textwidth}
+
+\centering
+%  \includegraphics[width=.64\linewidth]{example502.jpg}
+  \end{column}
+\end{columns}
+
+\end{frame}
+\note{}
+
+% //////////////////////////////////////////////////////////////////////////////
+\begin{frame}[t,fragile]
+  \frametitle{Coulomb Stress Change overlay topography and Cross Section}
+  \framesubtitle{Example 503}
+  \label{ch5fr:ex503}
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+\begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg \ 
+                   --output example503 \
+                   --logo_gmt \
+                   --moment_tensor historic.cmt \
+                   -fproj \
+                   -fsurf \
+                   -fdep \
+                   -cstress+ot \ 
+                   -fcross
+\end{verbatim}
+\end{scriptsize}
+
+  \end{column}
+  \begin{column}{.5\textwidth}
+
+\centering
+%  \includegraphics[width=.64\linewidth]{example503.jpg}
+  \end{column}
+\end{columns}
+
+\end{frame}
+\note{}
+
+% //////////////////////////////////////////////////////////////////////////////
+\begin{frame}[t,fragile]
+  \frametitle{Strain Component Eyy}
+  \framesubtitle{Example 504}
+  \label{ch5fr:ex504}
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+\begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg \ 
+                   --output example504 \
+                   --logo_gmt \
+                   --moment_tensor historic.cmt \
+                   -fproj \
+                   -fsurf \
+                   -fdep \
+                   -streyy
+\end{verbatim}
+\end{scriptsize}
+
+  \end{column}
+  \begin{column}{.5\textwidth}
+
+\centering
+%  \includegraphics[width=.64\linewidth]{example504.jpg}
+  \end{column}
+\end{columns}
+
+\end{frame}
+\note{}
+
+% //////////////////////////////////////////////////////////////////////////////
+\begin{frame}[t,fragile]
+  \frametitle{Dilatation (Exx + Eyy + Ezz) and cross section}
+  \framesubtitle{Example 504}
+  \label{ch5fr:ex504}
+\begin{columns}[t]
+  \begin{column}{.5\textwidth}
+\begin{scriptsize}
+\begin{verbatim}
+$ ./coulomb2gmt.sh kef_1953 kef_1953_kef \
+                   -outjpg \ 
+                   --output example504 \
+                   --logo_gmt \
+                   --moment_tensor historic.cmt \
+                   -fproj \
+                   -fsurf \
+                   -fdep \
+                   -strdil+ot \
+                   -fcross
+\end{verbatim}
+\end{scriptsize}
+
+  \end{column}
+  \begin{column}{.5\textwidth}
+
+\centering
+%  \includegraphics[width=.64\linewidth]{example504.jpg}
+  \end{column}
+\end{columns}
+
+\end{frame}
+\note{}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
