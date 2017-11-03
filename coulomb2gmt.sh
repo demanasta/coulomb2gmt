@@ -1094,30 +1094,14 @@ if [ "$FCROSS" -eq 1 ]; then
 	$pth2crossdcf > tmpcrossdcf2
     fi
   fi
+   
+  # check fault on input file
+  fault_num=$(grep "${FAULT_CODE}" ${pth2inpfile} -c)
+  DEBUG echo "[DEBUG:${LINENO}] fault number: "${fault_num}
   
-  # Fault top-bottom parameters
-  fault_top=$(awk 'NR==14 {print $10}' $pth2inpfile)
-  DEBUG echo "[DEBUG:${LINENO}] fault top= "$fault_top
-  fault_bot=$(awk 'NR==14 {print $11}' $pth2inpfile)
-  DEBUG echo "[DEBUG:${LINENO}] fault bot= "$fault_bot
-
-  # fault across line
-  fault_west=$(gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie \
-  | awk 'NR==1 {print $1, $2}' \
-  | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
-  | awk 'NR==1 {print $3}')
-  DEBUG echo "[DEBUG:${LINENO}] fault west= "$fault_west
-  fault_east=$(gmt spatial tmpcrossline $pth2fprojfile -Fl -Ie \
-  | awk 'NR==2 {print $1, $2}' \
-  | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
-  | awk 'NR==1 {print $3}')
-  DEBUG echo "[DEBUG:${LINENO}] fault_east= "$fault_east
-  fault_surf=$(gmt spatial tmpcrossline $pth2fsurffile -Fl -Ie \
-  | awk 'NR==2 {print $1, $2}' \
-  | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
-  | awk 'NR==1 {print $3}')
-  DEBUG echo "[DEBUG:${LINENO}] fault_surf= "$fault_surf
-  
+  calc_fault_cross ${fault_num}
+  DEBUG echo "[DEBUG:${LINENO}] fault number: "${fault_num}
+ 
   # create range for projection
   west=$(awk 'NR==1 {print $1}' tmpcrossdcf2)
   east=$(awk 'END {print $1}' tmpcrossdcf2)
@@ -1125,7 +1109,7 @@ if [ "$FCROSS" -eq 1 ]; then
   zmax=$(awk 'NR==7 {print $5}' $pth2crossdat)
   
   rangep="-R$west/$east/$zmin/$zmax"
-  DEBUG echo "[DEBUG:${LINENO}]  proj range: "${range}p
+  DEBUG echo "[DEBUG:${LINENO}]  proj range: "${rangep}
   projp=-JX14.8/-4
   tick=-B50:Distance\(km\):/5:Depth\(km\):WSen
   
@@ -1143,24 +1127,12 @@ if [ "$FCROSS" -eq 1 ]; then
   echo "$east $zmin  9,1,black 0 RT B" \
   | gmt pstext -R -J -Dj0.1c/0.1c -F+f+a+j -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
 
-  # make project cordinates for the source fault
-  tmp_fault=($fault_surf $fault_west $fault_east)
-  if [[ $(echo "if (${fault_surf} > ${fault_east}) 1 else 0" | bc) -eq 1 ]]; then
-    IFS=$'\n' tmp_faultsort=($(sort <<<"${tmp_fault[*]}"))
-    DEBUG echo "[DEBUG:${LINENO}] sort1 "${tmp_faultsort[*]}
-  else
-    IFS=$'\n' tmp_faultsort=($(sort -r <<<"${tmp_fault[*]}"))
-    DEBUG echo "[DEBUG:${LINENO}] sort2 "${tmp_faultsort[*]}
-  fi
-
-  # Plot fault in cross section part
-  echo "${tmp_faultsort[1]} $fault_top" > tmpasd
-  echo "${tmp_faultsort[0]} $fault_bot" >> tmpasd
-  gmt psxy tmpasd -J -R -W1,black -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
-  echo "${tmp_faultsort[2]} 0" > tmpasd
-  echo "${tmp_faultsort[1]} $fault_top" >> tmpasd
-  gmt psxy tmpasd -J -R -W.2,black,- -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
-
+  # Plot fault on cross section
+  for i in `seq 1 ${fault_num}`; do
+    plot_fault_cross ${i}
+  done
+  
+   
   # Plot calculation depth dashed line
   echo "$west $CALC_DEPTH" >tmpdep
   echo "$east $CALC_DEPTH" >>tmpdep

@@ -18,7 +18,7 @@ export pth2faults=$HOME/Map_project/faults/NOAFaults_v1.0.gmt
 # Path to input file directories
 
 # Path to directory of input files *.inp
-export pth2inpdir=../input_kefa14/  #../inp_historic/
+export pth2inpdir=../inp_historic/
 
 # Path to directory of *.dat files
 export pth2datdir=../gmt_files/
@@ -66,6 +66,7 @@ export dvscmagn=12 #use mm
 
 export RTRANS=30 # set transparency for overlay topography
 
+export FAULT_CODE=Fault
 # //////////////////////////////////////////////////////////////////////////////
 export logogmt_pos="-UBL/0.05c/0.05c/DemAnast"
 export logocus_pos="-Dx13.57c/10.05c+w1.1c"
