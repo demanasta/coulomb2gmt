@@ -167,23 +167,35 @@ function calc_fault_cross()
   while read -r line; do
     if [ "${line:0:7}" == "> break" ]; then
       let counter=counter+1
-      DEBUG echo "[DEBUG:${LINENO}] counter= "${counter}
+      DEBUG echo "[DEBUG:${LINENO}] counter proj= "${counter}
     else
       echo ${line} >> tmp_proj${counter}
     fi
   done < $pth2fprojfile
+  
   counter=1
   while read -r line; do
     if [ "${line:0:7}" == "> break" ]; then
       let counter=counter+1
-      DEBUG echo "[DEBUG:${LINENO}] counter= "${counter}
+      DEBUG echo "[DEBUG:${LINENO}] counter surf= "${counter}
     else
       echo ${line} >> tmp_surf${counter}
     fi
     done < $pth2fsurffile
-
-  export declare -A tmp_fault
-  source functions/clbplots.sh
+    
+  counter=1
+  while read -r line; do
+    if [ "${line:0:7}" == "> break" ]; then
+      let counter=counter+1
+      DEBUG echo "[DEBUG:${LINENO}] counter dep= "${counter}
+    else
+      echo ${line} >> tmp_depth${counter}
+    fi
+    done < $pth2fdepfile
+    
+  
+  declare -A tmp_fault
+#   export tmp_fault
   for i in `seq 1 ${1}`; do
     # fault across line
   fault_west=$(gmt spatial tmpcrossline tmp_proj${i} -Fl -Ie \
@@ -197,10 +209,16 @@ function calc_fault_cross()
   | awk 'NR==1 {print $3}')
   DEBUG echo "[DEBUG:${LINENO}] fault_east= "$fault_east
   fault_surf=$(gmt spatial tmpcrossline tmp_surf${i} -Fl -Ie \
-  | awk 'NR==2 {print $1, $2}' \
+  | awk 'NR==1 {print $1, $2}' \
   | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
   | awk 'NR==1 {print $3}')
   DEBUG echo "[DEBUG:${LINENO}] fault_surf= "$fault_surf
+  fault_depth=$(gmt spatial tmpcrossline tmp_depth${i} -Fl -Ie \
+  | awk 'NR==1 {print $1, $2}' \
+  | gmt mapproject -R -Jm -G${start_lon}/${start_lat}/k \
+  | awk 'NR==1 {print $3}')
+  DEBUG echo "[DEBUG:${LINENO}] fault_depth= "$fault_depth
+
   counter=0
   isNumber ${fault_west};  if [ $? -eq 0 ];  then
     isNumber ${fault_east};   if [ $? -eq 0 ];  then
@@ -208,15 +226,16 @@ function calc_fault_cross()
       tmp_fault[${counter},1]=${fault_west}
       tmp_fault[${counter},2]=${fault_east}
       tmp_fault[${counter},3]=${fault_surf}
+      tmp_fault[${counter},4]=${fault_depth}
       DEBUG echo "[DEBUG:${LINENO}] tmp_fault"${tmp_fault[@]}
 
       let inp_line=13+${i}
       DEBUG echo "[DEBUG:${LINENO}] inp_line="${inp_line}
 
       # Fault top-bottom parameters
-      tmp_fault[${counter},4]=$(awk 'NR=='${inp_line}' {print $10}' $pth2inpfile) #top
+      tmp_fault[${counter},5]=$(awk 'NR=='${inp_line}' {print $10}' $pth2inpfile) #top
       DEBUG echo "[DEBUG:${LINENO}] tmp_fault25 "${tmp_fault[1,2]}
-      tmp_fault[${counter},5]=$(awk 'NR=='${inp_line}' {print $11}' $pth2inpfile) #bottom
+      tmp_fault[${counter},6]=$(awk 'NR=='${inp_line}' {print $11}' $pth2inpfile) #bottom
       DEBUG echo "[DEBUG:${LINENO}] tmp_fault "${tmp_fault[@]}
       
       
@@ -231,7 +250,10 @@ function calc_fault_cross()
   fault_num=$counter
   
   
-  
+    DEBUG echo "[DEBUG:${LINENO}] tmp_fault output next function " ${tmp_fault[@]}
+  DEBUG echo "[DEBUG:${LINENO}] tmp_fault "${tmp_fault[1,1]}
+  DEBUG echo "[DEBUG:${LINENO}] tmp_fault "${tmp_fault[2,1]}
+
   
   
   
@@ -266,27 +288,51 @@ function calc_fault_cross()
 # arg: plot_fault_cross $i
 function plot_fault_cross()
 {
-  DEBUG echo "[DEBUG:${LINENO}] tmp_fault output next function "echo ${tmp_fault[@]}
+  DEBUG echo "[DEBUG:${LINENO}] tmp_fault output next function " ${tmp_fault[*]}
+  DEBUG echo "[DEBUG:${LINENO}] tmp_fault "${tmp_fault[0,1]}
+  DEBUG echo "[DEBUG:${LINENO}] tmp_fault "${tmp_fault[1,1]}
   # make project cordinates for the source fault
 #   tmp_fault=($fault_surf $fault_west $fault_east)
-  tmp_fault_arr=(${tmp_fault[${1},3]} ${tmp_fault[${1},1]} ${tmp_fault[${1},2]})
-  if [[ $(echo "if (${tmp_fault[${1},3]} > ${tmp_fault[${1},2]}) 1 else 0" | bc) -eq 1 ]]; then
-    IFS=$'\n' tmp_faultsort=($(sort <<<"${tmp_fault_arr[*]}"))
-    DEBUG echo "[DEBUG:${LINENO}] sort1 "${tmp_faultsort[*]}
+  isNumber ${tmp_fault[${1},3]};
+  if [ $? -eq 0 ];  then
+    tmp_fault_arr=(${tmp_fault[${1},3]} ${tmp_fault[${1},1]} ${tmp_fault[${1},2]})
+    if [[ $(echo "if (${tmp_fault[${1},3]} > ${tmp_fault[${1},2]}) 1 else 0" | bc) -eq 1 ]]; then
+      IFS=$'\n' tmp_faultsort=($(sort <<<"${tmp_fault_arr[*]}"))
+      DEBUG echo "[DEBUG:${LINENO}] sort1 "${tmp_faultsort[*]}
+    else
+      IFS=$'\n' tmp_faultsort=($(sort -r <<<"${tmp_fault[*]}"))
+      DEBUG echo "[DEBUG:${LINENO}] sort2 "${tmp_faultsort[*]}
+    fi
+
+    # Plot fault in cross section part
+    echo "${tmp_faultsort[1]} ${tmp_fault[${1},5]}" > tmpasd
+    echo "${tmp_faultsort[0]} ${tmp_fault[${1},6]}" >> tmpasd
+    gmt psxy tmpasd -J -R -W1,black -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
+    echo "${tmp_faultsort[2]} 0" > tmpasd
+    echo "${tmp_faultsort[1]} ${tmp_fault[${1},5]}" >> tmpasd
+    gmt psxy tmpasd -J -R -W.2,black,- -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
   else
-    IFS=$'\n' tmp_faultsort=($(sort -r <<<"${tmp_fault[*]}"))
-    DEBUG echo "[DEBUG:${LINENO}] sort2 "${tmp_faultsort[*]}
+    isNumber ${tmp_fault[${1},4]};
+    if [ $? -eq 0 ]; then
+      tmp_fault_arr=(${tmp_fault[${1},1]} ${tmp_fault[${1},2]})
+      if [[ $(echo "if (${tmp_fault[${1},1]} >= ${tmp_fault[${1},4]}) 1 else 0" | bc) -eq 1 ]]; then
+	IFS=$'\n' tmp_faultsort=($(sort <<<"${tmp_fault_arr[*]}"))
+	DEBUG echo "[DEBUG:${LINENO}] sort1 "${tmp_faultsort[*]}
+      else
+	IFS=$'\n' tmp_faultsort=($(sort -r <<<"${tmp_fault[*]}"))
+	DEBUG echo "[DEBUG:${LINENO}] sort2 "${tmp_faultsort[*]}
+      fi
+
+      # Plot fault in cross section part
+      echo "${tmp_faultsort[1]} ${tmp_fault[${1},5]}" > tmpasd
+      echo "${tmp_faultsort[0]} ${tmp_fault[${1},6]}" >> tmpasd
+      gmt psxy tmpasd -J -R -W1,black -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
+    else
+      echo "[ERROR] Error to plot fcross"
+      echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+      exit 1
+    fi
   fi
-
-  # Plot fault in cross section part
-  echo "${tmp_faultsort[1]} ${tmp_fault[${1},4]}" > tmpasd
-  echo "${tmp_faultsort[0]} ${tmp_fault[${1},5]}" >> tmpasd
-  gmt psxy tmpasd -J -R -W1,black -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
-  echo "${tmp_faultsort[2]} 0" > tmpasd
-  echo "${tmp_faultsort[1]} ${tmp_fault[${1},4]}" >> tmpasd
-  gmt psxy tmpasd -J -R -W.2,black,- -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
-
-  
 }
 
 
