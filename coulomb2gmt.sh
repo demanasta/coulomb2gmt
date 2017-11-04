@@ -1100,6 +1100,7 @@ if [ "$FCROSS" -eq 1 ]; then
   DEBUG echo "[DEBUG:${LINENO}] fault number: "${fault_num}
   
   calc_fault_cross ${fault_num}
+
   DEBUG echo "[DEBUG:${LINENO}] fault number: "${fault_num}
  
   # create range for projection
@@ -1129,6 +1130,7 @@ if [ "$FCROSS" -eq 1 ]; then
 
   # Plot fault on cross section
   for i in `seq 1 ${fault_num}`; do
+  
     plot_fault_cross ${i}
   done
   
