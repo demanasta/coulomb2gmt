@@ -261,6 +261,7 @@ function calc_fault_cross()
   printf  "$f2 $f2  $f2 $f2  $f2 $f2\n" ${tmp_fault[$i,1]} ${tmp_fault[$i,2]} ${tmp_fault[$i,3]} \
      ${tmp_fault[$i,4]} ${tmp_fault[$i,5]} ${tmp_fault[$i,6]} >>tmp_fault
      done
+     more tmp_fault
 }
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -276,46 +277,47 @@ function plot_fault_cross()
   
   # make project cordinates for the source fault
 #   tmp_fault=($fault_surf $fault_west $fault_east)
-  isNumber ${tmp_fault[3]}
-  if [ $? -eq 0 ];  then
+#   awk 'NR='${1}' { if (NF==6) {exit 6} }' tmp_fault; status=$?
+#   awk 'NR='${1}' { if (NF==6) {exit 6} }' tmp_fault; status=$?
+  isNumber ${tmp_fault[6]}; status=$?
+  DEBUG echo "[DEBUG:${LINENO}] status "$status
+  if [ $status -eq 0 ];  then
     tmp_fault_arr=(${tmp_fault[3]} ${tmp_fault[1]} ${tmp_fault[2]})
     if [[ $(echo "if (${tmp_fault[3]} > ${tmp_fault[2]}) 1 else 0" | bc) -eq 1 ]]; then
       IFS=$'\n' tmp_faultsort=($(sort <<<"${tmp_fault_arr[*]}"))
       DEBUG echo "[DEBUG:${LINENO}] sort1 "${tmp_faultsort[*]}
     else
-      IFS=$'\n' tmp_faultsort=($(sort -r <<<"${tmp_fault[*]}"))
+      IFS=$'\n' tmp_faultsort=($(sort -r <<<"${tmp_fault_arr[*]}"))
       DEBUG echo "[DEBUG:${LINENO}] sort2 "${tmp_faultsort[*]}
     fi
 
     # Plot fault in cross section part
-    echo "${tmp_faultsort[1]} ${tmp_fault[${1},5]}" > tmpasd
-    echo "${tmp_faultsort[0]} ${tmp_fault[${1},6]}" >> tmpasd
+    echo "${tmp_faultsort[1]} ${tmp_fault[5]}" > tmpasd
+    echo "${tmp_faultsort[0]} ${tmp_fault[6]}" >> tmpasd
     gmt psxy tmpasd -J -R -W1,black -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
     echo "${tmp_faultsort[2]} 0" > tmpasd
-    echo "${tmp_faultsort[1]} ${tmp_fault[${1},5]}" >> tmpasd
+    echo "${tmp_faultsort[1]} ${tmp_fault[5]}" >> tmpasd
     gmt psxy tmpasd -J -R -W.2,black,- -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
   else
-    isNumber ${tmp_fault[4]};
-    if [ $? -eq 0 ]; then
-      tmp_fault_arr=(${tmp_fault[1]} ${tmp_fault[2]})
-      if [[ $(echo "if (${tmp_fault[1]} >= ${tmp_fault[4]}) 1 else 0" | bc) -eq 1 ]]; then
-	IFS=$'\n' tmp_faultsort=($(sort <<<"${tmp_fault_arr[*]}"))
-	DEBUG echo "[DEBUG:${LINENO}] sort1 "${tmp_faultsort[*]}
-      else
-	IFS=$'\n' tmp_faultsort=($(sort -r <<<"${tmp_fault[*]}"))
-	DEBUG echo "[DEBUG:${LINENO}] sort2 "${tmp_faultsort[*]}
-      fi
-
-      # Plot fault in cross section part
-      echo "${tmp_faultsort[1]} ${tmp_fault[5]}" > tmpasd
-      echo "${tmp_faultsort[0]} ${tmp_fault[6]}" >> tmpasd
-      gmt psxy tmpasd -J -R -W1,black -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
+    tmp_fault_arr=(${tmp_fault[1]} ${tmp_fault[2]})
+    if [[ $(echo "if (${tmp_fault[1]} <= ${tmp_fault[3]}) 1 else 0" | bc) -eq 1 ]]; then
+      IFS=$'\n' tmp_faultsort=($(sort <<<"${tmp_fault_arr[*]}"))
+      DEBUG echo "[DEBUG:${LINENO}] sort1 "${tmp_faultsort[*]}
     else
-      echo "[ERROR] "$FUNCNAME": Error to plot fcross"
-      echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
-      exit 1
+      IFS=$'\n' tmp_faultsort=($(sort -r <<<"${tmp_fault_arr[*]}"))
+      DEBUG echo "[DEBUG:${LINENO}] sort2 "${tmp_faultsort[*]}
     fi
-  fi
+
+    # Plot fault in cross section part
+    echo "${tmp_faultsort[1]} ${tmp_fault[4]}" > tmpasd
+    echo "${tmp_faultsort[0]} ${tmp_fault[5]}" >> tmpasd
+    gmt psxy tmpasd -J -R -W1,black -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
+#   else
+#     echo "[ERROR] "$FUNCNAME": Error to plot fcross"
+#     echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+#     exit 1
+#   fi
+fi
 }
 
 
