@@ -132,6 +132,7 @@
 %%-----------------------------------------------------------------------------
 \usepackage{graphicx}  % Required for including images
 \usepackage{fancybox}
+
 % \usepackage{xcolor}
 %% for tikz
 % \usepackage{dtklogos}
@@ -159,6 +160,16 @@
 
 %\usepackage[scaled]{beramono}
 
+\usepackage{xcolor,verbatimbox}
+\catcode`>=\active %
+\catcode`<=\active %
+\newcommand\openesc[1][red]{\color{#1}}
+\def\closeesc{\color{black}}
+\def\vbdelim{\catcode`<=\active\catcode`>=\active%
+\def<{\openesc}
+\def>{\closeesc}}
+\catcode`>=12 %
+\catcode`<=12 %
 %%-----------------------------------------------------------------------------
 %% Adgust figures
 %%-----------------------------------------------------------------------------
