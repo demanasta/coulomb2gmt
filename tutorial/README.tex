@@ -206,9 +206,78 @@ the paths are where coulomb create by default each file.
 Many parameters configured at \texttt{default-param} file. 
 \begin{enumerate}
 \item  Paths togeneral files (DEM, logo, faults) 
-\item Paths to input file directories (.inp, .dat, .cou, .disp) 
+\begin{verbatim}
+export pth2dems=
+
+export inputTopoL=${pth2dems}/
+export inputTopoB=${pth2dems}/
+
+# Path to logo file
+export pth2logo=
+
+# Path to faults database file
+export pth2faults=
+\end{verbatim}
+\item Paths to input file directories (.inp, .dat, .cou, .disp)
+\begin{verbatim}
+# Path to directory of input files *.inp
+export pth2inpdir=../input_kefa14/ #../inp_historic/
+
+# Path to directory of *.dat files
+export pth2datdir=../gmt_files/
+
+# Path to directory of *.cou files
+export pth2coudir=../output_files/
+
+# Path to directory of *.disp files. GPS displacements
+export pth2gpsdir=../gps_data/
+
+# Path to earthquakes database
+export pth2eqdir=../earthquake_data/
+
+\end{verbatim} 
 \item ColorMaps Palette, frame variable. 
+\begin{verbatim}
+export landcpt=tmp_land.cpt
+export bathcpt=tmp_bath.cpt
+export coulombcpt=Coulomb_anatolia.cpt
+\end{verbatim}
 \item General variables.
+\begin{verbatim}
+# Do not comment next 3 line
+export prjscale=1500000         ## Default 1500000
+export frame=0.5		## Default 0.5
+export sclength=20              ## Default 20
+
+# general variables
+
+# set bar range for stress/strain sale bar
+export barrange=1		## Default 1
+
+# Used for strain plot <stain>*10^-${strainscale}
+export strainscale=5    ## Default 5
+
+# Horizontal and vertical displacement scale
+export dhscale=100		## Default 100
+export dvscale=100		## Default 100
+
+# magrnitude of displacement scale legend
+export dhscmagn=10 #use mm
+export dvscmagn=12 #use mm
+
+# Set calculation depth in km. Default read input file
+# export CALC_DEPTH=8 #use km
+
+# set transparency for overlay topography
+export RTRANS=30 
+
+# set code of fault name used on input files of coulomb
+export FAULT_CODE=Fault
+
+# Set position fron gmt and custom logos
+export logogmt_pos="-UBL/0.05c/0.05c/DemAnast"
+export logocus_pos="-Dx13.57c/10.05c+w1.1c"
+\end{verbatim}
 \end{enumerate}
 
 \subsection{General options}\label{general-options}
@@ -421,7 +490,7 @@ the main script above.
 \item
   Create a new Pull Request
 \item
-  Profit! :white\_check\_mark:
+  Profit!
 \end{enumerate}
 
 \subsection{For contributors}\label{for-contributors}
