@@ -595,7 +595,7 @@
     \centering\raisebox{\dimexpr \topskip-\height}{\@crestleft}
   \end{minipage}\hfill
   \begin{minipage}[t]{0.76\textwidth}
-    \centering \vspace*{-0.4cm}{\large \textbf{\@university} \par}
+    \centering \vspace*{-0.3cm}{\normalsize \textbf{\@university} \par}
     \vspace*{0.1cm}  {\small \@dept \par}
     \vspace*{0.1cm}  {\small \@lab  \par}
   \end{minipage}

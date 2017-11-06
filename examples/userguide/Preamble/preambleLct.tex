@@ -155,11 +155,15 @@
 % use metalogo to print xelatex!
 \usepackage{metalogo}
 
-% % tcolorbox custom block, problem with caption package, cant solve it yet!
+% % tcolorbox custom block, problem with caption package, cant solve it yet!   
 % \usepackage[most]{tcolorbox}
 
 %\usepackage[scaled]{beramono}
 
+
+%%-----------------------------------------------------------------------------
+%% add colors to verbatim enviroment
+%%-----------------------------------------------------------------------------
 \usepackage{xcolor,verbatimbox}
 \catcode`>=\active %
 \catcode`<=\active %
@@ -170,6 +174,7 @@
 \def>{\closeesc}}
 \catcode`>=12 %
 \catcode`<=12 %
+
 %%-----------------------------------------------------------------------------
 %% Adgust figures
 %%-----------------------------------------------------------------------------
@@ -344,7 +349,7 @@
 \SetDraftText{DRAFT}
 
 % Draft Version - default is v1.0
-\SetDraftVersion{v0.4}
+\SetDraftVersion{v0.7}
 
 % ******************************** Todo Notes **********************************
 %% Uncomment the following lines to have todonotes. % Not working yet!
