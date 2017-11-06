@@ -9,25 +9,27 @@
 #    |** National Tecnical University of Athens**|
 #    |===========================================|
 #   
-#    filename              : coulomb2gmt.sh
-#                            NAME=coulomb2gmt
-#    version               : v-1.0
-#                            VERSION=v1.0
-#                            RELEASE=beta
-#    licence               : MIT
-#    created               : SEP-2015
-#    usage                 :
-#    exit code(s)          : 0 -> success
-#                          : 1 -> error
-#    discription           : 
-#    uses                  : 
-#    notes                 :
-#    detailed update list  : LAST_UPDATE=OCT-2017
-#                 OCT-2017 : Re-format script with functions. Cross plots
-#                 OCT-2016 : Add logos, default parameters etc, 'didimoteixo v.' 
-#                 NOV-2015 : Strain plots, gps velocities, add topography
-#                 SEP-2015 : First release, stress plots, help, conversions
-#    contact               : Demitris Anastasiou (dganastasiou@gmail.com)
+#    filename       : coulomb2gmt.sh
+#                     NAME=coulomb2gmt
+#    version        : v-1.0
+#                     VERSION=v1.0
+#                     RELEASE=beta
+#    licence        : MIT
+#    created        : SEP-2015
+#    usage          :
+#    GMT Modules    :
+#    UNIX progs     :
+#    exit code(s)   : 0 -> success
+#                   : 1 -> error
+#    discription    : 
+#    uses           : 
+#    notes          :
+#    update list    : LAST_UPDATE=OCT-2017
+#        OCT-2017   : Re-format script with functions. Cross plots
+#        OCT-2016   : Add logos, default parameters etc, 'didimoteixo v.' 
+#        NOV-2015   : Strain plots, gps velocities, add topography
+#        SEP-2015   : First release, stress plots, help, conversions
+#    contact        : Demitris Anastasiou (dganastasiou@gmail.com)
 #    ----------------------------------------------------------------------
 # ==============================================================================
 
@@ -584,6 +586,7 @@ if [ "${RANGE}" -eq 0 ]; then
   prjscale=1500000 ##DEF 1000000
 fi
 
+prjscale=700000
 sclat=$(echo print ${minlat} + 0.10 | python)
 sclon=$(echo print ${maxlon} - 0.22 | python)
 export scale=-Lf${sclon}/${sclat}/36:24/20+l+jr
@@ -966,8 +969,6 @@ if [ "${EQDIST}" -eq 1 ]; then
   | gmt psxy -Jm -R -Sc0.1c -Gblack -O -K -V${VRBLEVM} >> ${outfile}
 fi 
 
-
-
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT CMT of earthquakes  
 
@@ -978,7 +979,6 @@ if [ "${CMT}" -eq 1 ]; then
   awk '{print $1,$2,$3,$4,$5,$6,$7,$8,$9}' ${inpcmt} \
   | gmt psmeca -R -Jm -Sa0.4 -CP0.05 -K -O -V${VRBLEVM} >> ${outfile}
 fi
-
 
 # //////////////////////////////////////////////////////////////////////////////
 # PLOT GPS OBSERVED AND MODELED OKADA SURF DESPLACEMENTS
@@ -1063,6 +1063,7 @@ fi
 
 if [ "$FCROSS" -eq 1 ]; then
   echo "...plot cross sections..."
+ 
   # plot in the main map the cross section line
   plot_cross_line ${pth2crossdat}
   
@@ -1099,6 +1100,7 @@ if [ "$FCROSS" -eq 1 ]; then
   fault_num=$(grep "${FAULT_CODE}" ${pth2inpfile} -c)
   DEBUG echo "[DEBUG:${LINENO}] fault number: "${fault_num}
   
+  # calculate fault coordinates on cross section
   calc_fault_cross ${fault_num}
 
   DEBUG echo "[DEBUG:${LINENO}] fault number: "${fault_num}
@@ -1130,7 +1132,6 @@ if [ "$FCROSS" -eq 1 ]; then
 
   # Plot fault on cross section
   for i in `seq 1 ${fault_num}`; do
-  
     plot_fault_cross ${i}
   done
   

@@ -55,15 +55,7 @@ function plotstr_overtopo()
 # Plot stress/strain raster without transparensy or DEM
 # arg: plotstr ${matrix data file}
 function plotstr()
-{
-#   gmt makecpt -Cgray.cpt -T-10000/0/100 -Z -V${VRBLEVM} > $bathcpt
-#   gmt grdimage $inputTopoB $range $proj -C$bathcpt -K -V${VRBLEVM} -Y8c > $outfile
-#   gmt pscoast $proj -P $range -Df -Gc -K -O -V${VRBLEVM} >> $outfile
-# 
-#   gmt makecpt -Cgray.cpt -T-6000/1800/50 -Z -V${VRBLEVM} > $landcpt
-#   gmt grdimage $inputTopoL $range $proj -C$landcpt  -K -O -V${VRBLEVM} >> $outfile
-#   gmt pscoast -R -J -O -K -Q -V${VRBLEVM} >> $outfile
-  
+{  
   gmt xyz2grd ${1} -Gtmpgrd $range -I0.05 -V${VRBLEVM}
   gmt makecpt -C$coulombcpt -T-$barrange/$barrange/0.002 -Z -V${VRBLEVM} > tmpcpt.cpt
   gmt grdsample tmpgrd -I4s -Gtmpgrd_sample.grd -V${VRBLEVM}
@@ -72,7 +64,6 @@ function plotstr()
   gmt pscoast $range $proj -Df -W0.3,120 -O -K -V${VRBLEVM} >> $outfile 
   gmt psbasemap -R -J -B$frame:."$mtitle": $scale $logogmt_pos \
     -O -K -V${VRBLEVM} >> $outfile
-  
 }
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -127,6 +118,7 @@ function plot_vdisp_scale()
   echo "$scdvlonl $scdvlatl 9,1,black 181 CM ${5}" \
   | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -A -O -K -V${VRBLEVM} >> ${outfile}
 }
+
 # //////////////////////////////////////////////////////////////////////////////
 # Plot cross section line on the main map
 # arg:  plot_cross_line ${path to cross data file}
@@ -134,12 +126,14 @@ function plot_cross_line()
 {
   if [ $(awk 'NR==1 {print $7}' ${1}) -eq 2 ]; then
     DEBUG echo "[DEBUG:${LINENO}] cross test coords true"
+    
     # read coordinates
     start_lon=$(awk 'NR==2 {print $5}' ${1})
     start_lat=$(awk 'NR==3 {print $5}' ${1})
     finish_lon=$(awk 'NR==4 {print $5}' ${1})
     finish_lat=$(awk 'NR==5 {print $5}' ${1})
     DEBUG echo "[DEBUG:${LINENO}] $start_lon $start_lat $finish_lon $finish_lat"
+    
     # plot line
     echo "$start_lon $start_lat" > tmpcrossline
     echo "$finish_lon $finish_lat" >> tmpcrossline
@@ -160,9 +154,10 @@ function plot_cross_line()
 
 # //////////////////////////////////////////////////////////////////////////////
 # Calculate faults on cross setion projection
-# arg: calc_fault_cross $i
+# arg: calc_fault_cross <number of faults>
 function calc_fault_cross()
 {
+  # split files of fault projection
   counter=1
   while read -r line; do
     if [ "${line:0:7}" == "> break" ]; then
@@ -173,6 +168,7 @@ function calc_fault_cross()
     fi
   done < $pth2fprojfile
   
+  # split file of fault surface
   counter=1
   while read -r line; do
     if [ "${line:0:7}" == "> break" ]; then
@@ -182,7 +178,8 @@ function calc_fault_cross()
       echo ${line} >> tmp_surf${counter}
     fi
     done < $pth2fsurffile
-    
+  
+  # split files of fault depth
   counter=1
   while read -r line; do
     if [ "${line:0:7}" == "> break" ]; then
@@ -193,9 +190,9 @@ function calc_fault_cross()
     fi
     done < $pth2fdepfile
     
-#   export tmp_fault
   declare -A tmp_fault
-# local -A tmp_fault
+  
+  # read proj coordinates for each fault
   counter=0
   for i in `seq 1 ${1}`; do
   DEBUG echo "[DEBUG:${LINENO}] start loop: "${i}
@@ -221,7 +218,7 @@ function calc_fault_cross()
   | awk 'NR==1 {print $3}')
   DEBUG echo "[DEBUG:${LINENO}] fault_depth= "$fault_depth
 
-  
+  # check proj coordinates and and create an array
   isNumber ${fault_west};  if [ $? -eq 0 ];  then
     isNumber ${fault_east};   if [ $? -eq 0 ];  then
       let counter=counter+1
@@ -239,29 +236,30 @@ function calc_fault_cross()
       tmp_fault[${counter},5]=$(awk 'NR=='${inp_line}' {print $10}' $pth2inpfile) #top
       tmp_fault[${counter},6]=$(awk 'NR=='${inp_line}' {print $11}' $pth2inpfile) #bottom
       DEBUG echo "[DEBUG:${LINENO}] tmp_fault "${tmp_fault[@]}
-      
-      
     else
       DEBUG echo "[DEBUG:${LINENO}] ERROR"
     fi
-    else
+  else
     DEBUG echo "[DEBUG:${LINENO}] ERROR"
   fi
   
   done
-  fault_num=$counter
   
+  # set fault number to faults which will plot on cross section
+  fault_num=$counter
   
   DEBUG echo "[DEBUG:${LINENO}] tmp_fault output next function " ${tmp_fault[@]}
   DEBUG echo "[DEBUG:${LINENO}] tmp_fault "${tmp_fault[1,1]}
   DEBUG echo "[DEBUG:${LINENO}] tmp_fault "${tmp_fault[2,1]}
 
+  # write output with temporary geometry
+  # this file will used from plot_fault_cross function
   f2="%10s"
   for ((i=1;i<=$counter;i++)) do
-  printf  "$f2 $f2  $f2 $f2  $f2 $f2\n" ${tmp_fault[$i,1]} ${tmp_fault[$i,2]} ${tmp_fault[$i,3]} \
+    printf  "$f2 $f2  $f2 $f2  $f2 $f2\n" ${tmp_fault[$i,1]} ${tmp_fault[$i,2]} ${tmp_fault[$i,3]} \
      ${tmp_fault[$i,4]} ${tmp_fault[$i,5]} ${tmp_fault[$i,6]} >>tmp_fault
-     done
-     more tmp_fault
+  done
+  DEBUG more tmp_fault
 }
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -269,19 +267,19 @@ function calc_fault_cross()
 # arg: plot_fault_cross $i
 function plot_fault_cross()
 {
+  # check in debug mode
   DEBUG echo "[DEBUG:${LINENO}] input i= "${1}
   for j in `seq 1 6`; do
     tmp_fault[${j}]=$(awk 'NR=='${1}' {print $('${j}') }' tmp_fault)
     DEBUG echo "[DEBUG:${LINENO}] tmp_fault "${j}" ="${tmp_fault[${j}]}
   done
-  
-  # make project cordinates for the source fault
-#   tmp_fault=($fault_surf $fault_west $fault_east)
-#   awk 'NR='${1}' { if (NF==6) {exit 6} }' tmp_fault; status=$?
-#   awk 'NR='${1}' { if (NF==6) {exit 6} }' tmp_fault; status=$?
+
+  # check if cross line intersects surface
   isNumber ${tmp_fault[6]}; status=$?
   DEBUG echo "[DEBUG:${LINENO}] status "$status
   if [ $status -eq 0 ];  then
+    
+    # create array and sort it
     tmp_fault_arr=(${tmp_fault[3]} ${tmp_fault[1]} ${tmp_fault[2]})
     if [[ $(echo "if (${tmp_fault[3]} > ${tmp_fault[2]}) 1 else 0" | bc) -eq 1 ]]; then
       IFS=$'\n' tmp_faultsort=($(sort <<<"${tmp_fault_arr[*]}"))
@@ -299,6 +297,8 @@ function plot_fault_cross()
     echo "${tmp_faultsort[1]} ${tmp_fault[5]}" >> tmpasd
     gmt psxy tmpasd -J -R -W.2,black,- -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
   else
+  
+    # create array and sort it
     tmp_fault_arr=(${tmp_fault[1]} ${tmp_fault[2]})
     if [[ $(echo "if (${tmp_fault[1]} <= ${tmp_fault[3]}) 1 else 0" | bc) -eq 1 ]]; then
       IFS=$'\n' tmp_faultsort=($(sort <<<"${tmp_fault_arr[*]}"))
@@ -312,12 +312,7 @@ function plot_fault_cross()
     echo "${tmp_faultsort[1]} ${tmp_fault[4]}" > tmpasd
     echo "${tmp_faultsort[0]} ${tmp_fault[5]}" >> tmpasd
     gmt psxy tmpasd -J -R -W1,black -Ya-6.5c -O -K -V${VRBLEVM} >> ${outfile}
-#   else
-#     echo "[ERROR] "$FUNCNAME": Error to plot fcross"
-#     echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
-#     exit 1
-#   fi
-fi
+  fi
 }
 
 
