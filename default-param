@@ -9,16 +9,16 @@ export inputTopoL=${pth2dems}/ETOPO1_gr_resample01m.grd   #ETOPO1_Bed_g_gmt4.grd
 export inputTopoB=${pth2dems}/ETOPO1_gr_resample01m.grd    #ETOPO1_Bed_g_gmt4.grd #ETOPO1_grcut.grd
 
 # Path to logo file
-export pth2logo=$HOME/Map_project/logos/DSOlogo2.eps
+export pth2logo=${HOME}/Map_project/logos/DSOlogo2.eps
 
 # Path to faults database file
-export pth2faults=$HOME/Map_project/faults/NOAFaults_v1.0.gmt
+export pth2faults=${HOME}/Map_project/faults/NOAFaults_v1.0.gmt
 
 # //////////////////////////////////////////////////////////////////////////////
 # Path to input file directories
 
 # Path to directory of input files *.inp
-export pth2inpdir=../input_kefa14/ #../inp_historic/
+export pth2inpdir=../inp_historic/
 
 # Path to directory of *.dat files
 export pth2datdir=../gmt_files/
@@ -45,16 +45,21 @@ export coulombcpt=Coulomb_anatolia.cpt
 # //////////////////////////////////////////////////////////////////////////////
 # Only frame nust set in this section
 # minlon=20.2
-# maxlon=20.9
-# minlat=37.9
-# maxlat=38.5
-# prjscale=500000
+# maxlon=21.7
+# minlat=37.5
+# maxlat=38.7
+
+# Do not comment next 3 line
+export prjscale=1500000         ## Default 1500000
 export frame=0.5		## Default 0.5
+export sclength=20              ## Default 20
 
 # //////////////////////////////////////////////////////////////////////////////
 # general variables
 
 export barrange=1		## Default 1
+
+export strainscale=5            ## Used for strain plot <stain>*10^-${strainscale}
 
 export dhscale=100		## Default 100
 export dvscale=100		## Default 100
@@ -67,6 +72,7 @@ export dvscmagn=12 #use mm
 export RTRANS=30 # set transparency for overlay topography
 
 export FAULT_CODE=Fault
+
 # //////////////////////////////////////////////////////////////////////////////
 export logogmt_pos="-UBL/0.05c/0.05c/DemAnast"
 export logocus_pos="-Dx13.57c/10.05c+w1.1c"

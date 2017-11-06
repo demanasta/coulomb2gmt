@@ -45,6 +45,8 @@ function plot_faults()
   fi
 }
 
+# //////////////////////////////////////////////////////////////////////////////
+# checking arguments
 function check_arg_ot() 
 {
   if [ "${1}" == "+ot" ]; then
@@ -54,3 +56,14 @@ function check_arg_ot()
     echo "[WARNING] Bad argument structure. argument \"${1}\" is not right"
   fi
 }
+
+# //////////////////////////////////////////////////////////////////////////////
+# calculate scale rate
+function calc_scale_rate()
+{
+  tmp_scrate=$(python -c "print((${prjscale}/150000000.)*${1})")
+  echo $tmp_scrate
+}
+
+
+

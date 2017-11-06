@@ -71,8 +71,13 @@ function plotstr()
 function plot_barscale()
 {
   bartick=$(echo $barrange | awk '{print $1/5}')
-  gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
-    -O -K -V${VRBLEVM} >> $outfile
+  if [ "${CSTRESS}" -eq 1 ] || [ "${SSTRESS}" -eq 1 ] || [ "${NSTRESS}" -eq 1 ]; then
+    gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:bar: \
+      -O -K -V${VRBLEVM} >> $outfile
+  else
+    gmt psscale -D2.75i/-0.4i/4i/0.15ih -Ctmpcpt.cpt  -B$bartick/:10@+-${strainscale}@+bar: \
+      -O -K -V${VRBLEVM} >> $outfile
+  fi
 }
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -80,10 +85,12 @@ function plot_barscale()
 # arg:  plot_hdisp_scale ${scdhlonl} ${scdhlatl} <color> <legend>
 function plot_hdisp_scale()
 {
-  scdhlat=$(echo print ${2} + .05 | python)
+  tmp_scrate=$(calc_scale_rate 5.)
+  scdhlat=$(echo print ${2} + ${tmp_scrate} | python)
   scdhlon=${1}
   DEBUG echo "[DEBUG:${LINENO}] scdhlat = ${scdhlat}  , scdhlon = ${scdhlon}"
-  scdhlatl=$(echo print ${scdhlat} + .1 | python)
+  tmp_scrate=$(calc_scale_rate 10.)
+  scdhlatl=$(echo print ${scdhlat} + ${tmp_scrate} | python)
   scdhlonl=${scdhlon}
   DEBUG echo "[DEBUG:${LINENO}] scdhlatl = ${scdhlatl}, scdhlonl = ${scdhlonl}"
 
@@ -101,10 +108,12 @@ function plot_hdisp_scale()
 # arg:  plot_hdisp_scale ${scdvlonl} ${scdvlatl} <up-color> <down-color> <legend>
 function plot_vdisp_scale()
 {
-  scdvlon=$(echo print ${1} - 0.09 | python)
+  tmp_scrate=$(calc_scale_rate 9.)
+  scdvlon=$(echo print ${1} - ${tmp_scrate} | python)
   DEBUG echo "[DEBUG:${LINENO}] scdvlat = ${scdvlat}, scdvmlon = ${scdvlon}"
   scdvlatl=${2}
-  scdvlonl=$(echo print ${scdvlon} - 0.06 | python)
+  tmp_scrate=$(calc_scale_rate 6.)
+  scdvlonl=$(echo print ${scdvlon} - ${tmp_scrate} | python)
   DEBUG echo "[DEBUG:${LINENO}] scdvmlatl = ${scdvlatl}, scdvmlonl = ${scdvlonl}"
 
   tmpmagn=$(echo print ${dvscmagn}/1000.  | python )

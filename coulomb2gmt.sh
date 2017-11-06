@@ -81,9 +81,9 @@ EQDIST=0
 
 RANGE=0
 OVERTOPO=0
-CSTRESS=0
-SSTRESS=0
-NSTRESS=0
+export CSTRESS=0
+export SSTRESS=0
+export NSTRESS=0
 
 STREXX=0
 STREYY=0
@@ -578,7 +578,8 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # Configure Map Range
 
-if [ "${RANGE}" -eq 0 ]; then
+if [ -z ${minlon+x} ] || [ -z ${maxlon+x} ] || [ -z ${minlat+x} ] || \
+   [ -z ${maxlat+x} ] || [ -z ${prjscale} ] && [ "${RANGE}" -eq 0 ]; then
   minlon=$(grep "min. lon" ${pth2inpfile} | awk '{print $6}')
   maxlon=$(grep "max. lon" ${pth2inpfile} | awk '{print $6}')
   minlat=$(grep "min. lat" ${pth2inpfile} | awk '{print $6}')
@@ -586,10 +587,16 @@ if [ "${RANGE}" -eq 0 ]; then
   prjscale=1500000 ##DEF 1000000
 fi
 
-prjscale=700000
-sclat=$(echo print ${minlat} + 0.10 | python)
-sclon=$(echo print ${maxlon} - 0.22 | python)
-export scale=-Lf${sclon}/${sclat}/36:24/20+l+jr
+# tmp_scrate=$(python -c "print((${prjscale}/150000000.)*10.)")
+tmp_scrate=$(calc_scale_rate 10.)
+sclat=$(echo print ${minlat} + ${tmp_scrate} | python)
+
+tmp_scrate=$(calc_scale_rate 27.)
+sclon=$(echo print ${maxlon} - ${tmp_scrate} | python)
+
+tmp_msclat=$(python -c "print int((${minlat} + ${maxlat})/2)")
+tmp_msclon=$(python -c "print int((${minlon} + ${maxlon})/2)")
+export scale=-Lf${sclon}/${sclat}/${tmp_msclat}:${tmp_msclon}/${sclength}+l+jr
 export range=-R${minlon}/${maxlon}/${minlat}/${maxlat}
 export proj=-Jm${minlon}/${minlat}/1:${prjscale}
 
@@ -762,7 +769,7 @@ if [ "${STREXX}" -eq 1 ]; then
   echo "...plot Strain Component Exx..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
-  awk 'NR>3 {print $4*1000000}' ${pth2strnfile} > tmpstr2
+  awk 'NR>3 {print $4*10^'${strainscale}'}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   if [ "${OVERTOPO}" -eq 1 ]; then
@@ -789,7 +796,7 @@ if [ "${STREYY}" -eq 1 ]; then
   echo "...plot Strain Component Eyy..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
-  awk 'NR>3 {print $5*1000000}' ${pth2strnfile} > tmpstr2
+  awk 'NR>3 {print $5*10^'${strainscale}'}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   if [ "${OVERTOPO}" -eq 1 ]; then
@@ -816,7 +823,7 @@ if [ "${STREZZ}" -eq 1 ]; then
   echo "...plot Strain Component Ezz..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
-  awk 'NR>3 {print $6*1000000}' ${pth2strnfile} > tmpstr2
+  awk 'NR>3 {print $6*10^'${strainscale}'}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   if [ "${OVERTOPO}" -eq 1 ]; then
@@ -843,7 +850,7 @@ if [ "${STREYZ}" -eq 1 ]; then
   echo "...plot Strain Component Eyz..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
-  awk 'NR>3 {print $7*1000000}' ${pth2strnfile} > tmpstr2
+  awk 'NR>3 {print $7*10^'${strainscale}'}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   if [ "${OVERTOPO}" -eq 1 ]; then
@@ -870,7 +877,7 @@ if [ "${STREXZ}" -eq 1 ]; then
   echo "...plot Strain Component Exz..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
-  awk 'NR>3 {print $8*1000000}' ${pth2strnfile} > tmpstr2
+  awk 'NR>3 {print $8*10^'${strainscale}'}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   if [ "${OVERTOPO}" -eq 1 ]; then
@@ -896,7 +903,7 @@ if [ "${STREXY}" -eq 1 ]; then
   echo "...plot Strain Component Exy..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
-  awk 'NR>3 {print $9*1000000}' ${pth2strnfile} > tmpstr2
+  awk 'NR>3 {print $9*10^'${strainscale}'}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   if [ "${OVERTOPO}" -eq 1 ]; then
@@ -923,7 +930,7 @@ if [ "${STRDIL}" -eq 1 ]; then
   echo "...plot Dilatation (Exx + Eyy + Ezz)..."
   # MAKE INPUT FILE........
   awk '{print $1, $2}' ${pth2coutfile} > tmpstr1
-  awk 'NR>3 {print $10*1000000}' ${pth2strnfile} > tmpstr2
+  awk 'NR>3 {print $10*10^'${strainscale}'}' ${pth2strnfile} > tmpstr2
   paste -d" " tmpstr1 tmpstr2 > tmpstrall
   
   if [ "${OVERTOPO}" -eq 1 ]; then
@@ -1008,8 +1015,11 @@ if [ "${DGPSHO}" -eq 1 ]; then
   plot_hdisp_scale ${scdhlonl} ${scdhlatl} red Observed
 fi
 
-scdvlat=$(echo print ${sclat} + .25 | python)
-scdvlonl=$(echo print ${sclon} + 0.16 | python)
+tmp_scrate=$(calc_scale_rate 25.)
+scdvlat=$(echo print ${sclat} + ${tmp_scrate} | python)
+
+tmp_scrate=$(calc_scale_rate 16.)
+scdvlonl=$(echo print ${sclon} + ${tmp_scrate} | python)
 
 # Plot vertical modeled displacements
 if [ "${DGPSVM}" -eq 1 ]; then
@@ -1043,7 +1053,8 @@ fi
 
 # Plot vertical scale legend
 if [ "${DGPSVM}" -eq 1 ] || [ "${DGPSVO}" -eq 1 ]; then
-  scdvmolat=$(echo print ${sclat} + .05 | python)
+  tmp_scrate=$(calc_scale_rate 5.)
+  scdvmolat=$(echo print ${sclat} + ${tmp_scrate} | python)
   DEBUG echo "[DEBUG:${LINENO}] -X-.08 added next line"
   echo "${sclon} ${scdvmolat} 9,1,black 0 CM \261 ${dvscmagn} mm" \
   | gmt pstext -R -Jm -Dj0c/0c -F+f+a+j -X-.08c -O -K -V${VRBLEVM} >> ${outfile}
@@ -1183,6 +1194,6 @@ then
 fi
 
 # clear all teporary files
-# rm tmp*
+rm -rf tmp* gmt.conf gmt.history
 # Print exit status
 echo "[STATUS] Finished. Exit status: $?"
