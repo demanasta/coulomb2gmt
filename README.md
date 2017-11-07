@@ -1,4 +1,4 @@
-coulomb2gmt -- pre-released v1.0-beta6.2
+coulomb2gmt -- pre-released v1.0-beta7.0
 ==================
 
 > Bash scripts to plot coulomb output on GMT
@@ -11,8 +11,11 @@ coulomb2gmt -- pre-released v1.0-beta6.2
 [![](https://img.shields.io/github/forks/demanasta/coulomb2gmt.svg)](https://github.com/demanasta/coulomb2gmt/network)
 [![](https://img.shields.io/github/issues/demanasta/coulomb2gmt.svg)](https://github.com/demanasta/coulomb2gmt/issues)
 
-## Author(s)
+## Author
 *   Demitris G. Anastasiou	
+
+__Decleration__
+The present project was developed during my doctoral dissertation, at the [Laboratory of Higher Geodesy and Dionysos Sastellite Observatory](http://dionysos.survey.ntua.gr/), at the [School of Rural & Surveying Engineering](http://www.survey.ntua.gr/en/) of [National Technical University of Athens](http://www.survey.ntua.gr/en/).
 
 --------------------------------------------------------------------------------
 
@@ -106,7 +109,7 @@ line* :lon lat font\_size,font\_type,font\_color angle potision text
 
 ### Default parameters
 
-Many parameters configured at `default-param` file.
+Many parameters configured at `default-param` file. Read carefully guideline in comments
 1. Paths to general files (DEM, logo, faults)
 2. Paths to input file directories (.inp, .dat, .cou, .disp)
 3. ColorMaps Palette, frame variable.
