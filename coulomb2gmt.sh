@@ -44,7 +44,7 @@
 # pre define parameters
 
 # program version
-VERSION="v.1.0-beta6.1"
+VERSION="v.1.0-beta7.1"
 
 # verbosity level for GMT, see http://gmt.soest.hawaii.edu/doc/latest/gmt.html#v-full
 # 
@@ -1109,7 +1109,15 @@ if [ "$FCROSS" -eq 1 ]; then
   calc_fault_cross ${fault_num}
 
   DEBUG echo "[DEBUG:${LINENO}] fault number: "${fault_num}
+
+  # create project data for earthquake distribution
+  if [ "${EQDIST}" -eq 1 ]; then
+    awk 'NR>2 {print($8,$7,$9)}' ${pth2eqdistfile} \
+    | gmt project -C${start_lon}/${start_lat} -E${finish_lon}/${finish_lat} -Fxyzpqrs \
+      -W-50/50 -Q -V${VRBLEVM}> projection.dat
+  fi
  
+  # NEW PROJECTIONS FOR CROSS SECTION
   # create range for projection
   west=$(awk 'NR==1 {print $1}' tmpcrossdcf2)
   east=$(awk 'END {print $1}' tmpcrossdcf2)
@@ -1139,8 +1147,13 @@ if [ "$FCROSS" -eq 1 ]; then
   for i in `seq 1 ${fault_num}`; do
     plot_fault_cross ${i}
   done
-  
-   
+
+  # plot earthquake on  projections
+  if [ "${EQDIST}" -eq 1 ]; then
+    awk '{print $4,$3}' projection.dat \
+    | gmt psxy -R -J $tick -W1 -Sc.1 -G0 -Ya-6.5c -O -K -V${VRBLEVM} >> $outfile
+  fi
+
   # Plot calculation depth dashed line
   echo "$west $CALC_DEPTH" >tmpdep
   echo "$east $CALC_DEPTH" >>tmpdep
