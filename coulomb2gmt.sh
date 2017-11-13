@@ -124,8 +124,10 @@ fi
 # //////////////////////////////////////////////////////////////////////////////
 # GET COMMAND LINE ARGUMENTS
 if [ "$#" -eq 0 ]; then
+  # no arguments call help function
   help
 elif [ "$#" -eq 1 ]; then
+  # one argument call help or version
   if [ "${1}" == "-h" ] || [ "${1}" == "--help" ]; then
     help
   elif [ "${1}" == "-v" ] || [ "${1}" == "--version" ]; then
@@ -159,10 +161,15 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	DEBUG echo "[DEBUG:${LINENO}] -r next arguments:" ${4} ${5} ${6} ${7} ${8}
 	if [ $# -ge 8 ];
 	then
+	  # check min longtitute is a number
  	  isNumber ${4};  if [ $? -eq 0 ];  then
+	    # check max longtitude is a number and greater than min longtitude
 	    isNumber ${5}; if [ $? -eq 0 ] && [ $(echo "${5} >${4}" | bc) -eq 1 ]; then
+	      # check min latitude is a number
 	      isNumber ${6}; if [ $? -eq 0 ]; then
+		# check max latitude is a nuber and greater than min latitude
 		isNumber ${7}; if [ $? -eq 0 ] && [ $(echo "${7} > ${6}" | bc) -eq 1 ]; then
+		  # check projection scale is a positive number
 		  isNumber ${8}; if [ $? -eq 0 ] && [ $(echo "${8} > 0" | bc) -eq 1 ]; then
 		    DEBUG echo "[DEBUG:${LINENO}] test if $?"
 		    RANGE=1
@@ -245,7 +252,7 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ]; then
 	  echo "[WARNING] CMT file does not set! CMT will not be plotted"
 	elif [ $# -eq 3 ]; then
-	  echo "[WARNING] CMT file does not exist! CMT will not be plotted"
+	  echo "[WARNING] CMT file \""${4}"\" does not exist! CMT will not be plotted"
 	fi
 	shift #shift for arg -cmt
 	;;
@@ -276,7 +283,7 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	elif [ $# -ge 4 ] && [ ${4:0:1} == \- ]; then
 	  echo "[WARNING] Custom text file does not set! Custom text will not be plotted"
 	elif  [ $# -ge 4 ] && [ ! -f ${4} ]; then
-	  echo "[WARNING] Custom text file does not exist! Custom text will not be plotted"
+	  echo "[WARNING] Custom text file \""${4}"\" does not exist! Custom text will not be plotted"
 	  shift
 	elif [ $# -eq 3 ]; then
 	  echo "[WARNING] Custom text file does not set! Custom text will not be plotted"
@@ -410,7 +417,7 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
 	exit 1
 	shift
 	;;
-    -*)
+    *)
       echo "[ERROR] Bad argument structure. argument \"${3}\" is not right"
       echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
       exit 1
