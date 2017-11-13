@@ -59,7 +59,7 @@ export sclength=20              ## Default 20
 
 export barrange=1		## Default 1
 
-export strainscale=5            ## Used for strain plot <stain>*10^-${strainscale}
+export strainscale=6            ## Used for strain plot <stain>*10^-${strainscale}
 
 export dhscale=100		## Default 100
 export dvscale=100		## Default 100

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # //////////////////////////////////////////////////////////////////////////////
 # ==============================================================================
@@ -44,7 +44,7 @@
 # pre define parameters
 
 # program version
-VERSION="v.1.0-beta7.1"
+VERSION="v.1.0-beta7.2"
 
 # verbosity level for GMT, see http://gmt.soest.hawaii.edu/doc/latest/gmt.html#v-full
 # 
@@ -967,7 +967,7 @@ fi
 if [ "${EQDIST}" -eq 1 ]; then
   echo "...plot earthquakes distribution..."
   awk 'NR>2 {print $8, $7}' ${pth2eqdistfile} \
-  | gmt psxy -Jm -R -Sc0.1c -Gblack -O -K -V${VRBLEVM} >> ${outfile}
+  | gmt psxy -Jm -R -Sc0.09c -Gblack -O -K -V${VRBLEVM} >> ${outfile}
 fi 
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -1080,7 +1080,7 @@ if [ "$FCROSS" -eq 1 ]; then
     tmpstarty=$(awk 'NR==4 {print $2}' tmpcrossdcf)
     DEBUG echo "[DEBUG:${LINENO}] start y " $tmpstarty
     # make proj file
-      awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $4*1000000}' \
+      awk 'NR>3 {print sqrt(($1 - '$tmpstartx')^2 + ($2 - '$tmpstarty')^2), $3, $4*10^'${strainscale}'}' \
 	$pth2crossdil > tmpcrossdcf2
   else
     awk 'NR>3' $pth2crossdcf > tmpcrossdcf
@@ -1151,7 +1151,7 @@ if [ "$FCROSS" -eq 1 ]; then
   # plot earthquake on  projections
   if [ "${EQDIST}" -eq 1 ]; then
     awk '{print $4,$3}' projection.dat \
-    | gmt psxy -R -J $tick -W1 -Sc.1 -G0 -Ya-6.5c -O -K -V${VRBLEVM} >> $outfile
+    | gmt psxy -R -J $tick -W.1 -Sc.09c -G0 -Ya-6.5c -O -K -V${VRBLEVM} >> $outfile
   fi
 
   # Plot calculation depth dashed line
