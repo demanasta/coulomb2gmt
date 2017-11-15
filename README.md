@@ -293,7 +293,7 @@ _Strain output files_
 
 ## ChangeLog
 
-The history of releases can be viewed at [ChangeLog](docs/ChangeLog.md)
+The history of releases can be viewed at [ChangeLog](docs/CHANGELOG.md)
 
 ## Acknowlegments
 
