@@ -1,6 +1,7 @@
 % \PassOptionsToPackage{usenames,dvipsnames}{xcolor}
 \documentclass{article}
 \usepackage[a4paper, margin=1.3in]{geometry}
+\usepackage[T1]{fontenc}
 \usepackage{tikz}
 \usetikzlibrary{shapes,shapes.geometric, arrows}
 \usepackage{hyperref}
@@ -40,7 +41,7 @@
 }
 
 \title{\vskip 3cm Plot coulomb outputs on GMT \texttt{coulomb2gmt} \\ \large{Reference \& User Guide} } % Title
-\author{Demitris G. \textsc{Anastasiou} \\ \normalsize{Dr.Eng | Rural \& Surveying Engineer NTUA} } % Author name
+\author{Demitris G. \textsc{Anastasiou} \\ \normalsize{Rural \& Surveying Engineer NTUA | Geodesist | Dr.Eng} } % Author name
 \date{\today} % Date for the report
 \makeindex
 
@@ -52,8 +53,8 @@
 \begin{tabular}{l r}
 First Release : & October 10, 2017 \\
 Repository:    & \url{http://github.com/demanasta/coulomb2gmt} \\
-Release:        & v1.0-beta6.2\\
-Develop:        & v1.0-beta7.*\\
+Release:        & v1.0-rc1.0\\
+Develop:        & v1.0-rc*\\
 \end{tabular}
 \end{center}
 \vfill
@@ -64,7 +65,7 @@ Develop:        & v1.0-beta7.*\\
 \begin{abstract}
 {\small 
 This document describes all options of project \texttt{coulomb2gmt} that plot 
-coulomb outputs on GMT enviroment. Τhe features of the program include the 
+coulomb outputs on GMT environment. The features of the program include the 
 automatic calculation of map frames, printing of all stress and strain parameters,
 overlay on the top of a DEM, plot fault geometry, cross sections, GPS and Okada 
 displacements, centroid moments tensors and earthquake distribution. Also, final 
