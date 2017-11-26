@@ -1,17 +1,18 @@
 # Change Log
 
-## [Unreleased](https://github.com/demanasta/coulomb2gmt/tree/HEAD)
-
-[Full Changelog](https://github.com/demanasta/coulomb2gmt/compare/v1.0-beta7.0...HEAD)
+## [v1.0-rc1.0](https://github.com/demanasta/coulomb2gmt/tree/v1.0-rc1.0) (2017-11-26)
+[Full Changelog](https://github.com/demanasta/coulomb2gmt/compare/v1.0-beta7.0...v1.0-rc1.0)
 
 **Implemented enhancements:**
 
 - plot cross section  [\#25](https://github.com/demanasta/coulomb2gmt/issues/25)
 - plot earthquake distribution file [\#24](https://github.com/demanasta/coulomb2gmt/issues/24)
 - newscript rename coulomb files [\#10](https://github.com/demanasta/coulomb2gmt/issues/10)
+- Develop [\#29](https://github.com/demanasta/coulomb2gmt/pull/29) ([demanasta](https://github.com/demanasta))
 
 **Fixed bugs:**
 
+- Check depth [\#28](https://github.com/demanasta/coulomb2gmt/issues/28)
 - plot cross section  [\#25](https://github.com/demanasta/coulomb2gmt/issues/25)
 
 ## [v1.0-beta7.0](https://github.com/demanasta/coulomb2gmt/tree/v1.0-beta7.0) (2017-11-07)
