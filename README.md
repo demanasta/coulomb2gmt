@@ -1,4 +1,4 @@
-coulomb2gmt -- pre-released v1.0-beta7.1
+coulomb2gmt -- v1.0-rc1.0
 ==================
 
 > Bash scripts to plot coulomb output on GMT
