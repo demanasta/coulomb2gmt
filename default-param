@@ -67,7 +67,7 @@ export dvscale=100		## Default 100
 export dhscmagn=10 #use mm
 export dvscmagn=12 #use mm
 
-# export CALC_DEPTH=8 #use km
+# export CALC_DEPTH=5 #use km
 
 export RTRANS=30 # set transparency for overlay topography
 

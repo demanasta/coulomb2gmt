@@ -424,8 +424,9 @@ elif [ -f ${pth2inpdir}/${1}.inp ]; then
     esac
   done
 else
-    echo "[ERROR] Input file does not exist! use corret input file"
-    help
+  echo "[ERROR] Input file does not exist! use corret input file"
+  echo "[STATUS] Script Finished Unsuccesful! Exit Status 1"
+  exit 1
 fi
 
 # //////////////////////////////////////////////////////////////////////////////
