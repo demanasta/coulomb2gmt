@@ -1,4 +1,4 @@
-coulomb2gmt -- pre-released v1.0-beta7.0
+coulomb2gmt -- v1.0-rc1.0
 ==================
 
 > Bash scripts to plot coulomb output on GMT
@@ -15,6 +15,7 @@ coulomb2gmt -- pre-released v1.0-beta7.0
 *   Demitris G. Anastasiou	
 
 __Decleration__
+
 The present project was developed during my doctoral dissertation, at the [Laboratory of Higher Geodesy and Dionysos Sastellite Observatory](http://dionysos.survey.ntua.gr/), at the [School of Rural & Surveying Engineering](http://www.survey.ntua.gr/en/) of [National Technical University of Athens](http://www.survey.ntua.gr/en/).
 
 --------------------------------------------------------------------------------
@@ -100,7 +101,7 @@ line* :  lon  lat   d  str dip slip str dip slip magnt exp plon  plat  name (14 
 ```
 * Custom text files: Use new gmt format for `pstext`. (GMT ver > 5.1 )
 ```
-line* :lon lat font\_size,font\_type,font\_color angle potision text
+line* :lon lat font_size,font_type,font_color angle potision text
 ```
 * `<inputdata>-gps.dist`: GPS displacements.
 
@@ -205,7 +206,13 @@ An assistant script `mvclbfiles.sh` developed to move and rename all output file
 You must first set `CLB34_HOME` variable the path to coulomb home directory,
 etc. `$ export CLB34_HOME=${HOME}/coulomb34`
 
-__Usage__: `$ ./mvclsbfiles.sh <inputdata>`
+__Usage__: 
+
+* `$ ./mvclsbfiles.sh -h | --help`: print help message
+
+* `$ ./mnclbfiles.sh -ch| --check_files`: check which of coulomb files exist
+
+* `$ ./mvclsbfiles.sh <inputdata>`: rename and move files
 `<inputdata>` is the code as mentioned in the main script above.
 
 __Files, rename and move:__
@@ -286,7 +293,7 @@ _Strain output files_
 
 ## ChangeLog
 
-The history of releases can be viewed at [ChangeLog](docs/ChangeLog.md)
+The history of releases can be viewed at [ChangeLog](docs/CHANGELOG.md)
 
 ## Acknowlegments
 
