@@ -2,18 +2,18 @@
 
 # //////////////////////////////////////////////////////////////////////////////
 # ==============================================================================
-#   
+#
 #    |===========================================|
 #    |**     DIONYSOS SATELLITE OBSERVATORY    **|
 #    |**        HIGHER GEODESY LABORATORY      **|
 #    |** National Tecnical University of Athens**|
 #    |===========================================|
-#   
+#
 #    filename       : coulomb2gmt.sh
 #                     NAME=coulomb2gmt
 #    version        : v-1.0
 #                     VERSION=v1.0
-#                     RELEASE=beta
+#                     RELEASE=rc1.0
 #    licence        : MIT
 #    created        : SEP-2015
 #    usage          :
@@ -44,7 +44,7 @@
 # pre define parameters
 
 # program version
-VERSION="v.1.0-beta7.2"
+VERSION="v.1.0-rc1.0"
 
 # verbosity level for GMT, see http://gmt.soest.hawaii.edu/doc/latest/gmt.html#v-full
 # 

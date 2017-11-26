@@ -12,7 +12,7 @@
 #                            NAME=checknum
 #    version               : v-1.0
 #                            VERSION=v1.0
-#                            RELEASE=beta
+#                            RELEASE=rc
 #    licence               : MIT
 #    created               : SEP-2017
 #    usage                 : called from ./coulomb2gmt.sh
